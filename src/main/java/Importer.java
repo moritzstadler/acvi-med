@@ -14,9 +14,12 @@ public class Importer {
     HashMap<Integer, Csq> csqByPosition;
     String tableName;
 
+    List<Variant> batch;
+
     public Importer() {
         headerById = new HashMap<>();
         csqByPosition = new HashMap<>();
+        batch = new LinkedList<>();
     }
 
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
@@ -25,11 +28,26 @@ public class Importer {
             String line;
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
+                if (batch.size() >= 2) {
+                    SqlConnector.getInstance().insertVariantBatch(batch, tableName);
+                    batch = new LinkedList<>();
+                }
+
                 lines++;
+
                 if (lines % 100 == 0) {
-                    System.out.println("Processing " + lines);
+                    System.out.println("Processing line " + lines);
+                }
+
+                if (determineFormat && lines > 100000) {
+                    break;
                 }
             }
+        }
+
+        //insert remaining batch
+        if (!determineFormat) {
+            SqlConnector.getInstance().insertVariantBatch(batch, tableName);
         }
 
         this.tableName = tableName;
@@ -148,7 +166,8 @@ public class Importer {
                 }
             }
         } else {
-            SqlConnector.getInstance().insertVariant(variant, tableName);
+            //SqlConnector.getInstance().insertVariant(variant, tableName);
+            batch.add(variant);
         }
     }
 

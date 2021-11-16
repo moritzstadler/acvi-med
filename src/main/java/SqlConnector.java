@@ -19,6 +19,8 @@ public class SqlConnector {
 
     private Connection connection;
     private ArrayList<String> csqNames;
+    private ArrayList<String> infoNames;
+    private String valuePlaceholders;
 
     public void connect(String url, String username, String password) {
         System.out.println("Connecting database...");
@@ -62,10 +64,14 @@ public class SqlConnector {
         cols.add("qual TEXT");
         cols.add("filter TEXT");
 
+        int colCount = 6;
+
+        infoNames = new ArrayList<>();
         for (Info info : header) {
             String infoName = "info_" + info.getId().replaceAll("[^a-zA-Z0-9_]", "");
             String infoType = convertInfoTypeToMySqlType(info.getType());
             cols.add(String.format("%s %s", infoName, infoType));
+            infoNames.add(infoName);
         }
 
         csqNames = new ArrayList<>();
@@ -75,6 +81,14 @@ public class SqlConnector {
             csqNames.add(csqName);
         }
 
+        colCount += infoNames.size() + csqNames.size();
+        valuePlaceholders = "";
+        for (int i = 0; i < colCount; i++) {
+            valuePlaceholders += "?";
+            if (i != colCount - 1) {
+                valuePlaceholders += ", ";
+            }
+        }
         //TODO format
 
         String inner = cols.stream().collect(Collectors.joining(", "));
@@ -95,6 +109,74 @@ public class SqlConnector {
         }
 
         return "TEXT";
+    }
+
+    public void insertVariantBatch(List<Variant> variants, String tableName) throws SQLException {
+        if (variants.size() == 0) {
+            return;
+        }
+
+        String sql = String.format("INSERT INTO %s VALUES ", tableName);
+        connection.setAutoCommit(false);
+        ArrayList<String> individualSqls = new ArrayList<>();
+
+        for (Variant variant : variants) {
+            ArrayList<String> values = new ArrayList<>();
+
+            values.add("NULL"); //pid
+            values.add(convertToMySqlString(variant.getChrom()));
+            values.add(convertToMySqlString(variant.getPos()));
+            values.add(convertToMySqlString(variant.getRef()));
+            values.add(convertToMySqlString(variant.getAlt()));
+            values.add(convertToMySqlString(variant.getQual()));
+            values.add(convertToMySqlString(variant.getFilter()));
+
+            /*create.setString(1, variant.getChrom());
+            create.setString(2, variant.getPos());
+            create.setString(3, variant.getRef());
+            create.setString(4, variant.getAlt());
+            create.setString(5, variant.getQual());
+            create.setString(6, variant.getFilter());*/
+
+            int colIndex = 7;
+
+            for (String infoKey : infoNames) {
+                if (!infoKey.equals("CSQ")) {
+                    /*create.setString(colIndex, variant.getInfoMap().get(infoKey));
+                    colIndex++;*/
+                    String value = variant.getInfoMap().get(infoKey);
+                    if (value == null || value.equals("")) {
+                        values.add("NULL");
+                    } else {
+                        values.add(convertToMySqlString(value));
+                    }
+                }
+            }
+
+            String[] csq = variant.getInfoMap().get("CSQ").split("\\|", -1);
+            for (int i = 0; i < csq.length; i++) {
+                String value = csq[i];
+                if (value.equals("")) {
+                    value = null;
+                }
+                /*create.setString(colIndex, value);
+                colIndex++;*/
+                if (value == null) {
+                    values.add("NULL");
+                } else {
+                    values.add(convertToMySqlString(value));
+                }
+            }
+
+            String individualSql = "(" + values.stream().collect(Collectors.joining(", ")) + ")";
+            individualSqls.add(individualSql);
+        }
+
+        sql += individualSqls.stream().collect(Collectors.joining(", "));
+
+        PreparedStatement create = connection.prepareStatement(sql);
+        create.execute();
+        connection.commit();
     }
 
     public void insertVariant(Variant variant, String tableName) throws SQLException {
@@ -136,7 +218,7 @@ public class SqlConnector {
         String values = valuesList.stream().collect(Collectors.joining(", "));
 
         String sql = String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columns, values);
-        System.out.println(sql);
+
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
     }
