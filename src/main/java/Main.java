@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class Main {
 
     public static void main(String[] args) throws IOException, SQLException {
-        if (args.length != 1) {
+        if (args.length != 5) {
             System.out.println("Missing arguments! Format: <filname> <database> <host> <user> <password>");
         }
 
@@ -20,6 +20,8 @@ public class Main {
         if (fileName.contains(".") && !fileName.startsWith(".")) {
             tableName = fileName.split("\\.")[0];
         }
+
+        //java -jar vcfimport-1.0-SNAPSHOT.jar ../../../ashkenazi_trio_ANNOTATED_final.vcf sample 34.90.49.248 root bkoJb14IJy84HFfh
 
 //        SqlConnector.getInstance().connect("34.90.49.248", "root", "bkoJb14IJy84HFfh");
         SqlConnector.getInstance().connect(host, user, password);
