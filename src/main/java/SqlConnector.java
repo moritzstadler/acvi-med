@@ -176,6 +176,7 @@ public class SqlConnector {
 
         PreparedStatement create = connection.prepareStatement(sql);
         create.execute();
+        create.close();
         connection.commit();
     }
 
@@ -221,6 +222,7 @@ public class SqlConnector {
 
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
+        create.close();
     }
 
     private String convertToMySqlString(String value) {

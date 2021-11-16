@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,7 +27,7 @@ public class Importer {
             String line;
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
-                if (batch.size() >= 50) {
+                if (batch.size() >= 100) {
                     SqlConnector.getInstance().insertVariantBatch(batch, tableName);
                     batch = new LinkedList<>();
                 }
