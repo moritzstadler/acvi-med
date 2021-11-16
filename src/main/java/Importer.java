@@ -26,7 +26,9 @@ public class Importer {
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
                 lines++;
-                System.out.println("Processing " + lines);
+                if (lines % 100 == 0) {
+                    System.out.println("Processing " + lines);
+                }
             }
         }
 
