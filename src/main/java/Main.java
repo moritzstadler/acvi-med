@@ -18,12 +18,9 @@ public class Main {
 
         String tableName = fileName;
         if (fileName.contains(".") && !fileName.startsWith(".")) {
-            tableName = fileName.split("\\.")[0];
+            tableName = fileName.split("\\.")[0].replaceAll("[a-zA-Z0-9_]", "");
         }
 
-        //java -jar vcfimport-1.0-SNAPSHOT.jar ../../../ashkenazi_trio_ANNOTATED_final.vcf sample 34.90.49.248 root bkoJb14IJy84HFfh
-
-//        SqlConnector.getInstance().connect("34.90.49.248", "root", "bkoJb14IJy84HFfh");
         SqlConnector.getInstance().connect(host, user, password);
         SqlConnector.getInstance().useDatabase(database);
         SqlConnector.getInstance().dropTable(tableName);
