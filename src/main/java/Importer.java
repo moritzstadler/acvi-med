@@ -28,7 +28,7 @@ public class Importer {
             String line;
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
-                if (batch.size() >= 2) {
+                if (batch.size() >= 50) {
                     SqlConnector.getInstance().insertVariantBatch(batch, tableName);
                     batch = new LinkedList<>();
                 }
