@@ -25,7 +25,7 @@ public class Main {
         SqlConnector.getInstance().connect(host, user, password);
         SqlConnector.getInstance().useDatabase(database);
         SqlConnector.getInstance().dropTable(tableName);
-^
+
         Importer importer = new Importer();
 
         try {
