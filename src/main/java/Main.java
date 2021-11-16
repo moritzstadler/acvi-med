@@ -18,13 +18,14 @@ public class Main {
 
         String tableName = fileName;
         if (fileName.contains(".") && !fileName.startsWith(".")) {
-            tableName = fileName.split("\\.")[0].replaceAll("[a-zA-Z0-9_]", "");
+            tableName = fileName.split("\\.")[0];
         }
+        tableName = tableName.replaceAll("[^a-zA-Z0-9_]", "");
 
         SqlConnector.getInstance().connect(host, user, password);
         SqlConnector.getInstance().useDatabase(database);
         SqlConnector.getInstance().dropTable(tableName);
-
+^
         Importer importer = new Importer();
 
         try {
