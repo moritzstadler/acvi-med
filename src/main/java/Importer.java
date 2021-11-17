@@ -2,15 +2,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Importer {
 
     HashMap<String, Info> headerById;
     HashMap<Integer, Csq> csqByPosition;
+    ArrayList<String> formatTypes;
+    Set<String> formatTypesSet;
     String tableName;
     String[] formatNames;
     int pid;
@@ -20,6 +20,8 @@ public class Importer {
     public Importer() {
         headerById = new HashMap<>();
         csqByPosition = new HashMap<>();
+        formatTypes = new ArrayList<>();
+        formatTypesSet = new HashSet<>();
         batch = new LinkedList<>();
     }
 
@@ -46,6 +48,7 @@ public class Importer {
         //insert remaining batch
         if (!determineFormat) {
             SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), batch, tableName, formatNames);
+            SqlConnector.getInstance().makeIndices(tableName);
         }
 
         this.tableName = tableName;
@@ -53,7 +56,7 @@ public class Importer {
         if (determineFormat) {
             List<Info> headers = headerById.keySet().stream().map(k -> headerById.get(k)).collect(Collectors.toList());
             List<Csq> csqs = csqByPosition.keySet().stream().map(k -> csqByPosition.get(k)).collect(Collectors.toList());
-            SqlConnector.getInstance().createTable(tableName, headers, csqs);
+            SqlConnector.getInstance().createTable(tableName, headers, csqs, formatNames, formatTypes);
         }
 
         /*for (Csq x : csqs) {
@@ -166,6 +169,14 @@ public class Importer {
             for (int i = 0; i < csqInputs.length; i++) {
                 if (csqByPosition.containsKey(i)) {
                     csqByPosition.get(i).matchType(csqInputs[i]);
+                }
+            }
+
+            String[] formatSplit = variant.getFormat().split(":", -1);
+            for (String s : formatSplit) {
+                if (!formatTypesSet.contains(s)) {
+                    formatTypesSet.add(s);
+                    formatTypes.add(s);
                 }
             }
         } else {

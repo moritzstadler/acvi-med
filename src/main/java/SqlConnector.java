@@ -2,6 +2,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,13 @@ public class SqlConnector {
     private Connection connection;
     private ArrayList<String> csqNames;
     private ArrayList<String> infoNames;
-    private String valuePlaceholders;
+    private String[] formatNames;
+    private ArrayList<String> formatTypes;
+    private ArrayList<String> genotypeRows;
+
+    public SqlConnector() {
+        this.genotypeRows = new ArrayList<>();
+    }
 
     public void connect(String url, String username, String password) {
         System.out.println("Connecting database...");
@@ -50,14 +57,11 @@ public class SqlConnector {
     }
 
     public void dropTable(String name) throws SQLException {
-        PreparedStatement dropFormat = connection.prepareCall("DROP TABLE IF EXISTS " + name + "_format");
-        dropFormat.execute();
-
         PreparedStatement drop = connection.prepareCall("DROP TABLE IF EXISTS " + name);
         drop.execute();
     }
 
-    public void createTable(String name, List<Info> header, List<Csq> csqArrayIds) throws SQLException {
+    public void createTable(String name, List<Info> header, List<Csq> csqArrayIds, String[] formatNames, ArrayList<String> formatTypes) throws SQLException {
         ArrayList<String> cols = new ArrayList<>();
         cols.add("pid BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
         cols.add("chrom VARCHAR(31)");
@@ -84,15 +88,17 @@ public class SqlConnector {
             csqNames.add(csqName);
         }
 
-        colCount += infoNames.size() + csqNames.size();
-        valuePlaceholders = "";
-        for (int i = 0; i < colCount; i++) {
-            valuePlaceholders += "?";
-            if (i != colCount - 1) {
-                valuePlaceholders += ", ";
+        this.formatNames = formatNames;
+        this.formatTypes = formatTypes;
+        for (String formatName : formatNames) {
+            for (String formatType : formatTypes) {
+                String colName = "format_" + formatName + "_" + formatType;
+                cols.add(String.format("%s %s", colName, "VARCHAR(63)"));
+                if (formatType.toLowerCase().equals("gt")) {
+                    genotypeRows.add(colName);
+                }
             }
         }
-        //TODO format
 
         String inner = cols.stream().collect(Collectors.joining(", "));
         String sql = String.format("CREATE TABLE %s (%s) ENGINE=InnoDB ROW_FORMAT=DYNAMIC", name, inner);
@@ -100,12 +106,6 @@ public class SqlConnector {
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
         create.close();
-
-        String formatTableName = name + "_format";
-        String sqlFormat = String.format("CREATE TABLE %s (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, pid BIGINT UNSIGNED , name VARCHAR(255), type VARCHAR(255), value VARCHAR(127), FOREIGN KEY (pid) REFERENCES %s(pid)) ENGINE=InnoDB ROW_FORMAT=DYNAMIC", formatTableName, name);
-        PreparedStatement createFormat = connection.prepareCall(sqlFormat);
-        createFormat.execute();
-        createFormat.close();
     }
 
     private String convertInfoTypeToMySqlType(String type) {
@@ -181,6 +181,23 @@ public class SqlConnector {
                 }
             }
 
+            String[] individualFormatTypes = variant.getFormat().split(":", -1);
+            HashMap<String, String> formatKeyValueIndividual = new HashMap<>();
+            for (String format : variant.getFormats()) {
+                String[] formatSplit = format.split(":", -1);
+                for (int i = 0; i < formatSplit.length; i++) {
+                    formatKeyValueIndividual.put(individualFormatTypes[i], formatSplit[i]);
+                }
+
+                for (String formatType : formatTypes) {
+                    if (formatKeyValueIndividual.containsKey(formatType)) {
+                        values.add(convertToMySqlString(formatKeyValueIndividual.get(formatType)));
+                    } else {
+                        values.add("NULL");
+                    }
+                }
+            }
+
             String individualSql = "(" + values.stream().collect(Collectors.joining(", ")) + ")";
             individualSqls.add(individualSql);
         }
@@ -191,34 +208,15 @@ public class SqlConnector {
         create.execute();
         create.close();
 
-        //insert the formats here
-        int currentFormatPid = pidStart;
-        String sqlFormat = String.format("INSERT INTO %s VALUES ", tableName + "_format");
-        ArrayList<String> valuesFormat = new ArrayList<>();
-
-        for (Variant variant : variants) {
-            String[] formatTypes = variant.getFormat().split(":", -1);
-
-            for (int i = 0; i < variant.getFormats().size(); i++) {
-                String format = variant.getFormats().get(i);
-                String[] formatValues = format.split(":", -1);
-
-                for (int j = 0; j < formatValues.length; j++) {
-                    String singleFormatValue = String.format("(NULL, %s, %s, %s, %s)", currentFormatPid, convertToMySqlString(formatNames[i]), convertToMySqlString(formatTypes[j]), convertToMySqlString(formatValues[j]));
-                    valuesFormat.add(singleFormatValue);
-                }
-            }
-            currentFormatPid++;
-        }
-
-        if (valuesFormat.size() > 0) {
-            sqlFormat += valuesFormat.stream().collect(Collectors.joining(", "));
-            PreparedStatement createFormat = connection.prepareStatement(sqlFormat);
-            createFormat.execute();
-            createFormat.close();
-        }
-
         connection.commit();
+    }
+
+    public void makeIndices(String tableName) throws SQLException {
+        String inner = genotypeRows.stream().collect(Collectors.joining(", "));
+        String sql = String.format("CREATE INDEX format_gt_index on %s (%s);", tableName, inner);
+        PreparedStatement genotypeIndex = connection.prepareStatement(sql);
+        genotypeIndex.execute();
+        genotypeIndex.close();
     }
 
     public void insertVariant(Variant variant, String tableName) throws SQLException {
