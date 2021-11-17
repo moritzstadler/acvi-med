@@ -112,15 +112,17 @@ public class SqlConnector {
 
     private String convertInfoTypeToMySqlType(String type, int size) {
         type = type.toLowerCase();
-        if (type.equals("string")) {
-            return String.format("VARCHAR(%s)", size);
-        } else if (type.equals("integer")) {
+        if (type.equals("integer")) {
             return "BIGINT";
         } else if (type.equals("float")) {
             return "DOUBLE";
         }
 
-        return String.format("VARCHAR(%s)", size);
+        if (size < 128) {
+            return String.format("VARCHAR(%s)", size);
+        } else {
+            return "TEXT";
+        }
     }
 
     public void insertVariantBatch(final int pidStart, List<Variant> variants, String tableName, String[] formatNames) throws SQLException {

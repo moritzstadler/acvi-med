@@ -25,7 +25,11 @@ public class Csq {
         } else if (mySqlTypeLevel == 1) {
             return "DOUBLE";
         } else {
-            return String.format("VARCHAR(%s)", size);
+            if (size < 128) {
+                return String.format("VARCHAR(%s)", size);
+            } else {
+                return "TEXT";
+            }
         }
     }
 
