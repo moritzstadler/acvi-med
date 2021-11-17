@@ -105,6 +105,8 @@ public class SqlConnector {
         String inner = cols.stream().collect(Collectors.joining(", "));
         String sql = String.format("CREATE TABLE %s (%s) ENGINE=InnoDB ROW_FORMAT=DYNAMIC", name, inner);
 
+        System.out.println(sql);
+
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
         create.close();
@@ -118,7 +120,7 @@ public class SqlConnector {
             return "DOUBLE";
         }
 
-        if (size < 64) {
+        if (size < 32) {
             return String.format("VARCHAR(%s)", size);
         } else {
             return "TEXT";

@@ -25,7 +25,7 @@ public class Csq {
         } else if (mySqlTypeLevel == 1) {
             return "DOUBLE";
         } else {
-            if (size < 64) {
+            if (size < 32) {
                 return String.format("VARCHAR(%s)", size);
             } else {
                 return "TEXT";
