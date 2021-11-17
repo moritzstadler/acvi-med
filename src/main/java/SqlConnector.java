@@ -118,7 +118,7 @@ public class SqlConnector {
             return "DOUBLE";
         }
 
-        if (size < 128) {
+        if (size < 64) {
             return String.format("VARCHAR(%s)", size);
         } else {
             return "TEXT";
