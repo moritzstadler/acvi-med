@@ -19,13 +19,13 @@ public class Csq {
         this.name = name;
     }
 
-    public String getMySqlType() {
+    public String getMySqlType(int size) {
         if (mySqlTypeLevel == 0) {
             return "BIGINT";
         } else if (mySqlTypeLevel == 1) {
             return "DOUBLE";
         } else {
-            return "TEXT";
+            return String.format("VARCHAR(%s)", size);
         }
     }
 

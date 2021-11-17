@@ -14,6 +14,7 @@ public class Importer {
     String tableName;
     String[] formatNames;
     int pid;
+    ArrayList<Integer> maxColSizes;
 
     List<Variant> batch;
 
@@ -56,7 +57,7 @@ public class Importer {
         if (determineFormat) {
             List<Info> headers = headerById.keySet().stream().map(k -> headerById.get(k)).collect(Collectors.toList());
             List<Csq> csqs = csqByPosition.keySet().stream().map(k -> csqByPosition.get(k)).collect(Collectors.toList());
-            SqlConnector.getInstance().createTable(tableName, headers, csqs, formatNames, formatTypes);
+            SqlConnector.getInstance().createTable(tableName, headers, csqs, formatNames, formatTypes, maxColSizes);
         }
 
         /*for (Csq x : csqs) {
@@ -179,10 +180,43 @@ public class Importer {
                     formatTypes.add(s);
                 }
             }
+
+            determineMaxColSize(variant);
         } else {
             //SqlConnector.getInstance().insertVariant(variant, tableName);
             batch.add(variant);
             pid++;
+        }
+    }
+
+    private void determineMaxColSize(Variant variant) {
+        ArrayList<String> cols = new ArrayList<>();
+
+        cols.add(variant.getChrom());
+        cols.add(variant.getPos());
+        cols.add(variant.getRef());
+        cols.add(variant.getAlt());
+        cols.add(variant.getQual());
+        cols.add(variant.getFilter());
+
+        for (String key : headerById.keySet()) {
+            if (!key.equals("CSQ")) {
+                cols.add(variant.getInfoMap().getOrDefault(key, ""));
+            }
+        }
+
+        String[] csqCols = variant.getInfoMap().get("CSQ").split("\\|", -1);
+        cols.addAll(Arrays.asList(csqCols));
+
+        if (maxColSizes == null) {
+            maxColSizes = new ArrayList<>();
+            for (int i = 0; i < cols.size(); i++) {
+                maxColSizes.add(0);
+            }
+        }
+
+        for (int i = 0; i < cols.size(); i++) {
+            maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1));
         }
     }
 
