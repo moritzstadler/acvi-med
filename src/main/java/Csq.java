@@ -48,6 +48,10 @@ public class Csq {
     }
 
     private int getMySqlTypeLevel(String input) {
+        if (input == null || input.equals("")) {
+            return 0;
+        }
+
         if (input.matches("[-]?[0-9]+")) {
             return 0;
         } else if (input.matches("[-]?([0-9]+[.])?[0-9]+")) {
