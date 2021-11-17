@@ -34,11 +34,11 @@ public class Importer {
 
                 lines++;
 
-                if (lines % 100 == 0) {
+                if (lines % 1000 == 0) {
                     System.out.println("Processing line " + lines);
                 }
 
-                if (determineFormat && lines > 100000) {
+                if (determineFormat && lines > 1000000) {
                     break;
                 }
             }

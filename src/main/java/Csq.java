@@ -39,7 +39,12 @@ public class Csq {
      * @param input the value in the variant
      */
     public void matchType(String input) {
+        int prevLevel = mySqlTypeLevel;
         mySqlTypeLevel = Math.max(mySqlTypeLevel, getMySqlTypeLevel(input));
+
+        if (mySqlTypeLevel != prevLevel) {
+            System.out.println("Field " + name + " was changed from " + prevLevel + " to " + mySqlTypeLevel + " by '" + input + "'");
+        }
     }
 
     private int getMySqlTypeLevel(String input) {
