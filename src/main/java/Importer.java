@@ -12,6 +12,8 @@ public class Importer {
     HashMap<String, Info> headerById;
     HashMap<Integer, Csq> csqByPosition;
     String tableName;
+    String[] formatNames;
+    int pid;
 
     List<Variant> batch;
 
@@ -23,12 +25,13 @@ public class Importer {
 
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
         int lines = 0;
+        pid = 1;
         try (BufferedReader br = new BufferedReader(new FileReader(name))) {
             String line;
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
                 if (batch.size() >= 100) {
-                    SqlConnector.getInstance().insertVariantBatch(batch, tableName);
+                    SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), batch, tableName, formatNames);
                     batch = new LinkedList<>();
                 }
 
@@ -37,16 +40,12 @@ public class Importer {
                 if (lines % 1000 == 0) {
                     System.out.println("Processing line " + lines);
                 }
-
-                if (determineFormat && lines > 1000000) {
-                    break;
-                }
             }
         }
 
         //insert remaining batch
         if (!determineFormat) {
-            SqlConnector.getInstance().insertVariantBatch(batch, tableName);
+            SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), batch, tableName, formatNames);
         }
 
         this.tableName = tableName;
@@ -72,7 +71,7 @@ public class Importer {
         if (line.startsWith("##")) {
             processHeader(getAfter(line, "##"));
         } else if (line.startsWith("#")) {
-
+            processDescriptor(getAfter(line, "#"));
         } else {
             //normal lines go here
             processVariant(line, determineFormat);
@@ -83,6 +82,11 @@ public class Importer {
         if (headerLine.startsWith("INFO")) {
             processInfoHeader(getAfter(headerLine, "INFO"));
         }
+    }
+
+    private void processDescriptor(String descriptorLine) {
+        String nameLine = getAfter(descriptorLine, "FORMAT\t");
+        formatNames = nameLine.split("\t");
     }
 
     private void processInfoHeader(String infoHeader) {
@@ -153,7 +157,7 @@ public class Importer {
             } else if (i == 8) {
                 variant.setFormat(value);
             } else {
-                variant.getSamples().add(value);
+                variant.getFormats().add(value);
             }
         }
 
@@ -167,6 +171,7 @@ public class Importer {
         } else {
             //SqlConnector.getInstance().insertVariant(variant, tableName);
             batch.add(variant);
+            pid++;
         }
     }
 

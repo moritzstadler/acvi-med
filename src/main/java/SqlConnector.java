@@ -50,6 +50,9 @@ public class SqlConnector {
     }
 
     public void dropTable(String name) throws SQLException {
+        PreparedStatement dropFormat = connection.prepareCall("DROP TABLE IF EXISTS " + name + "_format");
+        dropFormat.execute();
+
         PreparedStatement drop = connection.prepareCall("DROP TABLE IF EXISTS " + name);
         drop.execute();
     }
@@ -96,6 +99,13 @@ public class SqlConnector {
 
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
+        create.close();
+
+        String formatTableName = name + "_format";
+        String sqlFormat = String.format("CREATE TABLE %s (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, pid BIGINT UNSIGNED , name VARCHAR(255), type VARCHAR(255), value VARCHAR(127), FOREIGN KEY (pid) REFERENCES %s(pid)) ENGINE=InnoDB ROW_FORMAT=DYNAMIC", formatTableName, name);
+        PreparedStatement createFormat = connection.prepareCall(sqlFormat);
+        createFormat.execute();
+        createFormat.close();
     }
 
     private String convertInfoTypeToMySqlType(String type) {
@@ -111,10 +121,12 @@ public class SqlConnector {
         return "TEXT";
     }
 
-    public void insertVariantBatch(List<Variant> variants, String tableName) throws SQLException {
+    public void insertVariantBatch(final int pidStart, List<Variant> variants, String tableName, String[] formatNames) throws SQLException {
         if (variants.size() == 0) {
             return;
         }
+
+        int currentPid = pidStart;
 
         String sql = String.format("INSERT INTO %s VALUES ", tableName);
         connection.setAutoCommit(false);
@@ -123,7 +135,8 @@ public class SqlConnector {
         for (Variant variant : variants) {
             ArrayList<String> values = new ArrayList<>();
 
-            values.add("NULL"); //pid
+            values.add(currentPid + ""); //pid
+            currentPid++;
             values.add(convertToMySqlString(variant.getChrom()));
             values.add(convertToMySqlString(variant.getPos()));
             values.add(convertToMySqlString(variant.getRef()));
@@ -177,6 +190,34 @@ public class SqlConnector {
         PreparedStatement create = connection.prepareStatement(sql);
         create.execute();
         create.close();
+
+        //insert the formats here
+        int currentFormatPid = pidStart;
+        String sqlFormat = String.format("INSERT INTO %s VALUES ", tableName + "_format");
+        ArrayList<String> valuesFormat = new ArrayList<>();
+
+        for (Variant variant : variants) {
+            String[] formatTypes = variant.getFormat().split(":", -1);
+
+            for (int i = 0; i < variant.getFormats().size(); i++) {
+                String format = variant.getFormats().get(i);
+                String[] formatValues = format.split(":", -1);
+
+                for (int j = 0; j < formatValues.length; j++) {
+                    String singleFormatValue = String.format("(NULL, %s, %s, %s, %s)", currentFormatPid, convertToMySqlString(formatNames[i]), convertToMySqlString(formatTypes[j]), convertToMySqlString(formatValues[j]));
+                    valuesFormat.add(singleFormatValue);
+                }
+            }
+            currentFormatPid++;
+        }
+
+        if (valuesFormat.size() > 0) {
+            sqlFormat += valuesFormat.stream().collect(Collectors.joining(", "));
+            PreparedStatement createFormat = connection.prepareStatement(sqlFormat);
+            createFormat.execute();
+            createFormat.close();
+        }
+
         connection.commit();
     }
 

@@ -12,11 +12,11 @@ public class Variant {
     private String filter;
     private String info;
     private String format;
-    private ArrayList<String> samples;
+    private ArrayList<String> formats;
     private HashMap<String, String> infoMap;
 
     public Variant() {
-        samples = new ArrayList<>();
+        formats = new ArrayList<>();
     }
 
     public String getChrom() {
@@ -99,8 +99,8 @@ public class Variant {
         this.format = format;
     }
 
-    public ArrayList<String> getSamples() {
-        return samples;
+    public ArrayList<String> getFormats() {
+        return formats;
     }
 
     private void makeInfoMap() {
