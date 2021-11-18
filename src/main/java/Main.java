@@ -19,7 +19,7 @@ public class Main {
         if (fileName.contains(".") && !fileName.startsWith(".")) {
             tableName = fileName.split("\\.")[0];
         }
-        tableName = tableName.replaceAll("[^a-zA-Z0-9_]", "");
+        tableName = tableName.replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
 
         SqlConnector.getInstance().connect(host, user, password);
         //SqlConnector.getInstance().useDatabase(database);

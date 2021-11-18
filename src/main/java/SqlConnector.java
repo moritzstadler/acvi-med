@@ -22,11 +22,8 @@ public class SqlConnector {
     private ArrayList<String> infoNames;
     private String[] formatNames;
     private ArrayList<String> formatTypes;
-    private ArrayList<String> genotypeRows;
-
-    public SqlConnector() {
-        this.genotypeRows = new ArrayList<>();
-    }
+    private ArrayList<Integer> maxColSizes;
+    private ArrayList<String> fullColList;
 
     public void connect(String url, String username, String password) throws SQLException {
         System.out.println("Connecting database...");
@@ -51,6 +48,9 @@ public class SqlConnector {
     }
 
     public void createTable(String name, List<Info> header, List<Csq> csqArrayIds, String[] formatNames, ArrayList<String> formatTypes, ArrayList<Integer> maxColsSizes) throws SQLException {
+        fullColList = new ArrayList<>();
+        this.maxColSizes = maxColsSizes;
+
         ArrayList<String> cols = new ArrayList<>();
         cols.add("pid BIGINT");
         cols.add(String.format("chrom %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(0))));
@@ -59,6 +59,13 @@ public class SqlConnector {
         cols.add(String.format("alt %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(3))));
         cols.add(String.format("qual %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(4))));
         cols.add(String.format("filter %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(5))));
+
+        fullColList.add("chrom");
+        fullColList.add("pos");
+        fullColList.add("ref");
+        fullColList.add("alt");
+        fullColList.add("qual");
+        fullColList.add("filter");
 
         int colCount = 6;
 
@@ -69,6 +76,7 @@ public class SqlConnector {
             colCount++;
             cols.add(String.format("%s %s", infoName, infoType));
             infoNames.add(infoName);
+            fullColList.add(infoName);
         }
 
         csqNames = new ArrayList<>();
@@ -77,6 +85,7 @@ public class SqlConnector {
             cols.add(String.format("%s %s", csqName, csqField.getMySqlType(maxColsSizes.get(colCount))));
             colCount++;
             csqNames.add(csqName);
+            fullColList.add(csqName);
         }
 
         this.formatNames = formatNames;
@@ -85,9 +94,7 @@ public class SqlConnector {
             for (String formatType : formatTypes) {
                 String colName = "format_" + formatName + "_" + formatType;
                 cols.add(String.format("%s %s", colName, "VARCHAR(32)"));
-                if (formatType.toLowerCase().equals("gt")) {
-                    genotypeRows.add(colName);
-                }
+                fullColList.add(colName);
             }
         }
 
@@ -208,11 +215,17 @@ public class SqlConnector {
     }
 
     public void makeIndices(String tableName) throws SQLException {
-        String inner = genotypeRows.stream().collect(Collectors.joining(", "));
-        String sql = String.format("CREATE INDEX format_gt_index on %s (%s);", tableName, inner);
-        PreparedStatement genotypeIndex = connection.prepareStatement(sql);
-        genotypeIndex.execute();
-        genotypeIndex.close();
+        for (int i = 0; i < maxColSizes.size(); i++) {
+            if (maxColSizes.get(i) < 256) {
+                String sql = String.format("CREATE INDEX %s on %s (%s)", fullColList.get(i) + "_index_" + i, tableName, fullColList.get(i));
+                System.out.println(sql);
+                PreparedStatement index = connection.prepareStatement(sql);
+                index.execute();
+                index.close();
+            }
+        }
+
+        connection.commit();
     }
 
     public void insertVariant(Variant variant, String tableName) throws SQLException {

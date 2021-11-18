@@ -49,6 +49,7 @@ public class Importer {
         //insert remaining batch
         if (!determineFormat) {
             SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), batch, tableName, formatNames);
+            System.out.println("Creating Indexes");
             SqlConnector.getInstance().makeIndices(tableName);
         }
 
