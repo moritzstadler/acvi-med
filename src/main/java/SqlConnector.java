@@ -1,4 +1,3 @@
-import com.mysql.cj.jdbc.MysqlDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -29,31 +28,21 @@ public class SqlConnector {
         this.genotypeRows = new ArrayList<>();
     }
 
-    public void connect(String url, String username, String password) {
+    public void connect(String url, String username, String password) throws SQLException {
         System.out.println("Connecting database...");
 
-        MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUser(username);
-        dataSource.setPassword(password);
-        dataSource.setServerName(url);
-        //dataSource.setDatabaseName("mysql");
-
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        connection = DriverManager.getConnection(url, username, password);
     }
 
     public void useDatabase(String name) throws SQLException {
-        PreparedStatement setFormat = connection.prepareStatement("SET innodb_strict_mode = 0");
+        /*PreparedStatement setFormat = connection.prepareStatement("SET innodb_strict_mode = 0");
         setFormat.execute();
 
-        PreparedStatement create = connection.prepareCall("CREATE DATABASE IF NOT EXISTS " + name);
+        /*PreparedStatement create = connection.prepareCall("CREATE DATABASE IF NOT EXISTS " + name);
         create.execute();
 
-        PreparedStatement use = connection.prepareCall("USE " + name);
-        use.execute();
+        PreparedStatement use = connection.prepareStatement("\\c " + name);
+        use.execute();*/
     }
 
     public void dropTable(String name) throws SQLException {
@@ -63,7 +52,7 @@ public class SqlConnector {
 
     public void createTable(String name, List<Info> header, List<Csq> csqArrayIds, String[] formatNames, ArrayList<String> formatTypes, ArrayList<Integer> maxColsSizes) throws SQLException {
         ArrayList<String> cols = new ArrayList<>();
-        cols.add("pid BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
+        cols.add("pid BIGINT");
         cols.add(String.format("chrom %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(0))));
         cols.add("pos BIGINT");
         cols.add(String.format("ref %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(2))));
@@ -102,8 +91,9 @@ public class SqlConnector {
             }
         }
 
+        cols.add("PRIMARY KEY(pid)");
         String inner = cols.stream().collect(Collectors.joining(", "));
-        String sql = String.format("CREATE TABLE %s (%s) ENGINE=InnoDB ROW_FORMAT=DYNAMIC", name, inner);
+        String sql = String.format("CREATE TABLE %s (%s)", name, inner);
 
         System.out.println(sql);
 
@@ -117,10 +107,10 @@ public class SqlConnector {
         if (type.equals("integer")) {
             return "BIGINT";
         } else if (type.equals("float")) {
-            return "DOUBLE";
+            return "DOUBLE PRECISION";
         }
 
-        if (size < 32) {
+        if (size < 256) {
             return String.format("VARCHAR(%s)", size);
         } else {
             return "TEXT";

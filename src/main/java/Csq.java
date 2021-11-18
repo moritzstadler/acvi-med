@@ -23,9 +23,9 @@ public class Csq {
         if (mySqlTypeLevel == 0) {
             return "BIGINT";
         } else if (mySqlTypeLevel == 1) {
-            return "DOUBLE";
+            return "double precision";
         } else {
-            if (size < 32) {
+            if (size < 256) {
                 return String.format("VARCHAR(%s)", size);
             } else {
                 return "TEXT";
