@@ -1,4 +1,7 @@
 
+import sun.security.provider.SHA;
+
+import java.security.MessageDigest;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -221,13 +224,15 @@ public class SqlConnector {
             }
         }
 
-        Random r = new Random();
+        int count = 0;
         for (String col : colsToIndex) {
-            String sql = String.format("CREATE INDEX %s on %s (%s)", tableName + "_" + col + "_index_" + Math.abs(r.nextInt()), tableName, col);
+            String indexName = tableName.substring(0, Math.min(15, tableName.length())) + count + (tableName + col + count).hashCode();
+            String sql = String.format("CREATE INDEX %s on %s (%s)", indexName, tableName, col);
             System.out.println(sql);
             PreparedStatement index = connection.prepareStatement(sql);
             index.execute();
             index.close();
+            count++;
         }
     }
 
