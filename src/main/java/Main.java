@@ -6,15 +6,14 @@ import java.sql.SQLException;
 public class Main {
 
     public static void main(String[] args) throws IOException, SQLException {
-        if (args.length != 5) {
+        /*if (args.length != 5) {
             System.out.println("Missing arguments! Format: <filname> <database> <host> <user> <password>");
-        }
+        }*/
 
         String fileName = args[0];
-        String database = args[1];
-        String host = args[2];
-        String user = args[3];
-        String password = args[4];
+        String host = args[1];
+        String user = args[2];
+        String password = args[3];
 
         String tableName = fileName;
         if (fileName.contains(".") && !fileName.startsWith(".")) {
@@ -23,7 +22,7 @@ public class Main {
         tableName = tableName.replaceAll("[^a-zA-Z0-9_]", "");
 
         SqlConnector.getInstance().connect(host, user, password);
-        SqlConnector.getInstance().useDatabase(database);
+        //SqlConnector.getInstance().useDatabase(database);
         SqlConnector.getInstance().dropTable(tableName);
 
         Importer importer = new Importer();
