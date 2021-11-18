@@ -33,7 +33,7 @@ public class Importer {
             String line;
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
-                if (batch.size() >= 100) {
+                if (batch.size() >= 1000) {
                     SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), batch, tableName, formatNames);
                     batch = new LinkedList<>();
                 }
