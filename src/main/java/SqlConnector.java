@@ -64,12 +64,12 @@ public class SqlConnector {
     public void createTable(String name, List<Info> header, List<Csq> csqArrayIds, String[] formatNames, ArrayList<String> formatTypes, ArrayList<Integer> maxColsSizes) throws SQLException {
         ArrayList<String> cols = new ArrayList<>();
         cols.add("pid BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY");
-        cols.add(String.format("chrom VARCHAR(%s)", maxColsSizes.get(0)));
+        cols.add(String.format("chrom %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(0))));
         cols.add("pos BIGINT");
-        cols.add(String.format("ref VARCHAR(%s)", maxColsSizes.get(2)));
-        cols.add(String.format("alt VARCHAR(%s)", maxColsSizes.get(3)));
-        cols.add(String.format("qual VARCHAR(%s)", maxColsSizes.get(4)));
-        cols.add(String.format("filter VARCHAR(%s)", maxColsSizes.get(5)));
+        cols.add(String.format("ref %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(2))));
+        cols.add(String.format("alt %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(3))));
+        cols.add(String.format("qual %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(4))));
+        cols.add(String.format("filter %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(5))));
 
         int colCount = 6;
 
@@ -95,7 +95,7 @@ public class SqlConnector {
         for (String formatName : formatNames) {
             for (String formatType : formatTypes) {
                 String colName = "format_" + formatName + "_" + formatType;
-                cols.add(String.format("%s %s", colName, "VARCHAR(63)"));
+                cols.add(String.format("%s %s", colName, "VARCHAR(32)"));
                 if (formatType.toLowerCase().equals("gt")) {
                     genotypeRows.add(colName);
                 }
