@@ -223,7 +223,7 @@ public class SqlConnector {
 
         Random r = new Random();
         for (String col : colsToIndex) {
-            String sql = String.format("CREATE INDEX %s on %s (%s)", tableName + "_" + col + "_index_" + Math.abs(r.nextInt()), tableName, fullColList.get(i));
+            String sql = String.format("CREATE INDEX %s on %s (%s)", tableName + "_" + col + "_index_" + Math.abs(r.nextInt()), tableName, col);
             System.out.println(sql);
             PreparedStatement index = connection.prepareStatement(sql);
             index.execute();
