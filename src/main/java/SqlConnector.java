@@ -217,7 +217,7 @@ public class SqlConnector {
     public void makeIndices(String tableName) throws SQLException {
         for (int i = 0; i < maxColSizes.size(); i++) {
             if (maxColSizes.get(i) < 256) {
-                String sql = String.format("CREATE INDEX %s on %s (%s)", fullColList.get(i) + "_index_" + i, tableName, fullColList.get(i));
+                String sql = String.format("CREATE INDEX %s on %s (%s)", tableName + "_" + fullColList.get(i) + "_index_" + i, tableName, fullColList.get(i));
                 System.out.println(sql);
                 PreparedStatement index = connection.prepareStatement(sql);
                 index.execute();
