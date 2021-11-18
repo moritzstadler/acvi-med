@@ -1,9 +1,6 @@
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SqlConnector {
@@ -215,17 +212,23 @@ public class SqlConnector {
     }
 
     public void makeIndices(String tableName) throws SQLException {
+        connection.setAutoCommit(true);
+
+        Set<String> colsToIndex = new HashSet<>();
         for (int i = 0; i < maxColSizes.size(); i++) {
             if (maxColSizes.get(i) < 256) {
-                String sql = String.format("CREATE INDEX %s on %s (%s)", tableName + "_" + fullColList.get(i) + "_index_" + i, tableName, fullColList.get(i));
-                System.out.println(sql);
-                PreparedStatement index = connection.prepareStatement(sql);
-                index.execute();
-                index.close();
+                colsToIndex.add(fullColList.get(i));
             }
         }
 
-        connection.commit();
+        Random r = new Random();
+        for (String col : colsToIndex) {
+            String sql = String.format("CREATE INDEX %s on %s (%s)", tableName + "_" + col + "_index_" + Math.abs(r.nextInt()), tableName, fullColList.get(i));
+            System.out.println(sql);
+            PreparedStatement index = connection.prepareStatement(sql);
+            index.execute();
+            index.close();
+        }
     }
 
     public void insertVariant(Variant variant, String tableName) throws SQLException {
