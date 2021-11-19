@@ -56,9 +56,9 @@ public class Csq {
             return 0;
         }
 
-        if (input.matches("[-]?[0-9]+")) {
+        if (input.matches("[-+]?[0-9]+")) {
             return 0;
-        } else if (input.matches("[-]?([0-9]+[.])?[0-9]+")) {
+        } else if (input.matches("[-+]?([0-9]+[.])?[0-9]+([eE][-+]?[0-9]+)?")) {
             return 1;
         }
         return 2;

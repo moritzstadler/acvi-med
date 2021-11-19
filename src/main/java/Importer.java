@@ -74,7 +74,7 @@ public class Importer {
 
     private void processLine(String line, boolean determineFormat) throws SQLException {
         if (line.startsWith("##")) {
-            processHeader(getAfter(line, "##"));
+            processHeader(getAfter(line, "##"), determineFormat);
         } else if (line.startsWith("#")) {
             processDescriptor(getAfter(line, "#"));
         } else {
@@ -83,9 +83,9 @@ public class Importer {
         }
     }
 
-    private void processHeader(String headerLine) {
+    private void processHeader(String headerLine, boolean determineFormat) {
         if (headerLine.startsWith("INFO")) {
-            processInfoHeader(getAfter(headerLine, "INFO"));
+            processInfoHeader(getAfter(headerLine, "INFO"), determineFormat);
         }
     }
 
@@ -94,7 +94,7 @@ public class Importer {
         formatNames = nameLine.split("\t");
     }
 
-    private void processInfoHeader(String infoHeader) {
+    private void processInfoHeader(String infoHeader, boolean determineFormat) {
         String content = getBetweenMax(infoHeader, "<", ">");
         String[] pairs = content.split(",");
 
@@ -121,7 +121,9 @@ public class Importer {
         }
 
         if (info.getId().equals("CSQ")) {
-            processCSQHeader(info);
+            if (determineFormat) {
+                processCSQHeader(info);
+            }
         } else {
             headerById.put(info.getId(), info);
         }
