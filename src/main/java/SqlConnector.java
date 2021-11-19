@@ -292,14 +292,12 @@ public class SqlConnector {
     private String randomString(int length) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            int r = random.nextInt(26*2+10);
+            int r = random.nextInt(26+10);
             char next;
             if (r < 10) {
                 next = (char) ('0' + r);
-            } else if (r < 36) {
-                next = (char) ('a' + (r - 10));
             } else {
-                next = (char) ('A' + (r - 36));
+                next = (char) ('a' + (r - 10));
             }
             result.append(next);
         }
