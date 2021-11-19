@@ -47,7 +47,7 @@ public class Csq {
         mySqlTypeLevel = Math.max(mySqlTypeLevel, getMySqlTypeLevel(input));
 
         if (mySqlTypeLevel != prevLevel) {
-            System.out.println("Field " + name + " was changed from " + prevLevel + " to " + mySqlTypeLevel + " by '" + input + "'");
+            System.out.println("Field " + name + " - " + this.hashCode() + " was changed from " + prevLevel + " to " + mySqlTypeLevel + " by '" + input + "'");
         }
     }
 

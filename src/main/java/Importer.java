@@ -173,7 +173,6 @@ public class Importer {
             for (int i = 0; i < csqInputs.length; i++) {
                 if (csqByPosition.containsKey(i)) {
                     csqByPosition.get(i).matchType(csqInputs[i]);
-                    System.out.println(csqByPosition.size());
                 }
             }
 
