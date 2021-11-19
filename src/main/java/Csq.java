@@ -1,7 +1,7 @@
 public class Csq {
 
     private String name;
-    private int mySqlTypeLevel;
+    int mySqlTypeLevel;
 
     public Csq(String name) {
         this.name = name;
