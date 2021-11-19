@@ -1,8 +1,7 @@
-
-import sun.security.provider.SHA;
-
-import java.security.MessageDigest;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +23,11 @@ public class SqlConnector {
     private ArrayList<String> formatTypes;
     private ArrayList<Integer> maxColSizes;
     private ArrayList<String> fullColList;
+    private Random random = new Random();
+
+    public SqlConnector() {
+        random = new Random();
+    }
 
     public void connect(String url, String username, String password) throws SQLException {
         System.out.println("Connecting database...");
@@ -226,7 +230,7 @@ public class SqlConnector {
 
         int count = 0;
         for (String col : colsToIndex) {
-            String indexName = tableName.substring(0, Math.min(15, tableName.length())) + count + (tableName + col + count).hashCode();
+            String indexName = tableName.substring(0, Math.min(15, tableName.length())) + count + Math.abs((tableName + col + count).hashCode()) + randomString(15);
             String sql = String.format("CREATE INDEX %s on %s (%s)", indexName, tableName, col);
             System.out.println(sql);
             PreparedStatement index = connection.prepareStatement(sql);
@@ -283,6 +287,23 @@ public class SqlConnector {
 
     private String convertToMySqlString(String value) {
         return "'" + value.replaceAll("\"", "").replaceAll("'", "").replaceAll("\\\\", "") + "'";
+    }
+
+    private String randomString(int length) {
+        String result = "";
+        for (int i = 0; i < length; i++) {
+            int r = random.nextInt(26*2+10);
+            char next;
+            if (r < 10) {
+                next = (char) ('0' + r);
+            } else if (r < 36) {
+                next = (char) ('a' + (r - 10));
+            } else {
+                next = (char) ('A' + ( - 36));
+            }
+            result += next;
+        }
+        return result;
     }
 
 }
