@@ -20,17 +20,17 @@ public class Csq {
     }
 
     public String getMySqlType(int size) {
-        /*if (mySqlTypeLevel == 0) {
+        if (mySqlTypeLevel == 0) {
             return "BIGINT";
         } else if (mySqlTypeLevel == 1) {
             return "double precision";
-        } else {*/
+        } else {
             if (size < 256) {
                 return String.format("VARCHAR(%s)", size);
             } else {
                 return "TEXT";
             }
-        /*}*/
+        }
     }
 
     /**

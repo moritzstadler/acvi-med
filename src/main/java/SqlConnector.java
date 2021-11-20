@@ -115,11 +115,11 @@ public class SqlConnector {
 
     private String convertInfoTypeToMySqlType(String type, int size) {
         type = type.toLowerCase();
-        /*if (type.equals("integer")) {
+        if (type.equals("integer")) {
             return "BIGINT";
         } else if (type.equals("float")) {
             return "DOUBLE PRECISION";
-        }*/
+        }
 
         if (size < 256) {
             return String.format("VARCHAR(%s)", size);
@@ -160,13 +160,11 @@ public class SqlConnector {
 
             int colIndex = 7;
 
-            System.out.println(variant.getInfo());
             for (String infoKey : infoNames) {
                 if (!infoKey.equals("CSQ")) {
                     /*create.setString(colIndex, variant.getInfoMap().get(infoKey));
                     colIndex++;*/
                     String value = variant.getInfoMap().get(infoKey);
-                    System.out.println(infoKey + "=" + value);
                     if (value == null || value.equals("")) {
                         values.add("NULL");
                     } else {

@@ -43,10 +43,6 @@ public class Importer {
                 if (lines % 1000 == 0) {
                     System.out.println("Processing line " + lines);
                 }
-
-                if (determineFormat && lines > 100000) {
-                    break;
-                }
             }
         }
 
