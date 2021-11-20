@@ -104,9 +104,13 @@ public class Variant {
     }
 
     private void makeInfoMap() {
+        System.out.println(info);
+
         HashMap<String, String> result = new HashMap<>();
 
         String[] pairs = info.split(";");
+
+        System.out.println("\n");
 
         for (String pair : pairs) {
             if (!pair.contains("=")) {
@@ -116,11 +120,11 @@ public class Variant {
             String[] split = pair.split("=");
             String key = split[0];
             String value = split[1];
-            if (key.equals("difficultregion")) {
-                System.out.println("f");
-            }
             result.put(key, value);
+
+            System.out.println(key + " " + value);
         }
+        System.out.println("\n\n\n");
         infoMap = result;
     }
 }
