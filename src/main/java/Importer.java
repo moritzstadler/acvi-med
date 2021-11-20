@@ -57,7 +57,10 @@ public class Importer {
 
         if (determineFormat) {
             List<Info> headers = headerById.keySet().stream().map(k -> headerById.get(k)).collect(Collectors.toList());
-            List<Csq> csqs = csqByPosition.keySet().stream().map(k -> csqByPosition.get(k)).collect(Collectors.toList());
+            List<Csq> csqs = new LinkedList<>();
+            for (int i = 0; i < csqByPosition.size(); i++) {
+                csqs.add(csqByPosition.get(i));
+            };
             SqlConnector.getInstance().createTable(tableName, headers, csqs, formatNames, formatTypes, maxColSizes);
         }
 
