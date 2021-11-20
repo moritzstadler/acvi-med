@@ -79,7 +79,7 @@ public class SqlConnector {
             String infoType = convertInfoTypeToMySqlType(info.getType(), maxColsSizes.get(colCount));
             colCount++;
             cols.add(String.format("%s %s", infoName, infoType));
-            infoNames.add(infoName);
+            infoNames.add(info.getId());
             fullColList.add(infoName);
         }
 
