@@ -1,11 +1,11 @@
 public class Csq {
 
     private String name;
-    int mySqlTypeLevel;
+    private int sqlTypeLevel;
 
     public Csq(String name) {
         this.name = name;
-        mySqlTypeLevel = 0;
+        sqlTypeLevel = 0;
     }
 
     public Csq() {
@@ -19,18 +19,8 @@ public class Csq {
         this.name = name;
     }
 
-    public String getMySqlType(int size) {
-        if (mySqlTypeLevel == 0) {
-            return "BIGINT";
-        } else if (mySqlTypeLevel == 1) {
-            return "double precision";
-        } else {
-            if (size < 256) {
-                return String.format("VARCHAR(%s)", size);
-            } else {
-                return "TEXT";
-            }
-        }
+    public int getSqlTypeLevel() {
+        return sqlTypeLevel;
     }
 
     /**
@@ -43,25 +33,12 @@ public class Csq {
      * @param input the value in the variant
      */
     public void matchType(String input) {
-        int prevLevel = mySqlTypeLevel;
-        mySqlTypeLevel = Math.max(mySqlTypeLevel, getMySqlTypeLevel(input));
+        int prevLevel = sqlTypeLevel;
+        sqlTypeLevel = Math.max(sqlTypeLevel, SqlConnector.computeSqlTypeLevel(input));
 
-        if (mySqlTypeLevel != prevLevel) {
-            System.out.println("Field " + name + " - " + this.hashCode() + " was changed from " + prevLevel + " to " + mySqlTypeLevel + " by '" + input + "'");
+        if (sqlTypeLevel != prevLevel) {
+            System.out.println("CSQ Field " + name + " was changed from " + prevLevel + " to " + sqlTypeLevel + " by '" + input + "'");
         }
-    }
-
-    private int getMySqlTypeLevel(String input) {
-        if (input == null || input.equals("")) {
-            return 0;
-        }
-
-        if (input.matches("[-+]?[0-9]+")) {
-            return 0;
-        } else if (input.matches("[-+]?([0-9]+[.])?[0-9]+([eE][-+]?[0-9]+)?")) {
-            return 1;
-        }
-        return 2;
     }
 
 }

@@ -56,12 +56,12 @@ public class SqlConnector {
 
         ArrayList<String> cols = new ArrayList<>();
         cols.add("pid BIGINT");
-        cols.add(String.format("chrom %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(0))));
+        cols.add(String.format("chrom %s", getSqlTypeString(maxColsSizes.get(0))));
         cols.add("pos BIGINT");
-        cols.add(String.format("ref %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(2))));
-        cols.add(String.format("alt %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(3))));
-        cols.add(String.format("qual %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(4))));
-        cols.add(String.format("filter %s", convertInfoTypeToMySqlType("string", maxColsSizes.get(5))));
+        cols.add(String.format("ref %s", getSqlTypeString(maxColsSizes.get(2))));
+        cols.add(String.format("alt %s", getSqlTypeString(maxColsSizes.get(3))));
+        cols.add(String.format("qual %s", getSqlTypeString(maxColsSizes.get(4))));
+        cols.add(String.format("filter %s", getSqlTypeString(maxColsSizes.get(5))));
 
         fullColList.add("chrom");
         fullColList.add("pos");
@@ -75,7 +75,7 @@ public class SqlConnector {
         infoNames = new ArrayList<>();
         for (Info info : header) {
             String infoName = "info_" + info.getId().replaceAll("[^a-zA-Z0-9_]", "");
-            String infoType = convertInfoTypeToMySqlType(info.getType(), maxColsSizes.get(colCount));
+            String infoType = getSqlType(info.getSqlTypeLevel(), maxColsSizes.get(colCount));
             colCount++;
             cols.add(String.format("%s %s", infoName, infoType));
             infoNames.add(info.getId());
@@ -85,7 +85,7 @@ public class SqlConnector {
         csqNames = new ArrayList<>();
         for (Csq csqField : csqFields) {
             String csqName = "info_csq_" + csqField.getName().replaceAll("[^a-zA-Z0-9_]", "");
-            cols.add(String.format("%s %s", csqName, csqField.getMySqlType(maxColsSizes.get(colCount))));
+            cols.add(String.format("%s %s", csqName, getSqlType(csqField.getSqlTypeLevel(), maxColsSizes.get(colCount))));
             colCount++;
             csqNames.add(csqName);
             fullColList.add(csqName);
@@ -109,21 +109,6 @@ public class SqlConnector {
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
         create.close();
-    }
-
-    private String convertInfoTypeToMySqlType(String type, int size) {
-        type = type.toLowerCase();
-        if (type.equals("integer")) {
-            return "BIGINT";
-        } else if (type.equals("float")) {
-            return "DOUBLE PRECISION";
-        }
-
-        if (size < 256) {
-            return String.format("VARCHAR(%s)", size);
-        } else {
-            return "TEXT";
-        }
     }
 
     public void insertVariantBatch(final int pidStart, List<Variant> variants, String tableName, String[] formatNames) throws SQLException {
@@ -300,6 +285,37 @@ public class SqlConnector {
             result.append(next);
         }
         return result.toString();
+    }
+
+    public String getSqlType(int level, int size) {
+        if (level == 0) {
+            return "BIGINT";
+        } else if (level == 1) {
+            return "double precision";
+        } else {
+            if (size < 256) {
+                return String.format("VARCHAR(%s)", size);
+            } else {
+                return "TEXT";
+            }
+        }
+    }
+
+    private String getSqlTypeString(int length) {
+        return getSqlType(2, length);
+    }
+
+    public static int computeSqlTypeLevel(String input) {
+        if (input == null || input.equals("")) {
+            return 0;
+        }
+
+        if (input.matches("[-+]?[0-9]+")) {
+            return 0;
+        } else if (input.matches("[-+]?([0-9]+[.])?[0-9]+([eE][-+]?[0-9]+)?")) {
+            return 1;
+        }
+        return 2;
     }
 
 }
