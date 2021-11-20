@@ -168,6 +168,7 @@ public class Importer {
 
         if (determineFormat) {
             for (String headerId : variant.getInfoMap().keySet()) {
+                System.out.println(headerId);
                 headerById.get(headerId).matchType(variant.getInfoMap().get(headerId));
             }
 
