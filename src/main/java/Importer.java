@@ -167,6 +167,10 @@ public class Importer {
         }
 
         if (determineFormat) {
+            for (String headerId : variant.getInfoMap().keySet()) {
+                headerById.get(headerId).matchType(variant.getInfoMap().get(headerId));
+            }
+
             String[] csqInputs = variant.getInfoMap().get("CSQ").split("\\|");
             for (int i = 0; i < csqInputs.length; i++) {
                  csqs[i].matchType(csqInputs[i]);
