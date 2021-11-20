@@ -104,8 +104,6 @@ public class Variant {
     }
 
     private void makeInfoMap() {
-        System.out.println(info);
-
         HashMap<String, String> result = new HashMap<>();
 
         String[] pairs = info.split(";");
