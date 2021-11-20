@@ -115,11 +115,11 @@ public class SqlConnector {
 
     private String convertInfoTypeToMySqlType(String type, int size) {
         type = type.toLowerCase();
-        if (type.equals("integer")) {
+        /*if (type.equals("integer")) {
             return "BIGINT";
         } else if (type.equals("float")) {
             return "DOUBLE PRECISION";
-        }
+        }*/
 
         if (size < 256) {
             return String.format("VARCHAR(%s)", size);
