@@ -168,8 +168,9 @@ public class Importer {
 
         if (determineFormat) {
             for (String headerId : variant.getInfoMap().keySet()) {
-                System.out.println(headerId);
-                headerById.get(headerId).matchType(variant.getInfoMap().get(headerId));
+                if (!headerId.equals("CSQ")) {
+                    headerById.get(headerId).matchType(variant.getInfoMap().get(headerId));
+                }
             }
 
             String[] csqInputs = variant.getInfoMap().get("CSQ").split("\\|");
