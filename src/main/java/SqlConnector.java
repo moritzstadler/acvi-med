@@ -161,7 +161,6 @@ public class SqlConnector {
             int colIndex = 7;
 
             for (String infoKey : infoNames) {
-                System.out.println(infoKey);
                 if (!infoKey.equals("CSQ")) {
                     /*create.setString(colIndex, variant.getInfoMap().get(infoKey));
                     colIndex++;*/

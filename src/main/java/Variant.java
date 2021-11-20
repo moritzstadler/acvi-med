@@ -116,6 +116,9 @@ public class Variant {
             String[] split = pair.split("=");
             String key = split[0];
             String value = split[1];
+            if (key.equals("difficultregion")) {
+                System.out.println("f");
+            }
             result.put(key, value);
         }
         infoMap = result;
