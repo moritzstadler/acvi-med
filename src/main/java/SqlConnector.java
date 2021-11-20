@@ -165,6 +165,7 @@ public class SqlConnector {
                     /*create.setString(colIndex, variant.getInfoMap().get(infoKey));
                     colIndex++;*/
                     String value = variant.getInfoMap().get(infoKey);
+                    System.out.println(infoKey + "=" + value);
                     if (value == null || value.equals("")) {
                         values.add("NULL");
                     } else {

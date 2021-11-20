@@ -110,8 +110,6 @@ public class Variant {
 
         String[] pairs = info.split(";");
 
-        System.out.println("\n");
-
         for (String pair : pairs) {
             if (!pair.contains("=")) {
                 continue;
@@ -121,10 +119,7 @@ public class Variant {
             String key = split[0];
             String value = split[1];
             result.put(key, value);
-
-            System.out.println(key + " " + value);
         }
-        System.out.println("\n\n\n");
         infoMap = result;
     }
 }
