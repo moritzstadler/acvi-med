@@ -19,11 +19,10 @@ public class SqlConnector {
     private Connection connection;
     private ArrayList<String> csqNames;
     private ArrayList<String> infoNames;
-    private String[] formatNames;
     private ArrayList<String> formatTypes;
     private ArrayList<Integer> maxColSizes;
     private ArrayList<String> fullColList;
-    private Random random = new Random();
+    private Random random;
 
     public SqlConnector() {
         random = new Random();
@@ -51,7 +50,7 @@ public class SqlConnector {
         drop.execute();
     }
 
-    public void createTable(String name, List<Info> header, List<Csq> csqArrayIds, String[] formatNames, ArrayList<String> formatTypes, ArrayList<Integer> maxColsSizes) throws SQLException {
+    public void createTable(String name, List<Info> header, Csq[] csqFields, String[] formatNames, ArrayList<String> formatTypes, ArrayList<Integer> maxColsSizes) throws SQLException {
         fullColList = new ArrayList<>();
         this.maxColSizes = maxColsSizes;
 
@@ -84,7 +83,7 @@ public class SqlConnector {
         }
 
         csqNames = new ArrayList<>();
-        for (Csq csqField : csqArrayIds) {
+        for (Csq csqField : csqFields) {
             String csqName = "info_csq_" + csqField.getName().replaceAll("[^a-zA-Z0-9_]", "");
             cols.add(String.format("%s %s", csqName, csqField.getMySqlType(maxColsSizes.get(colCount))));
             colCount++;
@@ -92,7 +91,6 @@ public class SqlConnector {
             fullColList.add(csqName);
         }
 
-        this.formatNames = formatNames;
         this.formatTypes = formatTypes;
         for (String formatName : formatNames) {
             for (String formatType : formatTypes) {

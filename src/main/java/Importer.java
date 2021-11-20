@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class Importer {
 
     HashMap<String, Info> headerById;
-    HashMap<Integer, Csq> csqByPosition;
+    Csq[] csqs;
     ArrayList<String> formatTypes;
     Set<String> formatTypesSet;
     String tableName;
@@ -20,7 +20,6 @@ public class Importer {
 
     public Importer() {
         headerById = new HashMap<>();
-        csqByPosition = new HashMap<>();
         formatTypes = new ArrayList<>();
         formatTypesSet = new HashSet<>();
         batch = new LinkedList<>();
@@ -57,10 +56,6 @@ public class Importer {
 
         if (determineFormat) {
             List<Info> headers = headerById.keySet().stream().map(k -> headerById.get(k)).collect(Collectors.toList());
-            List<Csq> csqs = new LinkedList<>();
-            for (int i = 0; i < csqByPosition.size(); i++) {
-                csqs.add(csqByPosition.get(i));
-            };
             SqlConnector.getInstance().createTable(tableName, headers, csqs, formatNames, formatTypes, maxColSizes);
         }
 
@@ -136,9 +131,9 @@ public class Importer {
         String descriptionString = getBetweenMax(csq.getDescription(), "\"", "\"");
         String arrayDescription = getAfter(descriptionString, "Format: ");
         String[] csqArrayIds = arrayDescription.split("\\|");
-        csqByPosition = new HashMap<>();
+        csqs = new Csq[csqArrayIds.length];
         for (int i = 0; i < csqArrayIds.length; i++) {
-            csqByPosition.put(i, new Csq(csqArrayIds[i]));
+            csqs[i] = new Csq(csqArrayIds[i]);
         }
     }
 
@@ -174,9 +169,7 @@ public class Importer {
         if (determineFormat) {
             String[] csqInputs = variant.getInfoMap().get("CSQ").split("\\|");
             for (int i = 0; i < csqInputs.length; i++) {
-                if (csqByPosition.containsKey(i)) {
-                    csqByPosition.get(i).matchType(csqInputs[i]);
-                }
+                 csqs[i].matchType(csqInputs[i]);
             }
 
             String[] formatSplit = variant.getFormat().split(":", -1);
