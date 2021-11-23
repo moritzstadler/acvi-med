@@ -120,7 +120,6 @@ public class Importer {
 
         if (info.getId().equals("CSQ")) {
             if (determineFormat) {
-                System.out.println("processing csq header");
                 processCSQHeader(info);
             }
         } else {
@@ -213,8 +212,10 @@ public class Importer {
             }
         }
 
-        String[] csqCols = variant.getInfoMap().get("CSQ").split("\\|", -1);
-        cols.addAll(Arrays.asList(csqCols));
+        if (variant.getInfoMap().containsKey("CSQ")) {
+            String[] csqCols = variant.getInfoMap().get("CSQ").split("\\|", -1);
+            cols.addAll(Arrays.asList(csqCols));
+        }
 
         if (maxColSizes == null) {
             maxColSizes = new ArrayList<>();
