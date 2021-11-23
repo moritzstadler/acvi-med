@@ -173,9 +173,11 @@ public class Importer {
                 }
             }
 
-            String[] csqInputs = variant.getInfoMap().get("CSQ").split("\\|");
-            for (int i = 0; i < csqInputs.length; i++) {
-                 csqs[i].matchType(csqInputs[i]);
+            if (variant.getInfoMap().containsKey("CSQ")) {
+                String[] csqInputs = variant.getInfoMap().get("CSQ").split("\\|");
+                for (int i = 0; i < csqInputs.length; i++) {
+                    csqs[i].matchType(csqInputs[i]);
+                }
             }
 
             String[] formatSplit = variant.getFormat().split(":", -1);
