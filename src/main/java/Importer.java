@@ -120,6 +120,7 @@ public class Importer {
 
         if (info.getId().equals("CSQ")) {
             if (determineFormat) {
+                System.out.println("processing csq header");
                 processCSQHeader(info);
             }
         } else {
