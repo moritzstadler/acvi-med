@@ -156,18 +156,24 @@ public class SqlConnector {
                 }
             }
 
-            String[] csq = variant.getInfoMap().get("CSQ").split("\\|", -1);
-            for (int i = 0; i < csq.length; i++) {
-                String value = csq[i];
-                if (value.equals("")) {
-                    value = null;
+            if (variant.getInfoMap().containsKey("CSQ")) {
+                String[] csq = variant.getInfoMap().get("CSQ").split("\\|", -1);
+                for (int i = 0; i < csq.length; i++) {
+                    String value = csq[i];
+                    if (value.equals("")) {
+                        value = null;
+                    }
+                    /*create.setString(colIndex, value);
+                    colIndex++;*/
+                    if (value == null) {
+                        values.add("NULL");
+                    } else {
+                        values.add(convertToMySqlString(value));
+                    }
                 }
-                /*create.setString(colIndex, value);
-                colIndex++;*/
-                if (value == null) {
+            } else {
+                for (int i = 0; i < csqNames.size(); i++) {
                     values.add("NULL");
-                } else {
-                    values.add(convertToMySqlString(value));
                 }
             }
 
