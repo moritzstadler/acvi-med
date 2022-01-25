@@ -96,7 +96,7 @@ public class SqlConnector {
         for (String formatName : formatNames) {
             for (String formatType : formatTypes) {
                 String colName = "format_" + formatName + "_" + formatType;
-                cols.add(String.format("%s %s", colName, "VARCHAR(32)"));
+                cols.add(String.format("%s %s", colName, "VARCHAR(255)"));
                 fullColList.add(colName);
             }
         }
