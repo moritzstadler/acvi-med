@@ -122,6 +122,10 @@ public class Variant {
     }
 
     public String[] getCSQs() {
+        if (!getInfoMap().containsKey("CSQ")) {
+            return new String[] {""};
+        }
+
         String[] result = getInfoMap().get("CSQ").split(",");
         if (result.length == 0) {
             return new String[] {""};
