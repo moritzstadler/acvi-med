@@ -34,8 +34,9 @@ public class Importer {
             String line;
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
-                if (batch.size() >= 50) {
-                    SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), vid, batch, tableName, formatNames);
+                int batchSize = batch.stream().map(b -> b.getCSQs().length).reduce(0, Integer::sum);
+                if (batchSize >= 2) {
+                    SqlConnector.getInstance().insertVariantBatch(pid - batchSize, vid - batch.size(), batch, tableName, formatNames);
                     batch = new LinkedList<>();
                 }
 
@@ -49,7 +50,8 @@ public class Importer {
 
         //insert remaining batch
         if (!determineFormat) {
-            SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), vid, batch, tableName, formatNames);
+            int batchSize = batch.stream().map(b -> b.getCSQs().length).reduce(0, Integer::sum);
+            SqlConnector.getInstance().insertVariantBatch(pid - batchSize, vid - batch.size(), batch, tableName, formatNames);
             System.out.println("Creating Indexes");
             SqlConnector.getInstance().makeIndices(tableName);
         }
