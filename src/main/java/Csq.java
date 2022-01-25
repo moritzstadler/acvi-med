@@ -37,7 +37,7 @@ public class Csq {
         sqlTypeLevel = Math.max(sqlTypeLevel, SqlConnector.computeSqlTypeLevel(input));
 
         if (sqlTypeLevel != prevLevel) {
-            System.out.println("CSQ Field " + name + " was changed from " + prevLevel + " to " + sqlTypeLevel + " by '" + input + "'");
+            System.out.println("CSQ Field " + name + " was changed from " + SqlConnector.getSqlType(prevLevel, Integer.MAX_VALUE) + " to " + SqlConnector.getSqlType(sqlTypeLevel, Integer.MAX_VALUE) + " by '" + input + "'");
         }
     }
 
