@@ -96,7 +96,7 @@ public class SqlConnector {
         for (String formatName : formatNames) {
             for (String formatType : formatTypes) {
                 String colName = "format_" + formatName + "_" + formatType;
-                cols.add(String.format("%s %s", colName, "VARCHAR(255)"));
+                cols.add(String.format("%s %s", colName, "TEXT"));
                 fullColList.add(colName);
             }
         }
@@ -303,7 +303,7 @@ public class SqlConnector {
         return result.toString();
     }
 
-    public String getSqlType(int level, int size) {
+    public static String getSqlType(int level, int size) {
         if (level == 0) {
             return "BIGINT";
         } else if (level == 1) {
