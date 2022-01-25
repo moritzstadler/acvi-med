@@ -14,6 +14,7 @@ public class Importer {
     String tableName;
     String[] formatNames;
     int pid;
+    int vid;
     ArrayList<Integer> maxColSizes;
 
     List<Variant> batch;
@@ -28,12 +29,13 @@ public class Importer {
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
         int lines = 0;
         pid = 1;
+        vid = 1;
         try (BufferedReader br = new BufferedReader(new FileReader(name))) {
             String line;
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
-                if (batch.size() >= 200) {
-                    SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), batch, tableName, formatNames);
+                if (batch.size() >= 50) {
+                    SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), vid, batch, tableName, formatNames);
                     batch = new LinkedList<>();
                 }
 
@@ -47,7 +49,7 @@ public class Importer {
 
         //insert remaining batch
         if (!determineFormat) {
-            SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), batch, tableName, formatNames);
+            SqlConnector.getInstance().insertVariantBatch(pid - batch.size(), vid, batch, tableName, formatNames);
             System.out.println("Creating Indexes");
             SqlConnector.getInstance().makeIndices(tableName);
         }
@@ -173,10 +175,12 @@ public class Importer {
                 }
             }
 
-            if (variant.getInfoMap().containsKey("CSQ")) {
-                String[] csqInputs = variant.getInfoMap().get("CSQ").split("\\|");
-                for (int i = 0; i < csqInputs.length; i++) {
-                    csqs[i].matchType(csqInputs[i]);
+            for (String csq : variant.getCSQs()) {
+                if (!csq.equals("")) {
+                    String[] csqInputs = csq.split("\\|");
+                    for (int i = 0; i < csqInputs.length; i++) {
+                        csqs[i].matchType(csqInputs[i]);
+                    }
                 }
             }
 
@@ -192,40 +196,43 @@ public class Importer {
         } else {
             //SqlConnector.getInstance().insertVariant(variant, tableName);
             batch.add(variant);
-            pid++;
+            pid += variant.getCSQs().length;
+            vid++;
         }
     }
 
     private void determineMaxColSize(Variant variant) {
-        ArrayList<String> cols = new ArrayList<>();
+        for (String csq : variant.getCSQs()) {
+            ArrayList<String> cols = new ArrayList<>();
 
-        cols.add(variant.getChrom());
-        cols.add(variant.getPos());
-        cols.add(variant.getRef());
-        cols.add(variant.getAlt());
-        cols.add(variant.getQual());
-        cols.add(variant.getFilter());
+            cols.add(variant.getChrom());
+            cols.add(variant.getPos());
+            cols.add(variant.getRef());
+            cols.add(variant.getAlt());
+            cols.add(variant.getQual());
+            cols.add(variant.getFilter());
 
-        for (String key : headerById.keySet()) {
-            if (!key.equals("CSQ")) {
-                cols.add(variant.getInfoMap().getOrDefault(key, ""));
+            for (String key : headerById.keySet()) {
+                if (!key.equals("CSQ")) {
+                    cols.add(variant.getInfoMap().getOrDefault(key, ""));
+                }
             }
-        }
 
-        if (variant.getInfoMap().containsKey("CSQ")) {
-            String[] csqCols = variant.getInfoMap().get("CSQ").split("\\|", -1);
-            cols.addAll(Arrays.asList(csqCols));
-        }
+            if (!csq.equals("")) {
+                String[] csqCols = csq.split("\\|", -1);
+                cols.addAll(Arrays.asList(csqCols));
+            }
 
-        if (maxColSizes == null) {
-            maxColSizes = new ArrayList<>();
+            if (maxColSizes == null) {
+                maxColSizes = new ArrayList<>();
+                for (int i = 0; i < cols.size(); i++) {
+                    maxColSizes.add(0);
+                }
+            }
+
             for (int i = 0; i < cols.size(); i++) {
-                maxColSizes.add(0);
+                maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1));
             }
-        }
-
-        for (int i = 0; i < cols.size(); i++) {
-            maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1));
         }
     }
 

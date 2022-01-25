@@ -56,6 +56,7 @@ public class SqlConnector {
 
         ArrayList<String> cols = new ArrayList<>();
         cols.add("pid BIGINT");
+        cols.add("vid BIGINT");
         cols.add(String.format("chrom %s", getSqlTypeString(maxColsSizes.get(0))));
         cols.add("pos BIGINT");
         cols.add(String.format("ref %s", getSqlTypeString(maxColsSizes.get(2))));
@@ -111,91 +112,23 @@ public class SqlConnector {
         create.close();
     }
 
-    public void insertVariantBatch(final int pidStart, List<Variant> variants, String tableName, String[] formatNames) throws SQLException {
+    public void insertVariantBatch(final int pidStart, final int vidStart, List<Variant> variants, String tableName, String[] formatNames) throws SQLException {
         if (variants.size() == 0) {
             return;
         }
 
         int currentPid = pidStart;
+        int currentVid = vidStart;
 
         String sql = String.format("INSERT INTO %s VALUES ", tableName);
         connection.setAutoCommit(false);
         ArrayList<String> individualSqls = new ArrayList<>();
 
         for (Variant variant : variants) {
-            ArrayList<String> values = new ArrayList<>();
-
-            values.add(currentPid + ""); //pid
-            currentPid++;
-            values.add(convertToMySqlString(variant.getChrom()));
-            values.add(convertToMySqlString(variant.getPos()));
-            values.add(convertToMySqlString(variant.getRef()));
-            values.add(convertToMySqlString(variant.getAlt()));
-            values.add(convertToMySqlString(variant.getQual()));
-            values.add(convertToMySqlString(variant.getFilter()));
-
-            /*create.setString(1, variant.getChrom());
-            create.setString(2, variant.getPos());
-            create.setString(3, variant.getRef());
-            create.setString(4, variant.getAlt());
-            create.setString(5, variant.getQual());
-            create.setString(6, variant.getFilter());*/
-
-            int colIndex = 7;
-
-            for (String infoKey : infoNames) {
-                if (!infoKey.equals("CSQ")) {
-                    /*create.setString(colIndex, variant.getInfoMap().get(infoKey));
-                    colIndex++;*/
-                    String value = variant.getInfoMap().get(infoKey);
-                    if (value == null || value.equals("")) {
-                        values.add("NULL");
-                    } else {
-                        values.add(convertToMySqlString(value));
-                    }
-                }
-            }
-
-            if (variant.getInfoMap().containsKey("CSQ")) {
-                String[] csq = variant.getInfoMap().get("CSQ").split("\\|", -1);
-                for (int i = 0; i < csq.length; i++) {
-                    String value = csq[i];
-                    if (value.equals("")) {
-                        value = null;
-                    }
-                    /*create.setString(colIndex, value);
-                    colIndex++;*/
-                    if (value == null) {
-                        values.add("NULL");
-                    } else {
-                        values.add(convertToMySqlString(value));
-                    }
-                }
-            } else {
-                for (int i = 0; i < csqNames.size(); i++) {
-                    values.add("NULL");
-                }
-            }
-
-            String[] individualFormatTypes = variant.getFormat().split(":", -1);
-            HashMap<String, String> formatKeyValueIndividual = new HashMap<>();
-            for (String format : variant.getFormats()) {
-                String[] formatSplit = format.split(":", -1);
-                for (int i = 0; i < formatSplit.length; i++) {
-                    formatKeyValueIndividual.put(individualFormatTypes[i], formatSplit[i]);
-                }
-
-                for (String formatType : formatTypes) {
-                    if (formatKeyValueIndividual.containsKey(formatType)) {
-                        values.add(convertToMySqlString(formatKeyValueIndividual.get(formatType)));
-                    } else {
-                        values.add("NULL");
-                    }
-                }
-            }
-
-            String individualSql = "(" + values.stream().collect(Collectors.joining(", ")) + ")";
-            individualSqls.add(individualSql);
+            ArrayList<String> singleVariantSqls = getSingleVariantSqls(variant, currentPid, currentVid);
+            individualSqls.addAll(singleVariantSqls);
+            currentPid += singleVariantSqls.size();
+            currentVid++;
         }
 
         sql += individualSqls.stream().collect(Collectors.joining(", "));
@@ -205,6 +138,83 @@ public class SqlConnector {
         create.close();
 
         connection.commit();
+    }
+
+    private ArrayList<String> getSingleVariantSqls(Variant variant, int pid, int vid) {
+        ArrayList<String> result = new ArrayList<>();
+        for (String csq : variant.getCSQs()) {
+            result.add(getSingleVariantSql(variant, pid, vid, csq));
+            pid++;
+        }
+        return result;
+    }
+
+    private String getSingleVariantSql(Variant variant, int pid, int vid, String csqString) {
+        ArrayList<String> values = new ArrayList<>();
+
+        values.add(pid + ""); //primary id
+        values.add(vid + ""); //variant id
+        values.add(convertToMySqlString(variant.getChrom()));
+        values.add(convertToMySqlString(variant.getPos()));
+        values.add(convertToMySqlString(variant.getRef()));
+        values.add(convertToMySqlString(variant.getAlt()));
+        values.add(convertToMySqlString(variant.getQual()));
+        values.add(convertToMySqlString(variant.getFilter()));
+
+        int colIndex = 7;
+
+        for (String infoKey : infoNames) {
+            if (!infoKey.equals("CSQ")) {
+                    /*create.setString(colIndex, variant.getInfoMap().get(infoKey));
+                    colIndex++;*/
+                String value = variant.getInfoMap().get(infoKey);
+                if (value == null || value.equals("")) {
+                    values.add("NULL");
+                } else {
+                    values.add(convertToMySqlString(value));
+                }
+            }
+        }
+
+        if (!csqString.equals("")) {
+            String[] csq = csqString.split("\\|", -1);
+            for (int i = 0; i < csq.length; i++) {
+                String value = csq[i];
+                if (value.equals("")) {
+                    value = null;
+                }
+                    /*create.setString(colIndex, value);
+                    colIndex++;*/
+                if (value == null) {
+                    values.add("NULL");
+                } else {
+                    values.add(convertToMySqlString(value));
+                }
+            }
+        } else {
+            for (int i = 0; i < csqNames.size(); i++) {
+                values.add("NULL");
+            }
+        }
+
+        String[] individualFormatTypes = variant.getFormat().split(":", -1);
+        HashMap<String, String> formatKeyValueIndividual = new HashMap<>();
+        for (String format : variant.getFormats()) {
+            String[] formatSplit = format.split(":", -1);
+            for (int i = 0; i < formatSplit.length; i++) {
+                formatKeyValueIndividual.put(individualFormatTypes[i], formatSplit[i]);
+            }
+
+            for (String formatType : formatTypes) {
+                if (formatKeyValueIndividual.containsKey(formatType)) {
+                    values.add(convertToMySqlString(formatKeyValueIndividual.get(formatType)));
+                } else {
+                    values.add("NULL");
+                }
+            }
+        }
+
+        return "(" + values.stream().collect(Collectors.joining(", ")) + ")";
     }
 
     public void makeIndices(String tableName) throws SQLException {
@@ -229,7 +239,7 @@ public class SqlConnector {
         }
     }
 
-    public void insertVariant(Variant variant, String tableName) throws SQLException {
+    /*public void insertVariant(Variant variant, String tableName) throws SQLException {
         List<String> columnsList = new LinkedList<>();
         List<String> valuesList = new LinkedList<>();
 
@@ -272,7 +282,7 @@ public class SqlConnector {
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
         create.close();
-    }
+    }*/
 
     private String convertToMySqlString(String value) {
         return "'" + value.replaceAll("\"", "").replaceAll("'", "").replaceAll("\\\\", "") + "'";

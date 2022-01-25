@@ -120,4 +120,12 @@ public class Variant {
         }
         infoMap = result;
     }
+
+    public String[] getCSQs() {
+        String[] result = getInfoMap().get("CSQ").split(",");
+        if (result.length == 0) {
+            return new String[] {""};
+        }
+        return result;
+    }
 }
