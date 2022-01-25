@@ -94,6 +94,9 @@ public class Importer {
     private void processDescriptor(String descriptorLine) {
         String nameLine = getAfter(descriptorLine, "FORMAT\t");
         formatNames = nameLine.split("\t");
+        for (int i = 0; i < formatNames.length; i++) {
+            formatNames[i] = formatNames[i].replaceAll("-", "_").replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
+        }
     }
 
     private void processInfoHeader(String infoHeader, boolean determineFormat) {
