@@ -16,10 +16,13 @@ public class Main {
         String password = args[3];
 
         String tableName = fileName;
-        if (fileName.contains(".") && !fileName.startsWith(".")) {
-            tableName = fileName.split("\\.")[0];
+        if (fileName.contains(".")) {
+            String[] fileNameSplit = fileName.split("\\.");
+            if (fileNameSplit.length >= 1) {
+                tableName = fileNameSplit[fileNameSplit.length - 2];
+            }
         }
-        tableName = tableName.replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
+        tableName = tableName.replaceAll("-", "_").replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
 
         SqlConnector.getInstance().connect(host, user, password);
         //SqlConnector.getInstance().useDatabase(database);
