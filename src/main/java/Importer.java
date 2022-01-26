@@ -35,7 +35,7 @@ public class Importer {
             while ((line = br.readLine()) != null) {
                 processLine(line, determineFormat);
                 int batchSize = batch.stream().map(b -> b.getCSQs().length).reduce(0, Integer::sum);
-                if (batchSize >= 2) {
+                if (batchSize >= 50) {
                     SqlConnector.getInstance().insertVariantBatch(pid - batchSize, vid - batch.size(), batch, tableName, formatNames);
                     batch = new LinkedList<>();
                 }
