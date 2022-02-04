@@ -244,6 +244,7 @@ public class Importer {
         for (String csq : variant.getCSQs()) {
             if (!csq.equals("")) {
                 String[] csqInputs = csq.split("\\|");
+                boolean rightVariant = false;
                 for (int position : positionOfSpecialCSQFields) {
                     String inputToMatch = csqInputs[position];
                     if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
@@ -256,10 +257,14 @@ public class Importer {
                         }
 
                         csqInputs[position] = singleAmpersandValue;
-                        rightVariantCount++;
+
+                        rightVariant = true;
                     } else {
                         csqInputs[position] = "";
                     }
+                }
+                if (rightVariant) {
+                    rightVariantCount++;
                 }
                 alteredCsqs.add(Arrays.stream(csqInputs).collect(Collectors.joining("|")));
             }
