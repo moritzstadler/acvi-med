@@ -249,6 +249,7 @@ public class Importer {
                     if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
                         String[] ampersandSplit = inputToMatch.split("&");
 
+                        System.out.println(inputToMatch);
                         String singleAmpersandValue = ampersandSplit[rightVariantCount];
                         if (singleAmpersandValue.equals(".")) {
                             singleAmpersandValue = "";
