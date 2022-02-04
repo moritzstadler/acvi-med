@@ -155,6 +155,9 @@ public class Importer {
                 positionOfSpecialCSQFields.add(i);
             }
         }
+        System.out.println("pos biotype" + positionOfBiotypeInCSQ);
+        System.out.println("pos cosequence " + positionOfConsequenceInCSQ);
+        System.out.println("found specialfields " + positionOfSpecialCSQFields.size());
     }
 
     private void processVariant(String variantLine, boolean determineFormat) throws SQLException {
