@@ -250,12 +250,19 @@ public class Importer {
                     if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
                         String[] ampersandSplit = inputToMatch.split("&");
 
-                        String singleAmpersandValue = ampersandSplit[rightVariantCount];
-                        if (singleAmpersandValue.equals(".")) {
-                            singleAmpersandValue = "";
-                        }
 
-                        csqInputs[position] = singleAmpersandValue;
+
+                        String singleAmpersandValue = "";
+                        if (rightVariantCount < ampersandSplit.length) {
+                            singleAmpersandValue = ampersandSplit[rightVariantCount];
+                            if (singleAmpersandValue.equals(".")) {
+                                singleAmpersandValue = "";
+                            }
+
+                            csqInputs[position] = singleAmpersandValue;
+                        } else {
+                            System.out.println(variant.getChrom() + " " + variant.getPos() + " " + variant.getInfo());
+                        }
 
                         rightVariant = true;
                     } else {
