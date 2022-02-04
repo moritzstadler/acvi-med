@@ -198,7 +198,7 @@ public class Importer {
 
             for (String csq : variant.getCSQs()) {
                 if (!csq.equals("")) {
-                    String[] csqInputs = csq.split("\\|");
+                    String[] csqInputs = csq.split("\\|", -1);
                     for (int i = 0; i < csqInputs.length; i++) {
                         String inputToMatch = csqInputs[i];
 
@@ -243,7 +243,7 @@ public class Importer {
         int rightVariantCount = 0;
         for (String csq : variant.getCSQs()) {
             if (!csq.equals("")) {
-                String[] csqInputs = csq.split("\\|");
+                String[] csqInputs = csq.split("\\|", -1);
                 boolean rightVariant = false;
                 for (int position : positionOfSpecialCSQFields) {
                     String inputToMatch = csqInputs[position];
