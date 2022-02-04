@@ -202,7 +202,7 @@ public class Importer {
                     for (int i = 0; i < csqInputs.length; i++) {
                         String inputToMatch = csqInputs[i];
 
-                        if (Config.specialCsqFields.contains(csqs[i].getName())) {
+                        if (Config.specialCsqFields.contains(csqs[i].getName().toLowerCase())) {
                             if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
                                 String[] ampersandSplit = inputToMatch.split("&");
 
@@ -250,7 +250,6 @@ public class Importer {
                     if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
                         String[] ampersandSplit = inputToMatch.split("&");
 
-                        System.out.println(inputToMatch);
                         String singleAmpersandValue = ampersandSplit[rightVariantCount];
                         if (singleAmpersandValue.equals(".")) {
                             singleAmpersandValue = "";
