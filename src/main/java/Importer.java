@@ -147,11 +147,11 @@ public class Importer {
         for (int i = 0; i < csqArrayIds.length; i++) {
             csqs[i] = new Csq(csqArrayIds[i]);
 
-            if (csqArrayIds[i].equals("info_csq_consequence")) {
+            if (csqArrayIds[i].toLowerCase().equals("consequence")) {
                 positionOfConsequenceInCSQ = i;
-            } else if (csqArrayIds[i].equals("info_csq_biotype")) {
+            } else if (csqArrayIds[i].toLowerCase().equals("biotype")) {
                 positionOfBiotypeInCSQ = i;
-            } else if (Config.specialCsqFields.contains(csqArrayIds[i])) {
+            } else if (Config.specialCsqFields.contains(csqArrayIds[i].toLowerCase())) {
                 positionOfSpecialCSQFields.add(i);
             }
         }

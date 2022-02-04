@@ -10,21 +10,21 @@ public class Config {
     //info_csq_polyphen detto
 
     public static final HashSet<String> specialCsqFields = new HashSet<>(Arrays.asList(
-            "info_csq_aloft_fraction_transcripts_affected",
-            "info_csq_aloft_pred",
-            "info_csq_aloft_prob_dominant",
-            "info_csq_aloft_prob_recessive",
-            "info_csq_fathmm_pred",
-            "info_csq_fathmm_score",
-            "info_csq_mvp_score",
-            "info_csq_mutationtaster_aae",
-            "info_csq_mutationtaster_pred",
-            "info_csq_mutationtaster_score",
-            "info_csq_polyphen2_hdiv_pred",
-            "info_csq_polyphen2_hdiv_score",
-            "info_csq_sift4g_score",
-            "info_csq_vest4_score",
-            "info_csq_codonpos"
+            "aloft_fraction_transcripts_affected",
+            "aloft_pred",
+            "aloft_prob_dominant",
+            "aloft_prob_recessive",
+            "fathmm_pred",
+            "fathmm_score",
+            "mvp_score",
+            "mutationtaster_aae",
+            "mutationtaster_pred",
+            "mutationtaster_score",
+            "polyphen2_hdiv_pred",
+            "polyphen2_hdiv_score",
+            "csq_sift4g_score",
+            "csq_vest4_score",
+            "csq_codonpos"
     ));
 
 }
