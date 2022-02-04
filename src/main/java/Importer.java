@@ -19,11 +19,16 @@ public class Importer {
 
     List<Variant> batch;
 
+    int positionOfConsequenceInCSQ;
+    int positionOfBiotypeInCSQ;
+    HashSet<Integer> positionOfSpecialCSQFields;
+
     public Importer() {
         headerById = new HashMap<>();
         formatTypes = new ArrayList<>();
         formatTypesSet = new HashSet<>();
         batch = new LinkedList<>();
+        positionOfSpecialCSQFields = new HashSet<>();
     }
 
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
@@ -141,6 +146,14 @@ public class Importer {
         csqs = new Csq[csqArrayIds.length];
         for (int i = 0; i < csqArrayIds.length; i++) {
             csqs[i] = new Csq(csqArrayIds[i]);
+
+            if (csqArrayIds[i].equals("info_csq_consequence")) {
+                positionOfConsequenceInCSQ = i;
+            } else if (csqArrayIds[i].equals("info_csq_biotype")) {
+                positionOfBiotypeInCSQ = i;
+            } else if (Config.specialCsqFields.contains(csqArrayIds[i])) {
+                positionOfSpecialCSQFields.add(i);
+            }
         }
     }
 
@@ -184,7 +197,21 @@ public class Importer {
                 if (!csq.equals("")) {
                     String[] csqInputs = csq.split("\\|");
                     for (int i = 0; i < csqInputs.length; i++) {
-                        csqs[i].matchType(csqInputs[i]);
+                        String inputToMatch = csqInputs[i];
+
+                        if (Config.specialCsqFields.contains(csqs[i].getName())) {
+                            if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
+                                String[] ampersandSplit = inputToMatch.split("&");
+
+                                for (String ampersandItem : ampersandSplit) {
+                                    if (!ampersandItem.equals(".")) {
+                                        csqs[i].matchType(ampersandItem);
+                                    }
+                                }
+                            }
+                        } else {
+                            csqs[i].matchType(inputToMatch);
+                        }
                     }
                 }
             }
@@ -200,10 +227,41 @@ public class Importer {
             determineMaxColSize(variant);
         } else {
             //SqlConnector.getInstance().insertVariant(variant, tableName);
+            alterSpecialCSQFields(variant);
             batch.add(variant);
             pid += variant.getCSQs().length;
             vid++;
         }
+    }
+
+    private void alterSpecialCSQFields(Variant variant) {
+        List<String> alteredCsqs = new LinkedList<>();
+
+        int rightVariantCount = 0;
+        for (String csq : variant.getCSQs()) {
+            if (!csq.equals("")) {
+                String[] csqInputs = csq.split("\\|");
+                for (int position : positionOfSpecialCSQFields) {
+                    String inputToMatch = csqInputs[position];
+                    if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
+                        String[] ampersandSplit = inputToMatch.split("&");
+
+                        String singleAmpersandValue = ampersandSplit[rightVariantCount];
+                        if (singleAmpersandValue.equals(".")) {
+                            singleAmpersandValue = "";
+                        }
+
+                        csqInputs[position] = singleAmpersandValue;
+                        rightVariantCount++;
+                    } else {
+                        csqInputs[position] = "";
+                    }
+                }
+                alteredCsqs.add(Arrays.stream(csqInputs).collect(Collectors.joining("|")));
+            }
+        }
+
+        variant.getInfoMap().put("CSQ", String.join(",", alteredCsqs));
     }
 
     private void determineMaxColSize(Variant variant) {
@@ -236,7 +294,7 @@ public class Importer {
             }
 
             for (int i = 0; i < cols.size(); i++) {
-                maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1));
+                maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1)); //TODO: THIS IS WRONG FOR CSQ SPECIAL FIELDS
             }
         }
     }

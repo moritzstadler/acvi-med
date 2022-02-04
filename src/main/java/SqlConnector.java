@@ -227,6 +227,13 @@ public class SqlConnector {
             }
         }
 
+        String vidIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
+        String vidSql = String.format("CREATE INDEX %s on %s (vid)", vidIndexName, tableName);
+        System.out.println(vidSql);
+        PreparedStatement vidIndex = connection.prepareStatement(vidSql);
+        vidIndex.execute();
+        vidIndex.close();
+
         int count = 0;
         for (String col : colsToIndex) {
             String indexName = tableName.substring(0, Math.min(15, tableName.length())) + count + Math.abs((tableName + col + count).hashCode()) + randomString(15);

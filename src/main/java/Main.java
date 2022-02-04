@@ -10,10 +10,15 @@ public class Main {
             System.out.println("Missing arguments! Format: <filname> <database> <host> <user> <password>");
         }*/
 
-        String fileName = args[0];
+        /*String fileName = args[0];
         String host = args[1];
         String user = args[2];
-        String password = args[3];
+        String password = args[3];*/
+        String fileName = "sampleiso.vcf";
+        String database = "sample";
+        String host = "jdbc:postgresql://34.91.121.155:5432/" + database;
+        String user = "postgres";
+        String password = "4MzdliD0IKFpPh8l";
 
         String tableName = fileName;
         if (fileName.contains(".")) {
