@@ -22,9 +22,9 @@ public class Config {
             "mutationtaster_score",
             "polyphen2_hdiv_pred",
             "polyphen2_hdiv_score",
-            "csq_sift4g_score",
-            "csq_vest4_score",
-            "csq_codonpos"
+            "sift4g_score",
+            "vest4_score",
+            "codonpos"
     ));
 
 }
