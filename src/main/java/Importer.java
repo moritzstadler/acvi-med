@@ -282,7 +282,7 @@ public class Importer {
                 }
 
                 for (int verbosePosition : positionOfVerboseCSQFields) {
-                    csqInputs[verbosePosition] = getBefore(csqInputs[verbosePosition], "(");
+                    csqInputs[verbosePosition] = csqInputs[verbosePosition].replaceAll("[^A-Za-z]", "").toLowerCase();
                 }
 
                 alteredCsqs.add(Arrays.stream(csqInputs).collect(Collectors.joining("|")));
