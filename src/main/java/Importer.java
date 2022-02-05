@@ -21,6 +21,7 @@ public class Importer {
 
     int positionOfConsequenceInCSQ;
     int positionOfBiotypeInCSQ;
+    int positionOfHgvsc;
     HashSet<Integer> positionOfSpecialCSQFields;
     HashSet<Integer> positionOfVerboseCSQFields;
     int positionOfGenotype;
@@ -159,7 +160,10 @@ public class Importer {
                 positionOfBiotypeInCSQ = i;
             } else if (Config.specialCsqFields.contains(csqArrayIds[i].toLowerCase())) {
                 positionOfSpecialCSQFields.add(i);
+            } else if (csqArrayIds[i].toLowerCase().equals("hgvsc")) {
+                positionOfHgvsc = i;
             }
+
             if (Config.verbsoseCsqFields.contains(csqArrayIds[i].toLowerCase())) {
                 positionOfVerboseCSQFields.add(i);
             }
@@ -272,7 +276,7 @@ public class Importer {
 
                             csqInputs[position] = singleAmpersandValue;
                         } else {
-                            System.out.println("Too many isoforms to parse " + inputToMatch + " at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + variant.getInfoMap().get("hgvsc"));
+                            System.out.println("Too many isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + csqInputs[positionOfHgvsc] + " (" + inputToMatch + ")");
                             csqInputs[position] = "";
                         }
 
@@ -293,7 +297,7 @@ public class Importer {
             }
         }
         if (rightVariantCount < maxApersandSize) {
-            System.out.println("Too few isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + variant.getInfoMap().get("hgvsc") );
+            System.out.println("Too few isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt());
         }
 
         variant.getInfoMap().put("CSQ", String.join(",", alteredCsqs));
