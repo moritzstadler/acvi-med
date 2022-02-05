@@ -251,6 +251,7 @@ public class Importer {
         List<String> alteredCsqs = new LinkedList<>();
 
         int rightVariantCount = 0;
+        int maxApersandSize = -1;
         for (String csq : variant.getCSQs()) {
             if (!csq.equals("")) {
                 String[] csqInputs = csq.split("\\|", -1);
@@ -259,6 +260,8 @@ public class Importer {
                     String inputToMatch = csqInputs[position];
                     if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
                         String[] ampersandSplit = inputToMatch.split("&");
+
+                        maxApersandSize = Math.max(maxApersandSize, ampersandSplit.length);
 
                         String singleAmpersandValue = "";
                         if (rightVariantCount < ampersandSplit.length) {
@@ -269,7 +272,7 @@ public class Importer {
 
                             csqInputs[position] = singleAmpersandValue;
                         } else {
-                            System.out.println("Could not fully parse " + variant.getChrom() + " " + variant.getPos());
+                            System.out.println("Too many isoforms to parse " + inputToMatch + " at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + variant.getInfoMap().get("hgvsc"));
                             csqInputs[position] = "";
                         }
 
@@ -288,6 +291,9 @@ public class Importer {
 
                 alteredCsqs.add(Arrays.stream(csqInputs).collect(Collectors.joining("|")));
             }
+        }
+        if (rightVariantCount < maxApersandSize) {
+            System.out.println("Too few isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + variant.getInfoMap().get("hgvsc") );
         }
 
         variant.getInfoMap().put("CSQ", String.join(",", alteredCsqs));
