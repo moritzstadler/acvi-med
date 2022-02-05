@@ -16,9 +16,9 @@ public class Config {
             "fathmm_pred",
             "fathmm_score",
             "mvp_score",
-            /*"mutationtaster_aae",
+            "mutationtaster_aae",
             "mutationtaster_pred",
-            "mutationtaster_score",*/
+            "mutationtaster_score",
             "polyphen2_hdiv_pred",
             "polyphen2_hdiv_score",
             "sift4g_score",
