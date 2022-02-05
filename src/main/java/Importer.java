@@ -269,7 +269,8 @@ public class Importer {
 
                             csqInputs[position] = singleAmpersandValue;
                         } else {
-                            System.out.println(variant.getChrom() + " " + variant.getPos() + " " + variant.getInfo());
+                            System.out.println("Could not fully parse " + variant.getChrom() + " " + variant.getPos());
+                            csqInputs[position] = "";
                         }
 
                         rightVariant = true;
