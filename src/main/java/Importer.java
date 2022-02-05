@@ -22,6 +22,8 @@ public class Importer {
     int positionOfConsequenceInCSQ;
     int positionOfBiotypeInCSQ;
     HashSet<Integer> positionOfSpecialCSQFields;
+    HashSet<Integer> positionOfVerboseCSQFields;
+    int positionOfGenotype;
 
     public Importer() {
         headerById = new HashMap<>();
@@ -29,6 +31,7 @@ public class Importer {
         formatTypesSet = new HashSet<>();
         batch = new LinkedList<>();
         positionOfSpecialCSQFields = new HashSet<>();
+        positionOfVerboseCSQFields = new HashSet<>();
     }
 
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
@@ -101,6 +104,9 @@ public class Importer {
         formatNames = nameLine.split("\t");
         for (int i = 0; i < formatNames.length; i++) {
             formatNames[i] = formatNames[i].replaceAll("-", "_").replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
+            if (formatNames[i].endsWith("_gt")) {
+                positionOfGenotype = i;
+            }
         }
     }
 
@@ -153,6 +159,9 @@ public class Importer {
                 positionOfBiotypeInCSQ = i;
             } else if (Config.specialCsqFields.contains(csqArrayIds[i].toLowerCase())) {
                 positionOfSpecialCSQFields.add(i);
+            }
+            if (Config.verbsoseCsqFields.contains(csqArrayIds[i].toLowerCase())) {
+                positionOfVerboseCSQFields.add(i);
             }
         }
         System.out.println("pos biotype" + positionOfBiotypeInCSQ);
@@ -230,14 +239,15 @@ public class Importer {
             determineMaxColSize(variant);
         } else {
             //SqlConnector.getInstance().insertVariant(variant, tableName);
-            alterSpecialCSQFields(variant);
+            alterCSQFields(variant);
+            variant.getFormats().set(positionOfGenotype, variant.getFormats().get(positionOfGenotype).replaceAll("\\|", "/"));
             batch.add(variant);
             pid += variant.getCSQs().length;
             vid++;
         }
     }
 
-    private void alterSpecialCSQFields(Variant variant) {
+    private void alterCSQFields(Variant variant) {
         List<String> alteredCsqs = new LinkedList<>();
 
         int rightVariantCount = 0;
@@ -249,8 +259,6 @@ public class Importer {
                     String inputToMatch = csqInputs[position];
                     if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
                         String[] ampersandSplit = inputToMatch.split("&");
-
-
 
                         String singleAmpersandValue = "";
                         if (rightVariantCount < ampersandSplit.length) {
@@ -272,6 +280,11 @@ public class Importer {
                 if (rightVariant) {
                     rightVariantCount++;
                 }
+
+                for (int verbosePosition : positionOfVerboseCSQFields) {
+                    csqInputs[verbosePosition] = getBefore(csqInputs[verbosePosition], "(");
+                }
+
                 alteredCsqs.add(Arrays.stream(csqInputs).collect(Collectors.joining("|")));
             }
         }
