@@ -234,6 +234,18 @@ public class SqlConnector {
         vidIndex.execute();
         vidIndex.close();
 
+        //create index for genotype
+        for (String col : fullColList) {
+            if (col.startsWith("format_") && col.endsWith("_gt")) {
+                String gtIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
+                String gtSql = String.format("CREATE INDEX %s on %s (%s)", gtIndexName, tableName, col);
+                System.out.println(gtSql);
+                PreparedStatement gtIndex = connection.prepareStatement(gtSql);
+                gtIndex.execute();
+                gtIndex.close();
+            }
+        }
+
         int count = 0;
         for (String col : colsToIndex) {
             String indexName = tableName.substring(0, Math.min(15, tableName.length())) + count + Math.abs((tableName + col + count).hashCode()) + randomString(15);
