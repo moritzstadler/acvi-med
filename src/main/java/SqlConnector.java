@@ -96,7 +96,7 @@ public class SqlConnector {
         for (String formatName : formatNames) {
             for (String formatType : formatTypes) {
                 String colName = "format_" + formatName + "_" + formatType;
-                if (formatType.equals("gt")) {
+                if (formatType.toLowerCase().equals("gt")) {
                     cols.add(String.format("%s %s", colName, "VARCHAR(255)"));
                 } else {
                     cols.add(String.format("%s %s", colName, "TEXT"));
