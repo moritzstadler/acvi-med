@@ -96,7 +96,11 @@ public class SqlConnector {
         for (String formatName : formatNames) {
             for (String formatType : formatTypes) {
                 String colName = "format_" + formatName + "_" + formatType;
-                cols.add(String.format("%s %s", colName, "TEXT"));
+                if (formatType.equals("gt")) {
+                    cols.add(String.format("%s %s", colName, "VARCHAR(255)"));
+                } else {
+                    cols.add(String.format("%s %s", colName, "TEXT"));
+                }
                 fullColList.add(colName);
             }
         }
@@ -217,7 +221,7 @@ public class SqlConnector {
         return "(" + values.stream().collect(Collectors.joining(", ")) + ")";
     }
 
-    public void makeIndices(String tableName) throws SQLException {
+    public void makeIndices(String tableName, String[] formatNames) throws SQLException {
         connection.setAutoCommit(true);
 
         Set<String> colsToIndex = new HashSet<>();
@@ -235,15 +239,14 @@ public class SqlConnector {
         vidIndex.close();
 
         //create index for genotype
-        for (String col : fullColList) {
-            if (col.startsWith("format_") && col.endsWith("_gt")) {
-                String gtIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
-                String gtSql = String.format("CREATE INDEX %s on %s (%s)", gtIndexName, tableName, col);
-                System.out.println(gtSql);
-                PreparedStatement gtIndex = connection.prepareStatement(gtSql);
-                gtIndex.execute();
-                gtIndex.close();
-            }
+        for (String formatName : formatNames) {
+            String col = "format_" + formatName + "_gt";
+            String gtIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
+            String gtSql = String.format("CREATE INDEX %s on %s (%s)", gtIndexName, tableName, col);
+            System.out.println(gtSql);
+            PreparedStatement gtIndex = connection.prepareStatement(gtSql);
+            gtIndex.execute();
+            gtIndex.close();
         }
 
         int count = 0;

@@ -62,7 +62,7 @@ public class Importer {
             int batchSize = batch.stream().map(b -> b.getCSQs().length).reduce(0, Integer::sum);
             SqlConnector.getInstance().insertVariantBatch(pid - batchSize, vid - batch.size(), batch, tableName, formatNames);
             System.out.println("Creating Indexes");
-            SqlConnector.getInstance().makeIndices(tableName);
+            SqlConnector.getInstance().makeIndices(tableName, formatNames);
         }
 
         this.tableName = tableName;
