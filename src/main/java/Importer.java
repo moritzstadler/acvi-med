@@ -67,7 +67,7 @@ public class Importer {
 
             System.out.println("Too many isoforms to properly match &-seperated values: " + tooManyIsoformsCount);
             System.out.println("Too few isoforms to properly match &-seperated values: " + tooFewIsoformsCount);
-            
+
             System.out.println("Creating Indexes");
             SqlConnector.getInstance().makeIndices(tableName, formatNames);
         }
@@ -347,6 +347,10 @@ public class Importer {
                 }
             }
 
+            while (maxColSizes.size() < cols.size()) {
+                maxColSizes.add(0);
+            }
+            
             for (int i = 0; i < cols.size(); i++) {
                 maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1)); //TODO: THIS IS WRONG FOR CSQ SPECIAL FIELDS
             }
