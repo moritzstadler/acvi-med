@@ -26,6 +26,9 @@ public class Importer {
     HashSet<Integer> positionOfVerboseCSQFields;
     int positionOfGenotype;
 
+    int tooManyIsoformsCount = 0;
+    int tooFewIsoformsCount = 0;
+
     public Importer() {
         headerById = new HashMap<>();
         formatTypes = new ArrayList<>();
@@ -61,6 +64,10 @@ public class Importer {
         if (!determineFormat) {
             int batchSize = batch.stream().map(b -> b.getCSQs().length).reduce(0, Integer::sum);
             SqlConnector.getInstance().insertVariantBatch(pid - batchSize, vid - batch.size(), batch, tableName, formatNames);
+
+            System.out.println("Too many isoforms to properly match &-seperated values: " + tooManyIsoformsCount);
+            System.out.println("Too few isoforms to properly match &-seperated values: " + tooFewIsoformsCount);
+            
             System.out.println("Creating Indexes");
             SqlConnector.getInstance().makeIndices(tableName, formatNames);
         }
@@ -254,6 +261,8 @@ public class Importer {
     private void alterCSQFields(Variant variant) {
         List<String> alteredCsqs = new LinkedList<>();
 
+        boolean affectedByTooManyIsoforms = false;
+
         int rightVariantCount = 0;
         int maxApersandSize = -1;
         for (String csq : variant.getCSQs()) {
@@ -278,6 +287,7 @@ public class Importer {
                         } else {
                             System.out.println("Too many isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + csqInputs[positionOfHgvsc] + " (" + inputToMatch + ")");
                             csqInputs[position] = "";
+                            affectedByTooManyIsoforms = true;
                         }
 
                         rightVariant = true;
@@ -298,6 +308,11 @@ public class Importer {
         }
         if (rightVariantCount < maxApersandSize) {
             System.out.println("Too few isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt());
+            tooFewIsoformsCount++;
+        }
+
+        if (affectedByTooManyIsoforms) {
+            tooManyIsoformsCount++;
         }
 
         variant.getInfoMap().put("CSQ", String.join(",", alteredCsqs));
