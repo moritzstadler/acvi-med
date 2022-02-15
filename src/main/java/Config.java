@@ -32,4 +32,22 @@ public class Config {
             "polyphen"
     ));
 
+    //0.5&0.7&0.1 -> 0.7 is inserted
+    public static final HashSet<String> maximizableCsqFields = new HashSet<>(Arrays.asList(
+            "gnomadg_af",
+            "gnomadg_ac",
+            "gnomadg_vqslod",
+            "gnomadg_af_afr",
+            "gnomadg_af_amr",
+            "gnomadg_af_asj",
+            "gnomadg_af_eas",
+            "gnomadg_af_fin",
+            "gnomadg_af_nfe",
+            "gnomadg_af_oth",
+            "gnomadg_controls_af",
+            "gnomadg_controls_ac",
+            "gnomadg_controls_nhomalt",
+            "gnomadg_nhomalt_nfe"
+    ));
+
 }

@@ -24,6 +24,7 @@ public class Importer {
     int positionOfHgvsc;
     HashSet<Integer> positionOfSpecialCSQFields;
     HashSet<Integer> positionOfVerboseCSQFields;
+    HashSet<Integer> positionOfMaximizableCSQFields;
     int positionOfGenotype;
 
     int tooManyIsoformsCount = 0;
@@ -36,6 +37,7 @@ public class Importer {
         batch = new LinkedList<>();
         positionOfSpecialCSQFields = new HashSet<>();
         positionOfVerboseCSQFields = new HashSet<>();
+        positionOfMaximizableCSQFields = new HashSet<>();
     }
 
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
@@ -174,6 +176,10 @@ public class Importer {
             if (Config.verbsoseCsqFields.contains(csqArrayIds[i].toLowerCase())) {
                 positionOfVerboseCSQFields.add(i);
             }
+
+            if (Config.maximizableCsqFields.contains(csqArrayIds[i].toLowerCase())) {
+                positionOfMaximizableCSQFields.add(i);
+            }
         }
         System.out.println("pos biotype" + positionOfBiotypeInCSQ);
         System.out.println("pos cosequence " + positionOfConsequenceInCSQ);
@@ -230,6 +236,13 @@ public class Importer {
                                     if (!ampersandItem.equals(".")) {
                                         csqs[i].matchType(ampersandItem);
                                     }
+                                }
+                            }
+                        } else if (Config.maximizableCsqFields.contains(csqs[i].getName().toLowerCase())) {
+                            String[] ampersandSplit = inputToMatch.split("&");
+                            for (String ampersandItem : ampersandSplit) {
+                                if (!ampersandItem.equals(".")) {
+                                    csqs[i].matchType(ampersandItem);
                                 }
                             }
                         } else {
@@ -303,6 +316,12 @@ public class Importer {
                     csqInputs[verbosePosition] = csqInputs[verbosePosition].replaceAll("[^A-Za-z]", "").toLowerCase();
                 }
 
+                for (int maximizablePosition : positionOfMaximizableCSQFields) {
+                    if (csqs[maximizablePosition].getSqlTypeLevel() < 2) {
+                        csqInputs[maximizablePosition] = "" + Arrays.stream(csqInputs[maximizablePosition].split("&")).map(v -> Double.parseDouble(v)).max(Double::compareTo).orElse(0.0);
+                    }
+                }
+
                 alteredCsqs.add(Arrays.stream(csqInputs).collect(Collectors.joining("|")));
             }
         }
@@ -350,7 +369,7 @@ public class Importer {
             while (maxColSizes.size() < cols.size()) {
                 maxColSizes.add(0);
             }
-            
+
             for (int i = 0; i < cols.size(); i++) {
                 maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1)); //TODO: THIS IS WRONG FOR CSQ SPECIAL FIELDS
             }
