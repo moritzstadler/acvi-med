@@ -17,6 +17,8 @@ public class SqlConnector {
     }
 
     private Connection connection;
+    private Connection[] batchConnections;
+    private int batchConnectionPosition = 0;
     private ArrayList<String> csqNames;
     private ArrayList<String> infoNames;
     private ArrayList<String> formatTypes;
@@ -32,6 +34,16 @@ public class SqlConnector {
         System.out.println("Connecting database...");
 
         connection = DriverManager.getConnection(url, username, password);
+        batchConnections = new Connection[20];
+        for (int i = 0; i < batchConnections.length; i++) {
+            batchConnections[i] = DriverManager.getConnection(url, username, password);
+        }
+    }
+
+    private Connection getBatchConnection() {
+        batchConnectionPosition++;
+        batchConnectionPosition %= batchConnections.length;
+        return batchConnections[batchConnectionPosition];
     }
 
     public void useDatabase(String name) throws SQLException {
@@ -114,12 +126,18 @@ public class SqlConnector {
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
         create.close();
+
+        PreparedStatement logging = connection.prepareCall("ALTER TABLE " + name + " SET UNLOGGED");
+        logging.execute();
+        logging.close();
     }
 
     public void insertVariantBatch(final int pidStart, final int vidStart, List<Variant> variants, String tableName, String[] formatNames) throws SQLException {
         if (variants.size() == 0) {
             return;
         }
+
+        Connection connection = getBatchConnection();
 
         int currentPid = pidStart;
         int currentVid = vidStart;
@@ -259,6 +277,10 @@ public class SqlConnector {
             index.close();
             count++;
         }
+
+        PreparedStatement logging = connection.prepareCall("ALTER TABLE " + tableName + " SET LOGGED");
+        logging.execute();
+        logging.close();
     }
 
     /*public void insertVariant(Variant variant, String tableName) throws SQLException {
