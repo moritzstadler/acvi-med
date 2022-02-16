@@ -317,7 +317,7 @@ public class Importer {
                 }
 
                 for (int maximizablePosition : positionOfMaximizableCSQFields) {
-                    if (csqs[maximizablePosition].getSqlTypeLevel() < 2) {
+                    if (csqs[maximizablePosition].getSqlTypeLevel() == 1) { //only for doubles
                         double max = 0.0;
                         String[] split = csqInputs[maximizablePosition].split("&");
                         for (String s : split) {
