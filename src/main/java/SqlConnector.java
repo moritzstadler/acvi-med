@@ -126,10 +126,6 @@ public class SqlConnector {
         PreparedStatement create = connection.prepareCall(sql);
         create.execute();
         create.close();
-
-        PreparedStatement logging = connection.prepareCall("ALTER TABLE " + name + " SET UNLOGGED");
-        logging.execute();
-        logging.close();
     }
 
     public void insertVariantBatch(final int pidStart, final int vidStart, List<Variant> variants, String tableName, String[] formatNames) throws SQLException {
@@ -243,11 +239,50 @@ public class SqlConnector {
         connection.setAutoCommit(true);
 
         Set<String> colsToIndex = new HashSet<>();
-        for (int i = 0; i < maxColSizes.size(); i++) {
+        /*for (int i = 0; i < maxColSizes.size(); i++) {
             if (maxColSizes.get(i) < 256) {
                 colsToIndex.add(fullColList.get(i));
             }
-        }
+        }*/
+        colsToIndex.addAll(Arrays.asList(
+                "info_csq_gnomadg_af",
+                "info_csq_max_af",
+
+                "info_csq_polyphen",
+                "info_csq_dann_score",
+                "info_csq_sift",
+                "info_csq_gerp_rs",
+                "info_csq_fathmm_pred",
+                "info_csq_primateai_pred",
+                "info_csq_lrt_pred",
+                "info_csq_metasvm_pred",
+
+                "info_csq_feature_type",
+                "info_csq_canonical",
+                "info_csq_gnomad_af",
+                "info_csq_gnomad_afr_af",
+                "info_csq_gnomad_amr_af",
+                "info_csq_gnomad_asj_af",
+                "info_csq_gnomad_eas_af",
+                "info_csq_gnomad_fin_af",
+                "info_csq_gnomad_nfe_af",
+                "info_csq_gnomad_oth_af",
+                "info_csq_gnomad_sas_af",
+                "info_csq_gnomadg_af",
+                "info_csq_gnomadg_af_nfe",
+                "info_csq_gnomadg_af_afr",
+                "info_csq_gnomadg_af_amr",
+                "info_csq_gnomadg_af_asj",
+                "info_csq_gnomadg_af_eas",
+                "info_csq_gnomadg_af_fin",
+                "info_csq_gnomadg_af_oth",
+                "info_csq_mutationtaster_pred",
+                "info_csq_mvp_score",
+                "info_csq_spliceai_pred_ds_ag",
+                "info_csq_spliceai_pred_ds_al",
+                "info_csq_spliceai_pred_ds_dg",
+                "info_csq_spliceai_pred_ds_dl",
+                "filter"));
 
         String vidIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
         String vidSql = String.format("CREATE INDEX %s on %s (vid)", vidIndexName, tableName);
@@ -267,20 +302,24 @@ public class SqlConnector {
             gtIndex.close();
         }
 
+        //create index for impact
+        String impactIndexName = tableName.substring(0, Math.min(15, tableName.length())) + "imp" + Math.abs((tableName).hashCode()) + randomString(15);
+        String impactSql = String.format("create index %s on %s (array_position(array[Cast('MODIFIER' AS VARCHAR),Cast('LOW' AS VARCHAR),Cast('MODERATE' AS VARCHAR),Cast('HIGH' AS VARCHAR)],info_csq_impact) nulls first);", impactIndexName, tableName);
+        System.out.println(impactSql);
+        PreparedStatement impactIndex = connection.prepareStatement(impactSql);
+        impactIndex.execute();
+        impactIndex.close();
+
         int count = 0;
         for (String col : colsToIndex) {
             String indexName = tableName.substring(0, Math.min(15, tableName.length())) + count + Math.abs((tableName + col + count).hashCode()) + randomString(15);
-            String sql = String.format("CREATE INDEX %s on %s (%s)", indexName, tableName, col);
+            String sql = String.format("CREATE INDEX %s on %s (%s DESC NULLS LAST)", indexName, tableName, col);
             System.out.println(sql);
             PreparedStatement index = connection.prepareStatement(sql);
             index.execute();
             index.close();
             count++;
         }
-
-        PreparedStatement logging = connection.prepareCall("ALTER TABLE " + tableName + " SET LOGGED");
-        logging.execute();
-        logging.close();
     }
 
     /*public void insertVariant(Variant variant, String tableName) throws SQLException {
