@@ -257,6 +257,15 @@ public class SqlConnector {
                 "info_csq_lrt_pred",
                 "info_csq_metasvm_pred",
 
+                "info_csq_af_afr",
+                "info_csq_af_amr",
+                "info_csq_af_asj",
+                "info_csq_af_eas",
+                "info_csq_af_nfe",
+                "info_csq_af_nfe",
+                "info_csq_af_oth",
+                "info_csq_af",
+
                 "info_csq_feature_type",
                 "info_csq_canonical",
                 "info_csq_gnomad_af",
@@ -282,14 +291,13 @@ public class SqlConnector {
                 "info_csq_spliceai_pred_ds_al",
                 "info_csq_spliceai_pred_ds_dg",
                 "info_csq_spliceai_pred_ds_dl",
-                "filter"));
+                "filter",
+                "info_csq_symbol"));
 
         String vidIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
         String vidSql = String.format("CREATE INDEX %s on %s (vid)", vidIndexName, tableName);
         System.out.println(vidSql);
-        PreparedStatement vidIndex = connection.prepareStatement(vidSql);
-        vidIndex.execute();
-        vidIndex.close();
+        executeStatement(vidSql);
 
         //create index for genotype
         for (String formatName : formatNames) {
@@ -297,28 +305,33 @@ public class SqlConnector {
             String gtIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
             String gtSql = String.format("CREATE INDEX %s on %s (%s)", gtIndexName, tableName, col);
             System.out.println(gtSql);
-            PreparedStatement gtIndex = connection.prepareStatement(gtSql);
-            gtIndex.execute();
-            gtIndex.close();
+            executeStatement(gtSql);
         }
 
         //create index for impact
         String impactIndexName = tableName.substring(0, Math.min(15, tableName.length())) + "imp" + Math.abs((tableName).hashCode()) + randomString(15);
         String impactSql = String.format("create index %s on %s (array_position(array[Cast('MODIFIER' AS VARCHAR),Cast('LOW' AS VARCHAR),Cast('MODERATE' AS VARCHAR),Cast('HIGH' AS VARCHAR)],info_csq_impact) nulls first);", impactIndexName, tableName);
         System.out.println(impactSql);
-        PreparedStatement impactIndex = connection.prepareStatement(impactSql);
-        impactIndex.execute();
-        impactIndex.close();
+        executeStatement(impactSql);
 
         int count = 0;
         for (String col : colsToIndex) {
             String indexName = tableName.substring(0, Math.min(15, tableName.length())) + count + Math.abs((tableName + col + count).hashCode()) + randomString(15);
             String sql = String.format("CREATE INDEX %s on %s (%s DESC NULLS LAST)", indexName, tableName, col);
             System.out.println(sql);
-            PreparedStatement index = connection.prepareStatement(sql);
-            index.execute();
-            index.close();
+            executeStatement(sql);
             count++;
+        }
+    }
+
+    private void executeStatement(String sql) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.execute();
+            statement.close();
+        } catch (Exception ex) {
+            System.out.println("could not perform '" + sql + "'! Skipped with error: ");
+            System.out.println(ex);
         }
     }
 
