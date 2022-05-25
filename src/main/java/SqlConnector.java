@@ -245,6 +245,7 @@ public class SqlConnector {
             }
         }*/
         colsToIndex.addAll(Arrays.asList(
+                "info_gnomadg_af",
                 "info_csq_gnomadg_af",
                 "info_csq_max_af",
 
@@ -265,6 +266,8 @@ public class SqlConnector {
                 "info_csq_af_nfe",
                 "info_csq_af_oth",
                 "info_csq_af",
+                "info_csq_CADD_PHRED",
+                "info_csq_CADD_RAW",
 
                 "info_csq_feature_type",
                 "info_csq_canonical",
