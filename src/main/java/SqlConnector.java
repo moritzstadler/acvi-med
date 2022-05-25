@@ -245,11 +245,25 @@ public class SqlConnector {
             }
         }*/
         colsToIndex.addAll(Arrays.asList(
+                //info_AF_afr,... CADD, impact, max_af
                 "info_gnomadg_af",
                 "info_af_raw",
                 "info_af_popmax",
                 "info_csq_gnomadg_af",
                 "info_csq_max_af",
+                "info_caddind_raw",
+                "info_caddind_phred",
+                "info_cadd_raw",
+                "info_cadd_phred",
+                "info_af_raw",
+                "info_af_popmax",
+                "info_controls_af_popmax",
+                "info_af_afr",
+                "info_af_amr",
+                "info_af_asj",
+                "info_af_eas",
+                "info_af_nfe",
+                "info_af_oth",
 
                 "info_csq_polyphen",
                 "info_csq_dann_score",
