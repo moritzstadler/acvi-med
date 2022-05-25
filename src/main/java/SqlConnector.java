@@ -246,6 +246,8 @@ public class SqlConnector {
         }*/
         colsToIndex.addAll(Arrays.asList(
                 "info_gnomadg_af",
+                "info_af_raw",
+                "info_af_popmax",
                 "info_csq_gnomadg_af",
                 "info_csq_max_af",
 
