@@ -278,7 +278,9 @@ public class Importer {
 
     private void alterInfoFields(Variant variant) {
         for (String infoId : Config.infoFieldsWithComma) {
-            variant.getInfoMap().put(infoId, cleanInfoFieldWithComma(variant.getInfoMap().get(infoId)));
+            if (variant.getInfoMap().containsKey(infoId)) {
+                variant.getInfoMap().put(infoId, cleanInfoFieldWithComma(variant.getInfoMap().get(infoId)));
+            }
         }
         List<String> newInfo = new LinkedList<>();
         for (String infoId : variant.getInfoMap().keySet()) {
