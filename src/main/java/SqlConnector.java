@@ -256,7 +256,6 @@ public class SqlConnector {
                 "info_cadd_raw",
                 "info_cadd_phred",
                 "info_af_raw",
-                "info_af_popmax",
                 "info_controls_af_popmax",
                 "info_af_afr",
                 "info_af_amr",

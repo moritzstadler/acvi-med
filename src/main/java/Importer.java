@@ -218,7 +218,11 @@ public class Importer {
         if (determineFormat) {
             for (String headerId : variant.getInfoMap().keySet()) {
                 if (!headerId.equals("CSQ")) {
-                    headerById.get(headerId).matchType(variant.getInfoMap().get(headerId));
+                    if (Config.infoFieldsWithComma.contains(headerId)) {
+                        headerById.get(headerId).matchType(cleanInfoFieldWithComma(variant.getInfoMap().get(headerId)));
+                    } else {
+                        headerById.get(headerId).matchType(variant.getInfoMap().get(headerId));
+                    }
                 }
             }
 
@@ -264,11 +268,24 @@ public class Importer {
         } else {
             //SqlConnector.getInstance().insertVariant(variant, tableName);
             alterCSQFields(variant);
+            alterInfoFields(variant);
             variant.getFormats().set(positionOfGenotype, variant.getFormats().get(positionOfGenotype).replaceAll("\\|", "/"));
             batch.add(variant);
             pid += variant.getCSQs().length;
             vid++;
         }
+    }
+
+    private void alterInfoFields(Variant variant) {
+        for (String infoId : Config.infoFieldsWithComma) {
+            variant.getInfoMap().put(infoId, cleanInfoFieldWithComma(variant.getInfoMap().get(infoId)));
+        }
+        List<String> newInfo = new LinkedList<>();
+        for (String infoId : variant.getInfoMap().keySet()) {
+            newInfo.add(infoId + "=" + variant.getInfoMap().get(infoId));
+        }
+        String alteredInfo = String.join(";", newInfo);
+        variant.setInfo(alteredInfo);
     }
 
     private void alterCSQFields(Variant variant) {
@@ -390,6 +407,13 @@ public class Importer {
                 maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1)); //TODO: THIS IS WRONG FOR CSQ SPECIAL FIELDS
             }
         }
+    }
+
+    private String cleanInfoFieldWithComma(String input) {
+        if (input.contains(",")) {
+            return input.split(",")[0];
+        }
+        return input;
     }
 
     private String getBetweenMin(String line, String start, String end) {

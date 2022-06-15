@@ -7,6 +7,23 @@ public class Config {
     //info_csq_sift = deleterious(0) -> 0
     //info_csq_polyphen detto
 
+    //e. g. 0.0234,.
+    public static final HashSet<String> infoFieldsWithComma = new HashSet<>(Arrays.asList(
+            "AF_raw",
+            "AF_popmax",
+            "controls_AF_popmax",
+            "AF_afr",
+            "AF_amr",
+            "AF_asj",
+            "AF_eas",
+            "AF_nfe",
+            "AF_oth",
+            "CADDind_phred",
+            "CADDind_raw",
+            "CADD_phred",
+            "CADD_raw"
+    ));
+
     //e. g. .&0.5&0.7&0.6 or 1&23&4&
     public static final HashSet<String> specialCsqFields = new HashSet<>(Arrays.asList(
             "aloft_fraction_transcripts_affected",
