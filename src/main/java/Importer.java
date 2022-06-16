@@ -412,10 +412,16 @@ public class Importer {
     }
 
     private String cleanInfoFieldWithComma(String input) {
+        String clean = input;
         if (input.contains(",")) {
-            return input.split(",")[0];
+            clean = input.split(",")[0];
         }
-        return input;
+
+        if (clean.equals(".")) {
+            clean = "";
+        }
+
+        return clean;
     }
 
     private String getBetweenMin(String line, String start, String end) {
