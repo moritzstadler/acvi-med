@@ -25,7 +25,7 @@ public class Importer {
     HashSet<Integer> positionOfSpecialCSQFields;
     HashSet<Integer> positionOfVerboseCSQFields;
     HashSet<Integer> positionOfMaximizableCSQFields;
-    int positionOfGenotype;
+    List<Integer> positionsOfGenotype;
 
     int tooManyIsoformsCount = 0;
     int tooFewIsoformsCount = 0;
@@ -115,7 +115,7 @@ public class Importer {
         for (int i = 0; i < formatNames.length; i++) {
             formatNames[i] = formatNames[i].replaceAll("-", "_").replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
             if (formatNames[i].endsWith("_gt")) {
-                positionOfGenotype = i;
+                positionsOfGenotype.add(i);
             }
         }
     }
@@ -269,7 +269,9 @@ public class Importer {
             //SqlConnector.getInstance().insertVariant(variant, tableName);
             alterCSQFields(variant);
             alterInfoFields(variant);
-            variant.getFormats().set(positionOfGenotype, variant.getFormats().get(positionOfGenotype).replaceAll("\\|", "/"));
+            for (int positionOfGenotype : positionsOfGenotype) {
+                variant.getFormats().set(positionOfGenotype, variant.getFormats().get(positionOfGenotype).replaceAll("\\|", "/"));
+            }
             batch.add(variant);
             pid += variant.getCSQs().length;
             vid++;
