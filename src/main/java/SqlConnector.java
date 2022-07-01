@@ -226,9 +226,9 @@ public class SqlConnector {
             for (String formatType : formatTypes) {
                 if (formatKeyValueIndividual.containsKey(formatType)) {
                     if (formatType.toLowerCase().equals("gt")) {
-                        values.add(convertToMySqlString(formatKeyValueIndividual.get(formatType)));
-                    } else {
                         values.add(convertToMySqlString(formatKeyValueIndividual.get(formatType).replaceAll("\\|", "/")));
+                    } else {
+                        values.add(convertToMySqlString(formatKeyValueIndividual.get(formatType)));
                     }
                 } else {
                     values.add("NULL");
