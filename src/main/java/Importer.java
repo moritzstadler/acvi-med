@@ -38,6 +38,7 @@ public class Importer {
         positionOfSpecialCSQFields = new HashSet<>();
         positionOfVerboseCSQFields = new HashSet<>();
         positionOfMaximizableCSQFields = new HashSet<>();
+        positionsOfGenotype = new LinkedList<>();
     }
 
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
