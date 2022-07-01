@@ -25,7 +25,6 @@ public class Importer {
     HashSet<Integer> positionOfSpecialCSQFields;
     HashSet<Integer> positionOfVerboseCSQFields;
     HashSet<Integer> positionOfMaximizableCSQFields;
-    List<Integer> positionsOfGenotype;
 
     int tooManyIsoformsCount = 0;
     int tooFewIsoformsCount = 0;
@@ -38,7 +37,6 @@ public class Importer {
         positionOfSpecialCSQFields = new HashSet<>();
         positionOfVerboseCSQFields = new HashSet<>();
         positionOfMaximizableCSQFields = new HashSet<>();
-        positionsOfGenotype = new LinkedList<>();
     }
 
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
@@ -116,10 +114,6 @@ public class Importer {
         for (int i = 0; i < formatNames.length; i++) {
             formatNames[i] = formatNames[i].replaceAll("-", "_").replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
             System.out.println("format name: " + formatNames[i]);
-            if (formatNames[i].endsWith("_gt")) {
-                positionsOfGenotype.add(i);
-                System.out.println("found gt at " + i + ": " + formatNames[i]);
-            }
         }
     }
 
@@ -272,9 +266,6 @@ public class Importer {
             //SqlConnector.getInstance().insertVariant(variant, tableName);
             alterCSQFields(variant);
             alterInfoFields(variant);
-            for (int positionOfGenotype : positionsOfGenotype) {
-                variant.getFormats().set(positionOfGenotype, variant.getFormats().get(positionOfGenotype).replaceAll("\\|", "/"));
-            }
             batch.add(variant);
             pid += variant.getCSQs().length;
             vid++;
