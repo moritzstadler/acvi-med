@@ -225,8 +225,7 @@ public class SqlConnector {
 
             for (String formatType : formatTypes) {
                 if (formatKeyValueIndividual.containsKey(formatType)) {
-                    System.out.println("ft " + formatType + " " + formatKeyValueIndividual.get(formatType));
-                    if (formatType.equals("gt")) {
+                    if (formatType.toLowerCase().equals("gt")) {
                         values.add(convertToMySqlString(formatKeyValueIndividual.get(formatType)));
                     } else {
                         values.add(convertToMySqlString(formatKeyValueIndividual.get(formatType).replaceAll("\\|", "/")));
