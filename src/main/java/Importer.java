@@ -117,6 +117,7 @@ public class Importer {
             formatNames[i] = formatNames[i].replaceAll("-", "_").replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
             if (formatNames[i].endsWith("_gt")) {
                 positionsOfGenotype.add(i);
+                System.out.println("found gt at " + i + ": " + formatNames[i]);
             }
         }
     }
