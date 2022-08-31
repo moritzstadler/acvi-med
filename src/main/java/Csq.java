@@ -8,9 +8,6 @@ public class Csq {
         sqlTypeLevel = 0;
     }
 
-    public Csq() {
-    }
-
     public String getName() {
         return name;
     }

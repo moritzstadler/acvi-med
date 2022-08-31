@@ -1,9 +1,13 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Importer {
 
@@ -40,6 +44,11 @@ public class Importer {
     }
 
     public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
+        long totalLines;
+        try (Stream<String> stream = Files.lines(new File(name).toPath(), StandardCharsets.UTF_8)) {
+            totalLines = stream.count();
+        }
+
         int lines = 0;
         pid = 1;
         vid = 1;
@@ -56,7 +65,11 @@ public class Importer {
                 lines++;
 
                 if (lines % 1000 == 0) {
-                    System.out.println("Processing line " + lines);
+                    if (determineFormat) {
+                        System.out.println("Preprocessing line " + lines + "/" + totalLines);
+                    } else {
+                        System.out.println("Importing line " + lines + "/" + totalLines);
+                    }
                 }
             }
         }
@@ -80,18 +93,10 @@ public class Importer {
             SqlConnector.getInstance().createTable(tableName, headers, csqs, formatNames, formatTypes, maxColSizes);
         }
 
-        /*for (Csq x : csqs) {
-            System.out.println(x.getName());
-        }
-
-        for (String i : headerById.keySet()) {
-            System.out.println(headerById.get(i).getId() + " " + headerById.get(i).getType());
-        }*/
-
         return lines;
     }
 
-    private void processLine(String line, boolean determineFormat) throws SQLException {
+    private void processLine(String line, boolean determineFormat) {
         if (line.startsWith("##")) {
             processHeader(getAfter(line, "##"), determineFormat);
         } else if (line.startsWith("#")) {
@@ -132,14 +137,19 @@ public class Importer {
             String key = split[0];
             String value = split[1];
 
-            if (key.equals("ID")) {
-                info.setId(value);
-            } else if (key.equals("Number")) {
-                info.setNumber(value);
-            } else if (key.equals("Type")) {
-                info.setType(value);
-            } else if (key.equals("Description")) {
-                info.setDescription(value);
+            switch (key) {
+                case "ID":
+                    info.setId(value);
+                    break;
+                case "Number":
+                    info.setNumber(value);
+                    break;
+                case "Type":
+                    info.setType(value);
+                    break;
+                case "Description":
+                    info.setDescription(value);
+                    break;
             }
         }
 
@@ -183,7 +193,7 @@ public class Importer {
         System.out.println("found specialfields " + positionOfSpecialCSQFields.size());
     }
 
-    private void processVariant(String variantLine, boolean determineFormat) throws SQLException {
+    private void processVariant(String variantLine, boolean determineFormat) {
         String[] fields = variantLine.split("\t");
 
         Variant variant = new Variant();
@@ -353,7 +363,7 @@ public class Importer {
                     }
                 }
 
-                alteredCsqs.add(Arrays.stream(csqInputs).collect(Collectors.joining("|")));
+                alteredCsqs.add(String.join("|", csqInputs));
             }
         }
         if (rightVariantCount < maxApersandSize) {
@@ -402,7 +412,7 @@ public class Importer {
             }
 
             for (int i = 0; i < cols.size(); i++) {
-                maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1)); //TODO: THIS IS WRONG FOR CSQ SPECIAL FIELDS
+                maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1)); //TODO: THIS IS MIGHT BE WRONG FOR CSQ SPECIAL FIELDS
             }
         }
     }
@@ -420,20 +430,12 @@ public class Importer {
         return clean;
     }
 
-    private String getBetweenMin(String line, String start, String end) {
-        return getBefore(getAfter(line, start), end);
-    }
-
     private String getBetweenMax(String line, String start, String end) {
         return getBeforeLast(getAfter(line, start), end);
     }
 
     private String getAfter(String line, String delimiter) {
         return line.substring(line.indexOf(delimiter) + delimiter.length());
-    }
-
-    private String getBefore(String line, String delimiter) {
-        return line.substring(0, line.indexOf(delimiter));
     }
 
     private String getBeforeLast(String line, String delimiter) {

@@ -22,7 +22,6 @@ public class SqlConnector {
     private ArrayList<String> csqNames;
     private ArrayList<String> infoNames;
     private ArrayList<String> formatTypes;
-    private ArrayList<Integer> maxColSizes;
     private ArrayList<String> fullColList;
     private Random random;
 
@@ -46,17 +45,6 @@ public class SqlConnector {
         return batchConnections[batchConnectionPosition];
     }
 
-    public void useDatabase(String name) throws SQLException {
-        /*PreparedStatement setFormat = connection.prepareStatement("SET innodb_strict_mode = 0");
-        setFormat.execute();
-
-        /*PreparedStatement create = connection.prepareCall("CREATE DATABASE IF NOT EXISTS " + name);
-        create.execute();
-
-        PreparedStatement use = connection.prepareStatement("\\c " + name);
-        use.execute();*/
-    }
-
     public void dropTable(String name) throws SQLException {
         PreparedStatement drop = connection.prepareCall("DROP TABLE IF EXISTS " + name);
         drop.execute();
@@ -64,7 +52,6 @@ public class SqlConnector {
 
     public void createTable(String name, List<Info> header, Csq[] csqFields, String[] formatNames, ArrayList<String> formatTypes, ArrayList<Integer> maxColsSizes) throws SQLException {
         fullColList = new ArrayList<>();
-        this.maxColSizes = maxColsSizes;
 
         ArrayList<String> cols = new ArrayList<>();
         cols.add("pid BIGINT");
@@ -118,7 +105,7 @@ public class SqlConnector {
         }
 
         cols.add("PRIMARY KEY(pid)");
-        String inner = cols.stream().collect(Collectors.joining(", "));
+        String inner = String.join(", ", cols);
         String sql = String.format("CREATE TABLE %s (%s)", name, inner);
 
         System.out.println(sql);
@@ -149,7 +136,7 @@ public class SqlConnector {
             currentVid++;
         }
 
-        sql += individualSqls.stream().collect(Collectors.joining(", "));
+        sql += String.join(", ", individualSqls);
 
         PreparedStatement create = connection.prepareStatement(sql);
         create.execute();
@@ -179,8 +166,6 @@ public class SqlConnector {
         values.add(convertToMySqlString(variant.getQual()));
         values.add(convertToMySqlString(variant.getFilter()));
 
-        int colIndex = 7;
-
         for (String infoKey : infoNames) {
             if (!infoKey.equals("CSQ")) {
                     /*create.setString(colIndex, variant.getInfoMap().get(infoKey));
@@ -196,8 +181,8 @@ public class SqlConnector {
 
         if (!csqString.equals("")) {
             String[] csq = csqString.split("\\|", -1);
-            for (int i = 0; i < csq.length; i++) {
-                String value = csq[i];
+            for (String s : csq) {
+                String value = s;
                 if (value.equals("")) {
                     value = null;
                 }
@@ -240,20 +225,14 @@ public class SqlConnector {
             }
         }
 
-        return "(" + values.stream().collect(Collectors.joining(", ")) + ")";
+        return "(" + String.join(", ", values) + ")";
     }
 
     public void makeIndices(String tableName, String[] formatNames) throws SQLException {
         connection.setAutoCommit(true);
 
         Set<String> colsToIndex = new HashSet<>();
-        /*for (int i = 0; i < maxColSizes.size(); i++) {
-            if (maxColSizes.get(i) < 256) {
-                colsToIndex.add(fullColList.get(i));
-            }
-        }*/
         colsToIndex.addAll(Arrays.asList(
-                //info_AF_afr,... CADD, impact, max_af
                 "info_gnomadg_af",
                 "info_af_raw",
                 "info_af_popmax",
@@ -320,7 +299,9 @@ public class SqlConnector {
                 "filter",
                 "info_csq_symbol"));
 
-        String vidIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
+        final String tableUniqueIndexName = tableName.substring(0, Math.min(15, tableName.length()));
+
+        String vidIndexName = tableUniqueIndexName + Math.abs((tableName).hashCode()) + randomString(15);
         String vidSql = String.format("CREATE INDEX %s on %s (vid)", vidIndexName, tableName);
         System.out.println(vidSql);
         executeStatement(vidSql);
@@ -328,21 +309,21 @@ public class SqlConnector {
         //create index for genotype
         for (String formatName : formatNames) {
             String col = "format_" + formatName + "_gt";
-            String gtIndexName = tableName.substring(0, Math.min(15, tableName.length())) + Math.abs((tableName).hashCode()) + randomString(15);
+            String gtIndexName = tableUniqueIndexName + Math.abs((tableName).hashCode()) + randomString(15);
             String gtSql = String.format("CREATE INDEX %s on %s (%s)", gtIndexName, tableName, col);
             System.out.println(gtSql);
             executeStatement(gtSql);
         }
 
         //create index for impact
-        String impactIndexName = tableName.substring(0, Math.min(15, tableName.length())) + "imp" + Math.abs((tableName).hashCode()) + randomString(15);
+        String impactIndexName = tableUniqueIndexName + "imp" + Math.abs((tableName).hashCode()) + randomString(15);
         String impactSql = String.format("create index %s on %s (array_position(array[Cast('MODIFIER' AS VARCHAR),Cast('LOW' AS VARCHAR),Cast('MODERATE' AS VARCHAR),Cast('HIGH' AS VARCHAR)],info_csq_impact) nulls first);", impactIndexName, tableName);
         System.out.println(impactSql);
         executeStatement(impactSql);
 
         int count = 0;
         for (String col : colsToIndex) {
-            String indexName = tableName.substring(0, Math.min(15, tableName.length())) + count + Math.abs((tableName + col + count).hashCode()) + randomString(15);
+            String indexName = tableUniqueIndexName + count + Math.abs((tableName + col + count).hashCode()) + randomString(15);
             String sql = String.format("CREATE INDEX %s on %s (%s DESC NULLS LAST)", indexName, tableName, col);
             System.out.println(sql);
             executeStatement(sql);
@@ -360,51 +341,6 @@ public class SqlConnector {
             System.out.println(ex);
         }
     }
-
-    /*public void insertVariant(Variant variant, String tableName) throws SQLException {
-        List<String> columnsList = new LinkedList<>();
-        List<String> valuesList = new LinkedList<>();
-
-        columnsList.add("chrom");
-        valuesList.add(convertToMySqlString(variant.getChrom()));
-        columnsList.add("pos");
-        valuesList.add(convertToMySqlString(variant.getPos()));
-        columnsList.add("ref");
-        valuesList.add(convertToMySqlString(variant.getRef()));
-        columnsList.add("alt");
-        valuesList.add(convertToMySqlString(variant.getAlt()));
-        columnsList.add("qual");
-        valuesList.add(convertToMySqlString(variant.getQual()));
-        columnsList.add("filter");
-        valuesList.add(convertToMySqlString(variant.getFilter()));
-
-        for (String key : variant.getInfoMap().keySet()) {
-            String value = variant.getInfoMap().get(key);
-            if (key.equals("CSQ")) {
-                String[] csqs = value.split("\\|");
-                for (int i = 0; i < csqs.length; i++) {
-                    columnsList.add(csqNames.get(i));
-                    if (!csqs[i].equals("")) {
-                        valuesList.add(convertToMySqlString(csqs[i]));
-                    } else {
-                        valuesList.add("NULL");
-                    }
-                }
-            } else {
-                columnsList.add("info_" + key);
-                valuesList.add(convertToMySqlString(value));
-            }
-        }
-
-        String columns = columnsList.stream().collect(Collectors.joining(", "));
-        String values = valuesList.stream().collect(Collectors.joining(", "));
-
-        String sql = String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columns, values);
-
-        PreparedStatement create = connection.prepareCall(sql);
-        create.execute();
-        create.close();
-    }*/
 
     private String convertToMySqlString(String value) {
         return "'" + value.replaceAll("\"", "").replaceAll("'", "").replaceAll("\\\\", "") + "'";
