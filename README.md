@@ -16,7 +16,7 @@ Once the container has been built successfully, you can start the import by exec
 
 <pre><code>docker run --rm -it --net="host" -v <b>/absolute/path/to/your/file</b>:/files vcfimport:latest /files/<b>file.vcf</b> jdbc:postgresql://localhost:5432/sample postgres password</code></pre>
 
-<i>Note that if you decided to use a different Postgres host, username or password that needs to be changed too:
+<i>Note that if you decided to use a different Postgres host, username or password that change needs to be reflected in the command:
 ```docker run --rm -it --net="host" -v <folderpath>:/files vcfimport:latest /files/<filename> <postgreshost>/<database> <postgresusername> <postgrespassword>```</i>
 
 The importer should now import your file and will terminate upon completion. 
