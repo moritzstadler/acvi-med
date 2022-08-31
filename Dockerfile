@@ -6,4 +6,4 @@ WORKDIR /usr/src/app
 RUN chmod +x run.sh
 RUN mvn install
 EXPOSE 5432
-ENTRYPOINT ["/run.sh"]
+ENTRYPOINT ["./run.sh"]
