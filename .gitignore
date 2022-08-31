@@ -1,2 +1,3 @@
 /target
+*.vcf
 .DS_Store
