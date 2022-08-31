@@ -4,4 +4,4 @@ COPY pom.xml /usr/src/app
 WORKDIR /usr/src/app
 RUN mvn install
 EXPOSE 5432
-ENTRYPOINT ["mvn", "exec:java"]
+ENTRYPOINT ["/run.sh"]
