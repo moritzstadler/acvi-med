@@ -174,7 +174,7 @@ public class SqlConnector {
 
         PgConnection copyOperationConnection = (PgConnection) connection;
         CopyManager copyManager = new CopyManager(copyOperationConnection);
-        CopyIn copyIn = copyManager.copyIn(String.format("COPY %s FROM STDIN WITH DELIMITER '$'", tableName));
+        CopyIn copyIn = copyManager.copyIn(String.format("COPY %s FROM STDIN WITH DELIMITER '$' NULL AS ''", tableName));
 
         try {
             for (String row : rowsToAdd) {
@@ -214,7 +214,7 @@ public class SqlConnector {
             if (!infoKey.equals("CSQ")) {
                 String value = variant.getInfoMap().get(infoKey);
                 if (value == null || value.equals("")) {
-                    values.add("NULL");
+                    values.add("");
                 } else {
                     values.add(convertToCopySqlString(value));
                 }
@@ -229,14 +229,14 @@ public class SqlConnector {
                     value = null;
                 }
                 if (value == null) {
-                    values.add("NULL");
+                    values.add("");
                 } else {
                     values.add(convertToCopySqlString(value));
                 }
             }
         } else {
             for (int i = 0; i < csqNames.size(); i++) {
-                values.add("NULL");
+                values.add("");
             }
         }
 
@@ -260,7 +260,7 @@ public class SqlConnector {
                         values.add(convertToCopySqlString(formatKeyValueIndividual.get(formatType)));
                     }
                 } else {
-                    values.add("NULL");
+                    values.add("");
                 }
             }
         }
