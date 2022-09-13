@@ -174,7 +174,7 @@ public class SqlConnector {
 
         PgConnection copyOperationConnection = (PgConnection) connection;
         CopyManager copyManager = new CopyManager(copyOperationConnection);
-        CopyIn copyIn = copyManager.copyIn(String.format("COPY %s FROM STDIN WITH DELIMITER '§'", tableName));
+        CopyIn copyIn = copyManager.copyIn(String.format("COPY %s FROM STDIN WITH DELIMITER '$'", tableName));
 
         try {
             for (String row : rowsToAdd) {
@@ -265,11 +265,11 @@ public class SqlConnector {
             }
         }
 
-        return "" + String.join("§", values) + "\n";
+        return "" + String.join("$", values) + "\n";
     }
 
     private String convertToCopySqlString(String value) {
-        return value.replaceAll("§", "");
+        return value.replaceAll("$", "");
     }
 
     private ArrayList<String> getSingleVariantSqls(Variant variant, int pid, int vid) {
