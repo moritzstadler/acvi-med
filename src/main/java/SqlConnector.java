@@ -1,9 +1,9 @@
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SqlConnector {
 
@@ -16,6 +16,7 @@ public class SqlConnector {
         return instance;
     }
 
+    private String[] columnsToIndex;
     private Connection connection;
     private Connection[] batchConnections;
     private int batchConnectionPosition = 0;
@@ -27,6 +28,17 @@ public class SqlConnector {
 
     public SqlConnector() {
         random = new Random();
+
+        Properties prop = new Properties();
+
+        try {
+            //load columns which are to be indexed from config file
+            prop.load(SqlConnector.class.getResourceAsStream("/application.properties"));
+            columnsToIndex = prop.getProperty("columnsToIndex").split(",");
+        } catch (IOException ex) {
+            columnsToIndex = new String[0];
+            ex.printStackTrace();
+        }
     }
 
     public void connect(String url, String username, String password) throws SQLException {
@@ -232,72 +244,7 @@ public class SqlConnector {
         connection.setAutoCommit(true);
 
         Set<String> colsToIndex = new HashSet<>();
-        colsToIndex.addAll(Arrays.asList(
-                "info_gnomadg_af",
-                "info_af_raw",
-                "info_af_popmax",
-                "info_csq_gnomadg_af",
-                "info_csq_max_af",
-                "info_caddind_raw",
-                "info_caddind_phred",
-                "info_cadd_raw",
-                "info_cadd_phred",
-                "info_af_raw",
-                "info_controls_af_popmax",
-                "info_af_afr",
-                "info_af_amr",
-                "info_af_asj",
-                "info_af_eas",
-                "info_af_nfe",
-                "info_af_oth",
-
-                "info_csq_polyphen",
-                "info_csq_dann_score",
-                "info_csq_sift",
-                "info_csq_gerp_rs",
-                "info_csq_fathmm_pred",
-                "info_csq_primateai_pred",
-                "info_csq_lrt_pred",
-                "info_csq_metasvm_pred",
-
-                "info_csq_af_afr",
-                "info_csq_af_amr",
-                "info_csq_af_asj",
-                "info_csq_af_eas",
-                "info_csq_af_nfe",
-                "info_csq_af_nfe",
-                "info_csq_af_oth",
-                "info_csq_af",
-                "info_csq_CADD_PHRED",
-                "info_csq_CADD_RAW",
-
-                "info_csq_feature_type",
-                "info_csq_canonical",
-                "info_csq_gnomad_af",
-                "info_csq_gnomad_afr_af",
-                "info_csq_gnomad_amr_af",
-                "info_csq_gnomad_asj_af",
-                "info_csq_gnomad_eas_af",
-                "info_csq_gnomad_fin_af",
-                "info_csq_gnomad_nfe_af",
-                "info_csq_gnomad_oth_af",
-                "info_csq_gnomad_sas_af",
-                "info_csq_gnomadg_af",
-                "info_csq_gnomadg_af_nfe",
-                "info_csq_gnomadg_af_afr",
-                "info_csq_gnomadg_af_amr",
-                "info_csq_gnomadg_af_asj",
-                "info_csq_gnomadg_af_eas",
-                "info_csq_gnomadg_af_fin",
-                "info_csq_gnomadg_af_oth",
-                "info_csq_mutationtaster_pred",
-                "info_csq_mvp_score",
-                "info_csq_spliceai_pred_ds_ag",
-                "info_csq_spliceai_pred_ds_al",
-                "info_csq_spliceai_pred_ds_dg",
-                "info_csq_spliceai_pred_ds_dl",
-                "filter",
-                "info_csq_symbol"));
+        colsToIndex.addAll(Arrays.asList(columnsToIndex));
 
         final String tableUniqueIndexName = tableName.substring(0, Math.min(15, tableName.length()));
 
