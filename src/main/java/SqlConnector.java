@@ -30,12 +30,11 @@ public class SqlConnector {
         random = new Random();
 
         Properties prop = new Properties();
-
         try {
             //load columns which are to be indexed from config file
             prop.load(SqlConnector.class.getResourceAsStream("/application.properties"));
-            columnsToIndex = prop.getProperty("columnsToIndex").split(",");
-        } catch (IOException ex) {
+            columnsToIndex = prop.getProperty("columnsToIndex", "").split(",");
+        } catch (Exception ex) {
             columnsToIndex = new String[0];
             ex.printStackTrace();
         }
