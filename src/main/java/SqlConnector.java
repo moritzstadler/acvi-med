@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -179,8 +178,6 @@ public class SqlConnector {
 
         for (String infoKey : infoNames) {
             if (!infoKey.equals("CSQ")) {
-                    /*create.setString(colIndex, variant.getInfoMap().get(infoKey));
-                    colIndex++;*/
                 String value = variant.getInfoMap().get(infoKey);
                 if (value == null || value.equals("")) {
                     values.add("NULL");
@@ -197,8 +194,6 @@ public class SqlConnector {
                 if (value.equals("")) {
                     value = null;
                 }
-                    /*create.setString(colIndex, value);
-                    colIndex++;*/
                 if (value == null) {
                     values.add("NULL");
                 } else {
