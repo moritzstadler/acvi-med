@@ -1,3 +1,8 @@
+import org.postgresql.copy.CopyIn;
+import org.postgresql.copy.CopyManager;
+import org.postgresql.core.BaseConnection;
+import org.postgresql.jdbc.PgConnection;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -130,7 +135,7 @@ public class SqlConnector {
             return;
         }
 
-        Connection connection = getBatchConnection();
+        /*Connection connection = getBatchConnection();
 
         int currentPid = pidStart;
         int currentVid = vidStart;
@@ -153,6 +158,118 @@ public class SqlConnector {
         create.close();
 
         connection.commit();
+        */
+
+        List<String> rowsToAdd = new LinkedList<>();
+
+        int currentPid = pidStart;
+        int currentVid = vidStart;
+
+        for (Variant variant : variants) {
+            ArrayList<String> singleVariantSqls = getSingleVariantCopySqls(variant, currentPid, currentVid);
+            rowsToAdd.addAll(singleVariantSqls);
+            currentPid += singleVariantSqls.size();
+            currentVid++;
+        }
+
+        PgConnection copyOperationConnection = (PgConnection) connection;
+        CopyManager copyManager = new CopyManager(copyOperationConnection);
+        CopyIn copyIn = copyManager.copyIn(String.format("COPY %s FROM STDIN WITH DELIMITER '§'", tableName));
+
+        try {
+            for (String row : rowsToAdd) {
+                byte[] bytes = row.getBytes();
+                copyIn.writeToCopy(bytes, 0, bytes.length);
+            }
+            copyIn.endCopy();
+        } finally {
+            if (copyIn.isActive()) {
+                copyIn.cancelCopy();
+            }
+        }
+    }
+
+    private ArrayList<String> getSingleVariantCopySqls(Variant variant, int pid, int vid) {
+        ArrayList<String> result = new ArrayList<>();
+        for (String csq : variant.getCSQs()) {
+            result.add(getSingleVariantCopySql(variant, pid, vid, csq));
+            pid++;
+        }
+        return result;
+    }
+
+    private String getSingleVariantCopySql(Variant variant, int pid, int vid, String csqString) {
+        ArrayList<String> values = new ArrayList<>();
+
+        values.add(pid + ""); //primary id
+        values.add(vid + ""); //variant id
+        values.add(convertToCopySqlString(variant.getChrom()));
+        values.add(convertToCopySqlString(variant.getPos()));
+        values.add(convertToCopySqlString(variant.getRef()));
+        values.add(convertToCopySqlString(variant.getAlt()));
+        values.add(convertToCopySqlString(variant.getQual()));
+        values.add(convertToCopySqlString(variant.getFilter()));
+
+        for (String infoKey : infoNames) {
+            if (!infoKey.equals("CSQ")) {
+                String value = variant.getInfoMap().get(infoKey);
+                if (value == null || value.equals("")) {
+                    values.add("NULL");
+                } else {
+                    values.add(convertToCopySqlString(value));
+                }
+            }
+        }
+
+        if (!csqString.equals("")) {
+            String[] csq = csqString.split("\\|", -1);
+            for (String s : csq) {
+                String value = s;
+                if (value.equals("")) {
+                    value = null;
+                }
+                if (value == null) {
+                    values.add("NULL");
+                } else {
+                    values.add(convertToCopySqlString(value));
+                }
+            }
+        } else {
+            for (int i = 0; i < csqNames.size(); i++) {
+                values.add("NULL");
+            }
+        }
+
+        String[] individualFormatTypes = variant.getFormat().split(":", -1);
+        HashMap<String, String> formatKeyValueIndividual = new HashMap<>();
+        for (String format : variant.getFormats()) {
+            String[] formatSplit = format.split(":", -1);
+            for (int i = 0; i < formatSplit.length; i++) {
+                formatKeyValueIndividual.put(individualFormatTypes[i], formatSplit[i]);
+            }
+
+            for (String formatType : formatTypes) {
+                if (formatKeyValueIndividual.containsKey(formatType)) {
+                    if (formatType.toLowerCase().equals("gt")) {
+                        String cleanGt = formatKeyValueIndividual.get(formatType).replaceAll("\\|", "/");
+                        cleanGt = cleanGt.replaceAll("[1-9]+[0-9]*/[1-9]+[0-9]*", "1/1");
+                        cleanGt = cleanGt.replaceAll("[1-9]+[0-9]*/0", "1/0");
+                        cleanGt = cleanGt.replaceAll("0/[1-9]+[0-9]*", "0/1");
+                        values.add(convertToCopySqlString(cleanGt));
+                    } else {
+                        values.add(convertToCopySqlString(formatKeyValueIndividual.get(formatType)));
+                    }
+                } else {
+                    values.add("NULL");
+                }
+            }
+        }
+
+        return "" + String.join("§", values) + "\n";
+    }
+
+    private String convertToCopySqlString(String value) {
+        return value.replaceAll("§", "");
     }
 
     private ArrayList<String> getSingleVariantSqls(Variant variant, int pid, int vid) {
