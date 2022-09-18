@@ -154,7 +154,7 @@ RUN ensembl-vep/travisci/build_c.sh && \
 
 ENV LC_ALL $LANG_VAR
 ENV LANG $LANG_VAR
-
+$OPT_SRC/ensembl-vep
 # Switch back to vep user
 USER vep
 ENV PERL5LIB $PERL5LIB_TMP
@@ -173,11 +173,11 @@ RUN echo >> $OPT/.profile && \
 #######################
 
 FROM maven:3.8-jdk-11
-COPY src /usr/src/app/src
-COPY pom.xml /usr/src/app
-COPY application.properties /usr/src/app/src/main/resources/
-COPY import /usr/src/app
-WORKDIR /usr/src/app
+COPY src $OPT_SRC/ensembl-vep/src
+COPY pom.xml $OPT_SRC/ensembl-vep
+COPY application.properties $OPT_SRC/ensembl-vep/src/main/resources/
+COPY import $OPT_SRC/ensembl-vep
+#WORKDIR /usr/app/src
 RUN chmod +x import
 RUN mvn install
 EXPOSE 5432
