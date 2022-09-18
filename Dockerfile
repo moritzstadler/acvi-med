@@ -100,6 +100,8 @@ RUN apt-get update && apt-get -y install \
     perl \
     perl-base \
     unzip \
+    maven \
+    openjdk-11-jdk \
     vim && \
     apt-get -y purge manpages-dev && \
     apt-get clean && \
@@ -173,8 +175,6 @@ RUN echo >> $OPT/.profile && \
 #######################
 
 ##FROM maven:3.8-jdk-11
-RUN apt-get -y install maven
-RUN apt-get -y install openjdk-11-jdk
 COPY src $OPT_SRC/ensembl-vep/src
 COPY pom.xml $OPT_SRC/ensembl-vep
 COPY application.properties $OPT_SRC/ensembl-vep/src/main/resources/
