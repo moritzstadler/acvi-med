@@ -100,7 +100,7 @@ RUN apt-get update && apt-get -y install \
     perl \
     perl-base \
     unzip \
-    maven \
+#    maven \
 #    openjdk-11-jdk \
     vim && \
     apt-get -y purge manpages-dev && \
@@ -180,7 +180,7 @@ COPY pom.xml $OPT_SRC/ensembl-vep
 COPY application.properties $OPT_SRC/ensembl-vep/src/main/resources/
 COPY import $OPT_SRC/ensembl-vep
 WORKDIR $OPT_SRC/ensembl-vep
-RUN sudo chmod +x import
+RUN chmod +x import
 RUN mvn install
 EXPOSE 5432
 ###ENTRYPOINT ["./import"]
