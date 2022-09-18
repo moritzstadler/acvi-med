@@ -100,8 +100,8 @@ RUN apt-get update && apt-get -y install \
     perl \
     perl-base \
     unzip \
-#    maven \
-#    openjdk-11-jdk \
+    maven \
+    openjdk-11-jdk \
     vim && \
     apt-get -y purge manpages-dev && \
     apt-get clean && \
@@ -174,12 +174,14 @@ RUN echo >> $OPT/.profile && \
 ### Custom importer ###
 #######################
 
-##FROM maven:3.8-jdk-11
+#FROM maven:3.8-jdk-11
 COPY src $OPT_SRC/ensembl-vep/src
 COPY pom.xml $OPT_SRC/ensembl-vep
 COPY application.properties $OPT_SRC/ensembl-vep/src/main/resources/
 COPY import $OPT_SRC/ensembl-vep
 WORKDIR $OPT_SRC/ensembl-vep
+USER root
+RUN chmod o+w $OPT_SRC/ensembl-vep
 RUN chmod +x import
 RUN mvn install
 EXPOSE 5432
