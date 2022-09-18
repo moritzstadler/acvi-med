@@ -177,8 +177,8 @@ COPY src $OPT_SRC/ensembl-vep/src
 COPY pom.xml $OPT_SRC/ensembl-vep
 COPY application.properties $OPT_SRC/ensembl-vep/src/main/resources/
 COPY import $OPT_SRC/ensembl-vep
-#WORKDIR /usr/app/src
-RUN chmod +x ./import
+WORKDIR $OPT_SRC/ensembl-vep
+RUN chmod +x import
 RUN mvn install
 EXPOSE 5432
 #ENTRYPOINT ["./import"]
