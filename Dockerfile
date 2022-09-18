@@ -172,14 +172,16 @@ RUN echo >> $OPT/.profile && \
 ### Custom importer ###
 #######################
 
-FROM maven:3.8-jdk-11
-#COPY src $OPT_SRC/ensembl-vep/src
-#COPY pom.xml $OPT_SRC/ensembl-vep
-#COPY application.properties $OPT_SRC/ensembl-vep/src/main/resources/
-#COPY import $OPT_SRC/ensembl-vep
-#WORKDIR $OPT_SRC/ensembl-vep
-#RUN chmod +x import
-#RUN mvn install
-#EXPOSE 5432
+##FROM maven:3.8-jdk-11
+RUN apt-get -y install maven
+RUN apt-get -y install openjdk-11-jdk
+COPY src $OPT_SRC/ensembl-vep/src
+COPY pom.xml $OPT_SRC/ensembl-vep
+COPY application.properties $OPT_SRC/ensembl-vep/src/main/resources/
+COPY import $OPT_SRC/ensembl-vep
+WORKDIR $OPT_SRC/ensembl-vep
+RUN chmod +x import
+RUN mvn install
+EXPOSE 5432
 ###ENTRYPOINT ["./import"]
 
