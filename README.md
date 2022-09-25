@@ -1,4 +1,36 @@
-# Vcfimport
+__TOC__
+
+# Introduction
+
+This tool ...
+TODO add video here
+
+## Architecture
+
+TODO add diagram
+
+## System Requirements
+
+It is highly recommended to install the system on linux. If you wish to annotate the files before importing them (this is necessary if your
+VCF files are not annotated with vep already) you need roughly 500GB (TODO how much is actually needed?) of free disk space.
+The following programs are required for starting the system: (TODO spellcheck)
+
+- <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">git</a>
+- <a href="https://docs.docker.com/engine/install/" target="_blank">Docker</a>
+- <a href="https://docs.docker.com/compose/install/" target="_blank">Docker-Compose</a>
+- Free ports on `8080`, `3000`, `5432`, `3306`
+
+# Tool (TODO add name)
+
+## Necessary Configurations
+
+Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.
+
+## Deploying the System
+
+<pre><code>docker-compose up --build</code></pre>
+
+# Annotation and Import
 
 Before importing a VCF file make sure that the Postgres database is running on port `5432`. 
 
