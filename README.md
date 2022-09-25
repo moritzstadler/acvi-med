@@ -25,6 +25,9 @@ The following programs are required for starting the system: (TODO spellcheck)
 ## Necessary Configurations
 
 Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.
+Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
+choosing an appropriate location for storing its files. Adapt line 15 in [docker-compose.yaml file](tool/docker-compose.yaml) <pre><code>- <b>/data/vv/postgres</b>:/var/lib/postgresql/data</code></pre> to change
+the location.
 
 ## Deploying the System
 
@@ -32,7 +35,7 @@ Before deploying the system make sure to adapt the [docker-compose.yaml file](to
 
 # Annotation and Import
 
-Before importing a VCF file make sure that the Postgres database is running on port `5432`. 
+Before importing a VCF file make sure that the PostgreSQL database is running on port `5432`. 
 
 ## Build the container
 
@@ -48,7 +51,7 @@ Once the container has been built successfully, you can start the import by exec
 
 <pre><code>docker run --rm -it --net="host" -v <b>/absolute/path/to/your/vcffolder</b>:/files vcfimport:latest /files/<b>file.vcf</b> jdbc:postgresql://localhost:5432/sample postgres password</code></pre>
 
-<i>Note that if you decided to use a different Postgres host, username or password that change needs to be reflected in the command:
+<i>Note that if you decided to use a different PostgreSQL host, username or password that change needs to be reflected in the command:
 ```docker run --rm -it --net="host" -v <folderpath>:/files vcfimport:latest /files/<filename> <postgreshost>/<database> <postgresusername> <postgrespassword>```</i>
 
 The importer should now import your file and will terminate upon completion. 
