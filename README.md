@@ -26,8 +26,10 @@ The following programs are required for starting the system: (TODO spellcheck)
 
 Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.
 Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
-choosing an appropriate location for storing its files. Adapt line 15 in [docker-compose.yaml file](tool/docker-compose.yaml) <pre><code>- <b>/data/vv/postgres</b>:/var/lib/postgresql/data</code></pre> to change
-the location.
+choosing an appropriate location for storing its files. Adapt line 15 in [docker-compose.yaml file](tool/docker-compose.yaml) <code>- <b>/data/vv/postgres</b>:/var/lib/postgresql/data</code> to change
+the location. 
+Secondly if you are not running the system on localhost and rather want to provide access to other user, replace the URLs
+in the [config.json file](tool/web/src/config.json). `appBaseUrl` refers to the URL the application can be accessed through in the web browser. `apiBaseUrl` defines the URL core is accessed through.
 
 ## Deploying the System
 
