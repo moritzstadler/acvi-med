@@ -1,5 +1,4 @@
 /target
 .idea
 *.iml
-*.vcf
 .DS_Store
