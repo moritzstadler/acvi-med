@@ -1,0 +1,161 @@
+{
+  "filterable": [
+    "chrom", "pos", "info_csq_impact", "info_csq_afr_af", "info_csq_gerp_rs"
+  ],
+  "columns": [
+    {
+      "name": "",
+      "id": "pid",
+      "link": "",
+      "description": "",
+      "sample": "",
+      "range": "",
+      "displayable": false
+    },
+    {
+      "name": "Chromosome",
+      "id": "chrom",
+      "link": "",
+      "description": "The chromosome of the variant.",
+      "sample": "chr2",
+      "range": "from 1 up to chromsome length",
+      "displayable": false
+    },
+    {
+      "name": "Position",
+      "id": "pos",
+      "link": "",
+      "description": "The position of the variant on the chromosome. This defines at which base the variant occurs.",
+      "sample": "219863996",
+      "range": "from 1 up to chromsome length",
+      "displayable": false
+    },
+    {
+      "id": "info_csq_symbol",
+      "name": "Gene Symbol",
+      "description": "This mutation is found in the given gene.",
+      "displayable": true
+    },
+    {
+      "id": "info_csq_phenotypes",
+      "name": "Phenotypes",
+      "description": "The phenotypes this mutation can cause.",
+      "displayable": true,
+      "displaytype": "prettyampersand"
+    },
+    {
+      "name": "Allele frequency Africa",
+      "id": "info_csq_afr_af",
+      "link": "",
+      "sample": "0.33",
+      "description": "The frequency of the the allele in the given population.",
+      "displayable": true
+    },
+    {
+      "name": "Allele frequency Native America",
+      "id": "info_csq_amr_af",
+      "link": "",
+      "sample": "0.33",
+      "description": "The frequency of the the allele in the given population.",
+      "displayable": true
+    },
+    {
+      "name": "Allele frequency East Asia",
+      "id": "info_csq_eas_af",
+      "link": "",
+      "sample": "0.33",
+      "description": "The frequency of the the allele in the given population.",
+      "displayable": true
+    },
+    {
+      "name": "Maximum of allele frequencies among all populations",
+      "id": "info_csq_max_af",
+      "link": "",
+      "sample": "0.33",
+      "description": "The maximum frequency of the the allele across all populations.",
+      "displayable": true
+    },
+    {
+      "id": "info_csq_pubmed",
+      "name": "Related PubMed articles",
+      "description": "PubMed articles associated with this mutation.",
+      "displayable": true,
+      "displaytype": "pubmed"
+    },
+    {
+      "id": "info_csq_clin_sig",
+      "name": "Clinical Significance",
+      "description": "The clinical significance of the mutation.",
+      "displayable": true,
+      "displaytype": "clinsig"
+    },
+    {
+      "id": "info_csq_impact",
+      "name": "Impact",
+      "displayable": true,
+      "displaytype": "impact"
+    },
+    {
+      "name": "Callset names",
+      "id": "info_callsetnames",
+      "link": "https://link.to.paper.com/some/paper",
+      "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+      "sample": "14",
+      "range": "0-100",
+      "displayable": true
+    },
+    {
+      "id": "info_csq_interpro_domain",
+      "name": "Interpro domains",
+      "description": "The Interpro domains of the mutation.",
+      "displayable": true,
+      "displaytype": "prettyampersand"
+    },
+    {
+      "id": "info_csq_clinvar_mc",
+      "name": "ClinVar MC",
+      "description": "ClinVar MC field.",
+      "displayable": true,
+      "displaytype": "prettyampersand"
+    },
+    {
+      "id": "info_csq_clinvar_clnrevstat",
+      "name": "ClinVar clinical review status",
+      "description": "The ClinVar status.",
+      "displayable": true,
+      "displaytype": "prettyampersand"
+    },
+    {
+      "id": "info_csq_existing_variation",
+      "name": "Existing variation",
+      "displayable": true,
+      "displaytype": "prettyampersand"
+    },
+    {
+      "id": "info_csq_domainsPDB",
+      "name": "Protein Data Bank domains",
+      "description": "The domains as provided by PDB.",
+      "displayable": true,
+      "displaytype": "prettyampersand"
+    },
+    {
+      "name": "Conservation (GERP)",
+      "id": "info_csq_gerp_rs",
+      "link": "https://genome.cshlp.org/content/15/7/901.full",
+      "sample": "-2.14",
+      "description": "Genomic Evolutionary Rate Profiling (GERP) score. A score used to calculate the conservation of each nucleotide in multi-species alignment. Ranges from -12.3 to 6.17, with 6.17 being the most conserved.",
+      "from": -12.3,
+      "to": 6.17,
+      "displayable": true
+    },
+    {
+      "id": "info_csq_hgvsc",
+      "name": "HGVSC"
+    },
+    {
+      "id": "info_csq_ensp",
+      "name": "something",
+      "description": "something something something"
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+	"columns": [
+		{
+			"name": "CAD",
+			"identifier": "",
+			"link": "https://link.to.paper.com/some/paper",
+			"description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+			"sample": "14",
+			"type": "float",
+			"range": "0-100"
+		},
+		{
+			"name": "Position",
+			"identifier": "start_position",
+			"link": "",
+			"description": "The position of the variant on the chromosome. This defines at which base the variant occurs.",
+			"sample": "219863996",
+			"type": "float",
+			"range": "from 1 up to chromsome length"
+		},		
+		{
+			"name": "SIFT",
+			"identifier": "",
+			"link": "https://link.to.opeop.com/some/paper",
+			"description": "sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+			"sample": "30",
+			"type": "float",
+			"range": "0-100"
+		},		
+		{
+			"name": "Frequency",
+			"identifier": "",
+			"link": "https://link.some.paper.com/some/paper",
+			"description": "eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+			"sample": "20.3",
+			"type": "float",
+			"range": "0-100%"
+		},		
+		{
+			"name": "GnomAD",
+			"identifier": "",
+			"link": "https://gnomad.ling",
+			"description": "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+			"sample": "17.89",
+			"type": "float",
+			"range": "0-100%"
+		},
+		{
+			"name": "MULTI",
+			"identifier": "",
+			"link": "https://testlink.at",
+			"description": "This field can take descrete values. Possible are SEVERE, MILD und BENIGN. These represent some value",
+			"sample": "MILD",
+			"type": "enum",
+			"range": ["SEVERE", "MILD", "BENIGN"]
+		},		
+		{
+			"name": "RANGE",
+			"identifier": "",
+			"link": "https://testlink.asdfasdf",
+			"description": "Discrete values",
+			"sample": "SOME",
+			"type": "enum",
+			"range": ["SOME", "VALUE", "BASIC", "STRING", "TEXT"]
+		},		
+		{
+			"name": "Column1",
+			"identifier": "",
+			"link": "https://test.com",
+			"description": "Some column",
+			"sample": "17.89",
+			"type": "float",
+			"range": "0-10"
+		},
+		{
+			"name": "Column2",
+			"identifier": "",
+			"link": "https://test.com",
+			"description": "Some column",
+			"sample": "17.89",
+			"type": "float",
+			"range": "0-10"
+		},	
+		{
+			"name": "Column3",
+			"identifier": "",
+			"link": "https://test.com",
+			"description": "Some column",
+			"sample": "17.89",
+			"type": "float",
+			"range": "0-10"
+		},	
+		{
+			"name": "Column4",
+			"identifier": "",
+			"link": "https://test.com",
+			"description": "Some column",
+			"sample": "17.89",
+			"type": "float",
+			"range": "0-10"
+		},
+		{
+			"name": "Column5",
+			"identifier": "",
+			"link": "https://test.com",
+			"description": "Some column",
+			"sample": "17.89",
+			"type": "float",
+			"range": "0-10"
+		},	
+		{
+			"name": "Column6",
+			"identifier": "",
+			"link": "https://test.com",
+			"description": "Some column",
+			"sample": "17.89",
+			"type": "float",
+			"range": "0-10"
+		}						
+	]
+}

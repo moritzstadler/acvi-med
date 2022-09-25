@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+	<head>
+		<title>Architecture</title>
+		<style>
+			* {
+				font-family: Arial;
+			}
+
+			.container {
+				border: 3px solid #88abb8;
+				border-radius: 20px;
+				width: 500px;
+				text-align: center;
+				padding: 20px;
+				margin: 30px;
+				position: absolute;
+				background: #ddf3fa;
+				background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg');
+				background-size: 60px;
+				background-repeat: no-repeat;
+				background-position: 5px 5px;
+			}
+
+			.file {
+				border: 5px solid #000;
+				height: 70px;
+				width: 70px;
+				position: absolute;
+				font-size: 28px;
+				font-family: monospace;
+				font-weight: bold;
+				padding-top: 30px;
+				border-radius: 0px 20px 0px 0px;
+			}
+
+			.filedent {
+				border-left: 5px solid #000;
+				border-bottom: 5px solid #000;
+				width: 10px;
+				height: 10px;
+				position: absolute;
+				margin-top: -30px;
+				margin-left: 55px;
+			}
+
+			.external {
+				background: #eee;
+				border: 3px solid #ccc;
+				background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg');
+				background-size: 60px;
+				background-repeat: no-repeat;
+				background-position: 5px 5px;
+			}
+
+			.half {
+				width: 200px;
+			}
+
+			.container h2 {
+				font-size: 22px;
+				margin: 0px;
+				line-height: 1.0;
+				font-weight: normal;
+				margin-bottom: 10px;
+			}
+
+			img {
+				width: 60px;
+				margin-top: 40px;
+			}
+
+			.elipse {
+				background: linear-gradient(91deg, #aeaeae, #ffffff);
+				width: 150px;
+				height: 20px;
+				border-radius: 75px / 10px;
+				border: 1px solid;
+				margin: auto;
+			}
+
+			.bottom {
+				background: #aaa;
+			}
+
+			.rectangle {
+				background: linear-gradient(91deg, #aeaeae, #ffffff);
+				width: 150px;
+				height: 150px;
+				margin: auto;
+				margin-top: -10px;
+				margin-bottom: -10px;
+				border-right: 1px solid;
+				border-left: 1px solid;
+			}
+
+			.project {
+				position: absolute;
+				height: 690px;
+				width: 900px;
+				margin-left: 475px;
+				border: 2px dashed #b96a00;
+				background: #fffcf8;
+			}
+
+			.compose {
+				position: absolute;
+				height: 655px;
+				width: 585px;
+				margin-left: 775px;
+				margin-top: 15px;
+				border: 2px dashed green;
+				background: #f5fff5;
+			}
+
+			.arrow {
+				position: absolute;
+				z-index: 1000;
+			}
+		</style>
+	</head>
+	<body>
+		<div style="margin-left: 50px; margin-top: 200px;" class="file">
+			<div class="filedent"></div>
+			.VCF
+		</div>
+		<div style="margin-left: 200px; margin-top: 200px;" class="container half external">
+			<h2>VEP Ensembl.org</h2>
+			Annotating the plain VCF file
+		</div>
+		<div class="project"></div>
+		<div class="compose"></div>
+		<div style="margin-left: 500px; margin-top: 200px;" class="container half">
+			<h2>Importer (Java)</h2>
+			Importing and preprocessing the VCF
+		</div>
+		<div style="margin-left: 800px; margin-top: 400px;" class="container">
+			<h2>Core (Spring)</h2>
+			Managing user access, performing DB queries and caching results
+		</div>
+		<div style="margin-left: 800px; margin-top: 560px;" class="container">
+			<h2>Web (React.JS)</h2>
+			Provinding a interface to users, accessible through a web browser 
+		</div>		
+		<div style="margin-left: 1100px;" class="container half">
+			<h2>MySQL</h2>
+			Containing userdata and configurations<br/><br/>
+			<div class="elipse">
+			</div>
+			<div class="rectangle">
+				<img src="https://upload.wikimedia.org/wikipedia/de/thumb/d/dd/MySQL_logo.svg/1600px-MySQL_logo.svg.png?20190217224241" />
+			</div>
+			<div class="elipse bottom">
+			</div>
+		</div>
+		<div style="margin-left: 800px;" class="container half">
+			<h2>Postgresql</h2>
+			Containing patient samples<br/><br/><br/>
+			<div class="elipse">
+			</div>
+			<div class="rectangle">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1080px-Postgresql_elephant.svg.png?20080116191800" />
+			</div>
+			<div class="elipse bottom">
+			</div>
+		</div>
+		<img style="margin-left: 900px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- postgres to core -->
+		<img style="margin-left: 1000px; margin-top: 500px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- core to web -->		
+		<img style="margin-left: 1075px; margin-top: 500px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Arrow_head_up.svg" /> <!-- web to core -->		
+
+		<img style="margin-left: 1150px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- mysql -->		
+		<img style="margin-left: 1225px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Arrow_head_up.svg" /> <!-- mysql -->	
+
+		<img style="margin-left: 445px; margin-top: 220px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to import -->
+
+		<img style="margin-left: 745px; margin-top: 220px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to post -->
+
+		<img style="margin-left: 135px; margin-top: 220px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to vep -->		
+	</body>
+</html>

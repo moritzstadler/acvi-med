@@ -1,0 +1,48 @@
+diff --git a/node_modules/igv/.DS_Store b/node_modules/igv/.DS_Store
+new file mode 100644
+index 0000000..9498e50
+Binary files /dev/null and b/node_modules/igv/.DS_Store differ
+diff --git a/node_modules/igv/dist/igv.esm.js b/node_modules/igv/dist/igv.esm.js
+index 5853c06..b00e3d0 100644
+--- a/node_modules/igv/dist/igv.esm.js
++++ b/node_modules/igv/dist/igv.esm.js
+@@ -16880,7 +16880,7 @@ async function loadURL(url, options) {
+ 
+         // Various Google tansformations
+         if (isGoogleURL(url)) {
+-            if (isGoogleStorageURL(url)) {
++            /*if (isGoogleStorageURL(url)) {
+                 url = translateGoogleCloudURL(url);
+             }
+             url = addApiKey(url);
+@@ -16892,7 +16892,7 @@ async function loadURL(url, options) {
+             // If we have an access token try it, but don't force a signIn or request for scopes yet
+             if (!oauthToken) {
+                 oauthToken = getCurrentGoogleAccessToken();
+-            }
++            }*/
+         }
+ 
+         const headers = options.headers || {};
+diff --git a/node_modules/igv/dist/igv.js b/node_modules/igv/dist/igv.js
+index 8235704..ab35f84 100644
+--- a/node_modules/igv/dist/igv.js
++++ b/node_modules/igv/dist/igv.js
+@@ -17201,7 +17201,7 @@
+       return new Promise(function (resolve, reject) {
+         // Various Google tansformations
+         if (isGoogleURL(url)) {
+-          if (isGoogleStorageURL(url)) {
++          /*if (isGoogleStorageURL(url)) {
+             url = translateGoogleCloudURL(url);
+           }
+ 
+@@ -17214,7 +17214,7 @@
+ 
+           if (!oauthToken) {
+             oauthToken = getCurrentGoogleAccessToken();
+-          }
++          }*/
+         }
+ 
+         const headers = options.headers || {};

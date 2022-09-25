@@ -1,0 +1,444 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Importer {
+
+    HashMap<String, Info> headerById;
+    Csq[] csqs;
+    ArrayList<String> formatTypes;
+    Set<String> formatTypesSet;
+    String tableName;
+    String[] formatNames;
+    int pid;
+    int vid;
+    ArrayList<Integer> maxColSizes;
+
+    List<Variant> batch;
+
+    int positionOfConsequenceInCSQ;
+    int positionOfBiotypeInCSQ;
+    int positionOfHgvsc;
+    HashSet<Integer> positionOfSpecialCSQFields;
+    HashSet<Integer> positionOfVerboseCSQFields;
+    HashSet<Integer> positionOfMaximizableCSQFields;
+
+    int tooManyIsoformsCount = 0;
+    int tooFewIsoformsCount = 0;
+
+    public Importer() {
+        headerById = new HashMap<>();
+        formatTypes = new ArrayList<>();
+        formatTypesSet = new HashSet<>();
+        batch = new LinkedList<>();
+        positionOfSpecialCSQFields = new HashSet<>();
+        positionOfVerboseCSQFields = new HashSet<>();
+        positionOfMaximizableCSQFields = new HashSet<>();
+    }
+
+    public int importFile(String name, String tableName, boolean determineFormat) throws IOException, SQLException {
+        long totalLines;
+        try (Stream<String> stream = Files.lines(new File(name).toPath(), StandardCharsets.UTF_8)) {
+            totalLines = stream.count();
+        }
+
+        int lines = 0;
+        pid = 1;
+        vid = 1;
+        try (BufferedReader br = new BufferedReader(new FileReader(name))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                processLine(line, determineFormat);
+                int batchSize = batch.stream().map(b -> b.getCSQs().length).reduce(0, Integer::sum);
+                if (batchSize >= 50000) {
+                    SqlConnector.getInstance().insertVariantBatch(pid - batchSize, vid - batch.size(), batch, tableName, formatNames);
+                    batch = new LinkedList<>();
+                }
+
+                lines++;
+
+                if (lines % 1000 == 0) {
+                    if (determineFormat) {
+                        System.out.println("Preprocessing line " + lines + "/" + totalLines);
+                    } else {
+                        System.out.println("Importing line " + lines + "/" + totalLines);
+                    }
+                }
+            }
+        }
+
+        //insert remaining batch
+        if (!determineFormat) {
+            int batchSize = batch.stream().map(b -> b.getCSQs().length).reduce(0, Integer::sum);
+            SqlConnector.getInstance().insertVariantBatch(pid - batchSize, vid - batch.size(), batch, tableName, formatNames);
+
+            System.out.println("Too many isoforms to properly match &-seperated values: " + tooManyIsoformsCount);
+            System.out.println("Too few isoforms to properly match &-seperated values: " + tooFewIsoformsCount);
+
+            System.out.println("Creating Indexes");
+            SqlConnector.getInstance().makeIndices(tableName, formatNames);
+        }
+
+        this.tableName = tableName;
+
+        if (determineFormat) {
+            List<Info> headers = headerById.keySet().stream().map(k -> headerById.get(k)).collect(Collectors.toList());
+            SqlConnector.getInstance().createTable(tableName, headers, csqs, formatNames, formatTypes, maxColSizes);
+        }
+
+        return lines;
+    }
+
+    private void processLine(String line, boolean determineFormat) {
+        if (line.startsWith("##")) {
+            processHeader(getAfter(line, "##"), determineFormat);
+        } else if (line.startsWith("#")) {
+            processDescriptor(getAfter(line, "#"));
+        } else {
+            //normal lines go here
+            processVariant(line, determineFormat);
+        }
+    }
+
+    private void processHeader(String headerLine, boolean determineFormat) {
+        if (headerLine.startsWith("INFO")) {
+            processInfoHeader(getAfter(headerLine, "INFO"), determineFormat);
+        }
+    }
+
+    private void processDescriptor(String descriptorLine) {
+        String nameLine = getAfter(descriptorLine, "FORMAT\t");
+        formatNames = nameLine.split("\t");
+        for (int i = 0; i < formatNames.length; i++) {
+            formatNames[i] = formatNames[i].replaceAll("-", "_").replaceAll("[^a-zA-Z0-9_]", "").toLowerCase();
+            System.out.println("format name: " + formatNames[i]);
+        }
+    }
+
+    private void processInfoHeader(String infoHeader, boolean determineFormat) {
+        String content = getBetweenMax(infoHeader, "<", ">");
+        String[] pairs = content.split(",");
+
+        Info info = new Info();
+
+        for (String pair : pairs) {
+            if (!pair.contains("=")) {
+                continue;
+            }
+
+            String[] split = pair.split("=");
+            String key = split[0];
+            String value = split[1];
+
+            switch (key) {
+                case "ID":
+                    info.setId(value);
+                    break;
+                case "Number":
+                    info.setNumber(value);
+                    break;
+                case "Type":
+                    info.setType(value);
+                    break;
+                case "Description":
+                    info.setDescription(value);
+                    break;
+            }
+        }
+
+        if (info.getId().equals("CSQ")) {
+            if (determineFormat) {
+                processCSQHeader(info);
+            }
+        } else {
+            headerById.put(info.getId(), info);
+        }
+    }
+
+    private void processCSQHeader(Info csq) {
+        String descriptionString = getBetweenMax(csq.getDescription(), "\"", "\"");
+        String arrayDescription = getAfter(descriptionString, "Format: ");
+        String[] csqArrayIds = arrayDescription.split("\\|");
+        csqs = new Csq[csqArrayIds.length];
+        for (int i = 0; i < csqArrayIds.length; i++) {
+            csqs[i] = new Csq(csqArrayIds[i]);
+
+            if (csqArrayIds[i].toLowerCase().equals("consequence")) {
+                positionOfConsequenceInCSQ = i;
+            } else if (csqArrayIds[i].toLowerCase().equals("biotype")) {
+                positionOfBiotypeInCSQ = i;
+            } else if (Config.specialCsqFields.contains(csqArrayIds[i].toLowerCase())) {
+                positionOfSpecialCSQFields.add(i);
+            } else if (csqArrayIds[i].toLowerCase().equals("hgvsc")) {
+                positionOfHgvsc = i;
+            }
+
+            if (Config.verbsoseCsqFields.contains(csqArrayIds[i].toLowerCase())) {
+                positionOfVerboseCSQFields.add(i);
+            }
+
+            if (Config.maximizableCsqFields.contains(csqArrayIds[i].toLowerCase())) {
+                positionOfMaximizableCSQFields.add(i);
+            }
+        }
+        System.out.println("pos biotype" + positionOfBiotypeInCSQ);
+        System.out.println("pos cosequence " + positionOfConsequenceInCSQ);
+        System.out.println("found specialfields " + positionOfSpecialCSQFields.size());
+    }
+
+    private void processVariant(String variantLine, boolean determineFormat) {
+        String[] fields = variantLine.split("\t");
+
+        Variant variant = new Variant();
+        for (int i = 0; i < fields.length; i++) {
+            String value = fields[i];
+            if (i == 0) {
+                variant.setChrom(value);
+            } else if (i == 1) {
+                variant.setPos(value);
+            } else if (i == 2) {
+                variant.setId(value);
+            } else if (i == 3) {
+                variant.setRef(value);
+            } else if (i == 4) {
+                variant.setAlt(value);
+            } else if (i == 5) {
+                variant.setQual(value);
+            } else if (i == 6) {
+                variant.setFilter(value);
+            } else if (i == 7) {
+                variant.setInfo(value);
+            } else if (i == 8) {
+                variant.setFormat(value);
+            } else {
+                variant.getFormats().add(value);
+            }
+        }
+
+        if (determineFormat) {
+            for (String headerId : variant.getInfoMap().keySet()) {
+                if (!headerId.equals("CSQ")) {
+                    if (Config.infoFieldsWithComma.contains(headerId)) {
+                        headerById.get(headerId).matchType(cleanInfoFieldWithComma(variant.getInfoMap().get(headerId)));
+                    } else {
+                        headerById.get(headerId).matchType(variant.getInfoMap().get(headerId));
+                    }
+                }
+            }
+
+            for (String csq : variant.getCSQs()) {
+                if (!csq.equals("")) {
+                    String[] csqInputs = csq.split("\\|", -1);
+                    for (int i = 0; i < csqInputs.length; i++) {
+                        String inputToMatch = csqInputs[i];
+
+                        if (Config.specialCsqFields.contains(csqs[i].getName().toLowerCase())) {
+                            if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
+                                String[] ampersandSplit = inputToMatch.split("&");
+
+                                for (String ampersandItem : ampersandSplit) {
+                                    if (!ampersandItem.equals(".")) {
+                                        csqs[i].matchType(ampersandItem);
+                                    }
+                                }
+                            }
+                        } else if (Config.maximizableCsqFields.contains(csqs[i].getName().toLowerCase())) {
+                            String[] ampersandSplit = inputToMatch.split("&");
+                            for (String ampersandItem : ampersandSplit) {
+                                if (!ampersandItem.equals(".")) {
+                                    csqs[i].matchType(ampersandItem);
+                                }
+                            }
+                        } else {
+                            csqs[i].matchType(inputToMatch);
+                        }
+                    }
+                }
+            }
+
+            String[] formatSplit = variant.getFormat().split(":", -1);
+            for (String s : formatSplit) {
+                if (!formatTypesSet.contains(s)) {
+                    formatTypesSet.add(s);
+                    formatTypes.add(s);
+                }
+            }
+
+            determineMaxColSize(variant);
+        } else {
+            //SqlConnector.getInstance().insertVariant(variant, tableName);
+            alterCSQFields(variant);
+            alterInfoFields(variant);
+            batch.add(variant);
+            pid += variant.getCSQs().length;
+            vid++;
+        }
+    }
+
+    private void alterInfoFields(Variant variant) {
+        for (String infoId : Config.infoFieldsWithComma) {
+            if (variant.getInfoMap().containsKey(infoId)) {
+                variant.getInfoMap().put(infoId, cleanInfoFieldWithComma(variant.getInfoMap().get(infoId)));
+            }
+        }
+        List<String> newInfo = new LinkedList<>();
+        for (String infoId : variant.getInfoMap().keySet()) {
+            newInfo.add(infoId + "=" + variant.getInfoMap().get(infoId));
+        }
+        String alteredInfo = String.join(";", newInfo);
+        variant.setInfo(alteredInfo);
+    }
+
+    private void alterCSQFields(Variant variant) {
+        List<String> alteredCsqs = new LinkedList<>();
+
+        boolean affectedByTooManyIsoforms = false;
+
+        int rightVariantCount = 0;
+        int maxApersandSize = -1;
+        for (String csq : variant.getCSQs()) {
+            if (!csq.equals("")) {
+                String[] csqInputs = csq.split("\\|", -1);
+                boolean rightVariant = false;
+                for (int position : positionOfSpecialCSQFields) {
+                    String inputToMatch = csqInputs[position];
+                    if (csqInputs[positionOfConsequenceInCSQ].equals("missense_variant") && csqInputs[positionOfBiotypeInCSQ].equals("protein_coding")) {
+                        String[] ampersandSplit = inputToMatch.split("&");
+
+                        maxApersandSize = Math.max(maxApersandSize, ampersandSplit.length);
+
+                        String singleAmpersandValue = "";
+                        if (rightVariantCount < ampersandSplit.length) {
+                            singleAmpersandValue = ampersandSplit[rightVariantCount];
+                            if (singleAmpersandValue.equals(".")) {
+                                singleAmpersandValue = "";
+                            }
+
+                            csqInputs[position] = singleAmpersandValue;
+                        } else {
+                            System.out.println("Too many isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + csqInputs[positionOfHgvsc] + " (" + inputToMatch + ")");
+                            csqInputs[position] = "";
+                            affectedByTooManyIsoforms = true;
+                        }
+
+                        rightVariant = true;
+                    } else {
+                        csqInputs[position] = "";
+                    }
+                }
+                if (rightVariant) {
+                    rightVariantCount++;
+                }
+
+                for (int verbosePosition : positionOfVerboseCSQFields) {
+                    csqInputs[verbosePosition] = csqInputs[verbosePosition].replaceAll("[^A-Za-z]", "").toLowerCase();
+                }
+
+                for (int maximizablePosition : positionOfMaximizableCSQFields) {
+                    if (csqs[maximizablePosition].getSqlTypeLevel() == 0) {
+                        int max = 0;
+                        String[] split = csqInputs[maximizablePosition].split("&");
+                        for (String s : split) {
+                            if (!s.isEmpty()) {
+                                max = Math.max(max, Integer.parseInt(s));
+                            }
+                        }
+                        csqInputs[maximizablePosition] = "" + max;
+                    } else if (csqs[maximizablePosition].getSqlTypeLevel() == 1) { //only for doubles
+                        double max = 0.0;
+                        String[] split = csqInputs[maximizablePosition].split("&");
+                        for (String s : split) {
+                            if (!s.isEmpty()) {
+                                max = Math.max(max, Double.parseDouble(s));
+                            }
+                        }
+                        csqInputs[maximizablePosition] = "" + max;
+                    }
+                }
+
+                alteredCsqs.add(String.join("|", csqInputs));
+            }
+        }
+        if (rightVariantCount < maxApersandSize) {
+            System.out.println("Too few isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt());
+            tooFewIsoformsCount++;
+        }
+
+        if (affectedByTooManyIsoforms) {
+            tooManyIsoformsCount++;
+        }
+
+        variant.getInfoMap().put("CSQ", String.join(",", alteredCsqs));
+    }
+
+    private void determineMaxColSize(Variant variant) {
+        for (String csq : variant.getCSQs()) {
+            ArrayList<String> cols = new ArrayList<>();
+
+            cols.add(variant.getChrom());
+            cols.add(variant.getPos());
+            cols.add(variant.getRef());
+            cols.add(variant.getAlt());
+            cols.add(variant.getQual());
+            cols.add(variant.getFilter());
+
+            for (String key : headerById.keySet()) {
+                if (!key.equals("CSQ")) {
+                    cols.add(variant.getInfoMap().getOrDefault(key, ""));
+                }
+            }
+
+            if (!csq.equals("")) {
+                String[] csqCols = csq.split("\\|", -1);
+                cols.addAll(Arrays.asList(csqCols));
+            }
+
+            if (maxColSizes == null) {
+                maxColSizes = new ArrayList<>();
+                for (int i = 0; i < cols.size(); i++) {
+                    maxColSizes.add(0);
+                }
+            }
+
+            while (maxColSizes.size() < cols.size()) {
+                maxColSizes.add(0);
+            }
+
+            for (int i = 0; i < cols.size(); i++) {
+                maxColSizes.set(i, Math.max(maxColSizes.get(i), cols.get(i).length() + 1)); //TODO: THIS IS MIGHT BE WRONG FOR CSQ SPECIAL FIELDS
+            }
+        }
+    }
+
+    private String cleanInfoFieldWithComma(String input) {
+        String clean = input;
+        if (input.contains(",")) {
+            clean = input.split(",")[0];
+        }
+
+        if (clean.equals(".")) {
+            clean = "";
+        }
+
+        return clean;
+    }
+
+    private String getBetweenMax(String line, String start, String end) {
+        return getBeforeLast(getAfter(line, start), end);
+    }
+
+    private String getAfter(String line, String delimiter) {
+        return line.substring(line.indexOf(delimiter) + delimiter.length());
+    }
+
+    private String getBeforeLast(String line, String delimiter) {
+        return line.substring(0, line.lastIndexOf(delimiter));
+    }
+}

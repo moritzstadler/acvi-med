@@ -1,0 +1,70 @@
+.OrderSelector {
+	margin: 20px;
+}
+
+.OrderSelector .singleSelect {
+	border: 2px solid #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	margin-right: 10px; 
+	margin-bottom: 10px;
+	width: 300px;
+	display: inline-block;;
+}
+
+.newSelect {
+	opacity: 0.66;
+}
+
+.inlineBlock {
+	display: inline-block;
+}
+
+span.thenBy {
+	display: inline-block;
+	margin-right: 10px;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 10px;
+}
+
+.OrderSelector select {
+	width: calc(100% - 65px);
+    height: 30px;
+    font-weight: bold;
+    outline: none;
+    display: inline-block;
+}
+
+.OrderSelector .sortMode {
+	display: inline-block;
+	text-align: right;
+	margin-left: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+	background: red;
+	color: #fff;
+	border-radius: 3px;
+	background: #4dbbd5;
+}
+
+.sortMode i {
+	font-size: 20px;
+	cursor: pointer;
+}
+
+.ascending {
+	background: #e64b35 !important;
+}
+
+.transparent {
+	opacity: 0.4;
+}
+
+.deleteSorting {
+	margin-left: 5px;
+}
+
+.deleteSorting i {
+	font-size: 19px;
+}

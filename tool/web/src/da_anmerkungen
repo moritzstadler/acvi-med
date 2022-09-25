@@ -1,0 +1,75 @@
+bravo
+
+Nach einem Gen suchen
+
+
+Spaltenname; Beispielwert; Range
+
+
+Beim Filter blank werte nicht verlieren
+
+
+Links liste spaltennamen (geordnet nach beliebtheit), rechts beschreibung + link paper
+
+kleiner größer, bei character checkmarks
+
+
+bei ergebnis die gefilterten ganz links darstellen
+
+WAS IST MIR SORT ODER ORDER BY?
+
+Save current result as filter
+
+Save filter also in cookie
+
+Human readable definition of a filter
+	"
+		This filters for all variants with an 
+		allel frequency less than 0.01 and a 
+		SIFT score larger than 50 - or an allel
+		frequency less than 0.02 and a CAD
+		score larger than 33.5 
+	"
+
+
+
+
+{
+	filter: {
+		"left": {
+			"left": {
+				"left": {
+					"left": "CAD",
+					"right": 30,
+					"operator": ">"
+				},
+				"right": {
+					"left": "freq",
+					"right": 0.01,
+					"operator": "<"
+				}
+				"operator": "AND"
+			}
+			"right": {
+				"left": {
+					"left": "SIFT",
+					"right": 65,
+					"operator": ">"
+				},
+				"right": {
+					"left": "freq",
+					"right": 0.05,
+					"operator": "<"
+				}
+				"operator": "AND"
+			}
+			"operator": "OR"
+		},
+		"right": {
+			"left": "type",
+			"right": ["mutation", "frameshift"],
+			"operator": "IN"
+		},
+		"operator": "OR"
+	}
+}

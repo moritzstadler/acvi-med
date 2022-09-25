@@ -1,0 +1,1264 @@
+{
+  "filterable":[
+    "info_csq_impact",
+    "info_af_raw",
+    "info_controls_af_popmax",
+    "info_cadd_raw",
+    "info_caddind_raw",
+    "info_af_afr",
+    "info_af_amr",
+    "info_af_asj",
+    "info_af_eas",
+    "info_af_nfe",
+    "info_af_oth",
+    "filter"
+  ],
+  "columns":[
+    {
+      "name":"",
+      "id":"pid",
+      "link":"",
+      "description":"",
+      "sample":"",
+      "range":"",
+      "displayable":false
+    },
+    {
+      "name":"Chromosome",
+      "id":"chrom",
+      "link":"",
+      "description":"The chromosome of the variant.",
+      "sample":"chr2",
+      "range":"from 1 up to chromosome length",
+      "displayable":false
+    },
+    {
+      "name":"Position",
+      "id":"pos",
+      "link":"",
+      "description":"The position of the variant on the chromosome. This defines at which base the variant occurs.",
+      "sample":"219863996",
+      "range":"from 1 up to chromosome length",
+      "displayable":false
+    },
+    {
+      "name":"Variant quality",
+      "id":"filter",
+      "link":"https://pubmed.ncbi.nlm.nih.gov/31830260/",
+      "description":"Each variant has a certain set of QC parameter such as coverage, allelic depth, base calling quality, strand bias etc. These parameter were extracted from validated variants of large scale public datasets and used to train a neural net model. In the analyzed dataset we assign PASS or FAIL to variants using this pretrained neural net model.",
+      "displayable":false
+    },
+    {
+      "name":"Allele frequency Africa",
+      "id":"info_af_afr",
+      "link":"",
+      "sample":"0.01",
+      "description":"Frequency of existing variant in gnomAD across African populations. The v2.1.1 data set accessed with this tool spans 125,748 exome sequences and 15,708 whole-genome sequences from unrelated individuals sequenced as part of various disease-specific and population genetic studies. https://www.nature.com/articles/s41586-020-2267-z",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency Native America",
+      "id":"info_af_amr",
+      "link":"",
+      "sample":"0.01",
+      "description":"Frequency of existing variant in gnomAD across native American populations. The v2.1.1 data set accessed with this tool spans 125,748 exome sequences and 15,708 whole-genome sequences from unrelated individuals sequenced as part of various disease-specific and population genetic studies. https://www.nature.com/articles/s41586-020-2267-z",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency Ashkenazi Jews",
+      "id":"info_af_asj",
+      "link":"",
+      "sample":"0.01",
+      "description":"Frequency of existing variant in gnomAD across Ashkenazi Jewish populations. The v2.1.1 data set accessed with this tool spans 125,748 exome sequences and 15,708 whole-genome sequences from unrelated individuals sequenced as part of various disease-specific and population genetic studies. https://www.nature.com/articles/s41586-020-2267-z",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency East Asia",
+      "id":"info_af_eas",
+      "link":"",
+      "sample":"0.01",
+      "description":"Frequency of existing variant in gnomAD across east Asian populations. The v2.1.1 data set accessed with this tool spans 125,748 exome sequences and 15,708 whole-genome sequences from unrelated individuals sequenced as part of various disease-specific and population genetic studies. https://www.nature.com/articles/s41586-020-2267-z",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency other population",
+      "id":"info_af_oth",
+      "link":"",
+      "sample":"0.01",
+      "description":"Frequency of existing variant in gnomAD across other populations. The v2.1.1 data set accessed with this tool spans 125,748 exome sequences and 15,708 whole-genome sequences from unrelated individuals sequenced as part of various disease-specific and population genetic studies. https://www.nature.com/articles/s41586-020-2267-z",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency non Finnish European",
+      "id":"info_af_nfe",
+      "link":"",
+      "sample":"0.01",
+      "description":"Frequency of existing variant in gnomAD across non Finnish European populations. The v2.1.1 data set accessed with this tool spans 125,748 exome sequences and 15,708 whole-genome sequences from unrelated individuals sequenced as part of various disease-specific and population genetic studies. https://www.nature.com/articles/s41586-020-2267-z",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency Africa",
+      "id":"info_csq_afr_af",
+      "link":"",
+      "sample":"0.01",
+      "description":"The frequency of the the allele in the given population.",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency Native America",
+      "id":"info_csq_amr_af",
+      "link":"",
+      "sample":"0.01",
+      "description":"The frequency of the the allele in the given population.",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency East Asia",
+      "id":"info_csq_eas_af",
+      "link":"",
+      "sample":"0.01",
+      "description":"The frequency of the the allele in the given population.",
+      "displayable":true
+    },
+    {
+      "id":"info_csq_pubmed",
+      "name":"Related PubMed articles",
+      "description":"PubMed articles associated with this mutation.",
+      "displayable":true,
+      "displaytype":"pubmed"
+    },
+    {
+      "id":"info_csq_domainsPDB",
+      "name":"Protein Data Bank domains",
+      "description":"The domains as provided by PDB.",
+      "displayable":true,
+      "displaytype":"prettyampersand"
+    },
+    {
+      "name":"GERP score conservation",
+      "id":"info_csq_gerp_rs",
+      "description":"GERP (Genomic Evolutionary Rate Profiling) RS score, the larger the score, the more conserved the site. Scores range from -12.3 to 6.17. GERP identifies constrained elements in multiple alignments by quantifying substitution deficits. These deficits represent substitutions that would have occurred if the element were neutral DNA, but did not occur because the element has been under functional constraint. For example, a GERP score of 4 would mean there are 4 fewer substitutions at a particular site than what is expected based on the neutral rate of evolution across the phylogeny. GERP scores from 4–6 are assumed to have “large” deleterious effects",
+      "link":"http://mendel.stanford.edu/sidowlab/downloads/gerp/index.html",
+      "sample":"4",
+      "samplecomparator": ">",
+      "from": -12.3,
+      "to": 6.17,
+      "displayable":true
+    },
+    {
+      "name":"annotated allele",
+      "id":"info_csq_allele",
+      "description":" the variant allele used to calculate the consequence",
+      "displayable":true
+    },
+    {
+      "name":"RefSeq functional consequence",
+      "id":"info_csq_consequence",
+      "link":"https://m.ensembl.org/info/genome/variation/prediction/predicted_data.html#consequences",
+      "description":"functional consequence of the SNV according to RefSeq",
+      "displayable":true
+    },
+    {
+      "name":"Impact according to Ensemble",
+      "id":"info_csq_impact",
+      "link":"https://m.ensembl.org/info/genome/variation/prediction/predicted_data.html#consequences",
+      "description":"For each variant that is mapped to the reference genome, we identify all overlapping Ensembl transcripts. We then use a rule-based approach to predict the effects that each allele of the variant may have on each transcript. The set of consequence terms, defined by the Sequence Ontology (SO), that can be currently assigned to each combination of an allele and a transcript is shown in the table below. Note that each allele of each variant may have a different effect in different transcripts. This approach is applied to all germ line variants and somatic mutations stored in the Ensembl databases. The resulting consequence type calls, along with information determined as part of the process, such as the cDNA and CDS coordinates and the affected codons and amino acids in coding transcripts, are stored in the Ensembl Variation database and displayed on our website.",
+      "displayable":true,
+      "displaytype": "impact"
+    },
+    {
+      "name":"Feature type by genomic location",
+      "id":"info_csq_feature_type",
+      "description":"Information about the genomic location of the feature can get the value: MotifFeature, RegulatoryFeature,Transcript",
+      "displayable":true
+    },
+    {
+      "name":"Ensemble transcript ID",
+      "id":"info_csq_feature",
+      "description":"Ensemble transcript ID",
+      "displayable":true
+    },
+    {
+      "name":"Ensemble Biotype",
+      "id":"info_csq_biotype",
+      "link":"https://m.ensembl.org/info/genome/genebuild/biotypes.html",
+      "description":"Gene or transcript classification according their function in a cell. Amongst others it can take values: promoter, rRNA, lncRNA, protein_coding etc. ",
+      "displayable":true
+    },
+    {
+      "name":"Exon",
+      "id":"info_csq_exon",
+      "description":"The exon number (out of total number)",
+      "displayable":true
+    },
+    {
+      "name":"Intron",
+      "id":"info_csq_Intron",
+      "description":"The intron number (out of total number)",
+      "displayable":true
+    },
+    {
+      "name":"HGVS coding sequence name (Ensembl)",
+      "id":"info_csq_hgvsc",
+      "link":"https://varnomen.hgvs.org/bg-material/simple/",
+      "description":"The HGVS coding sequence name based on Ensembl transcript ID",
+      "displayable":true,
+      "displaytype": "hgvsc"
+    },
+    {
+      "name":"HGVS protein sequence name",
+      "id":"info_csq_hgvsp",
+      "link":"https://varnomen.hgvs.org/bg-material/simple/",
+      "description":"The HGVS protein sequence name",
+      "displayable":true
+    },
+    {
+      "name":"position in coding sequence",
+      "id":"info_csq_cds_position",
+      "description":"Relative position of base pair in coding sequence",
+      "displayable":true
+    },
+    {
+      "name":"position in protein sequence",
+      "id":"info_csq_cds_position",
+      "description":"Relative position of amino acid in protein",
+      "displayable":true
+    },
+    {
+      "name":"change in codons",
+      "id":"info_csq_codons",
+      "description":"The alternative codons with the variant base in upper case",
+      "displayable":true
+    },
+    {
+      "name":"known ID for variant",
+      "id":"info_csq_existing_variation",
+      "description":"Known identifier of existing variant (e.g. COSMIC or rsID)",
+      "displayable":true,
+      "displaytype":"prettyampersandwithcosmic"
+    },
+    {
+      "name":"distance to nearest transcipt",
+      "id":"info_csq_distance",
+      "description":"Shortest distance from variant to transcript",
+      "displayable":true
+    },
+    {
+      "name":"DNA strand",
+      "id":"info_csq_strand",
+      "description":"Variant is on positive of antisense strand of the DNA",
+      "displayable":true
+    },
+    {
+      "name":"Type of variant",
+      "id":"info_csq_variant_class",
+      "description":"Type of variant",
+      "displayable":true
+    },
+    {
+      "name":"Source of Gene name",
+      "id":"info_csq_symbol_source",
+      "description":"Source of Gene name",
+      "displayable":true
+    },
+    {
+      "name":"Gene name",
+      "id":"info_csq_symbol",
+      "description":"Gene name",
+      "displayable":true
+    },
+    {
+      "name":"HGNC ID",
+      "id":"info_csq_hgnc_id",
+      "description":"HUGO Gene Nomenclature Committee ID",
+      "link":"https://www.genenames.org/tools/search/",
+      "displayable":true
+    },
+    {
+      "name":"Cannonical transcipt",
+      "id":"info_csq_canonical",
+      "link":"https://www.ensembl.org/info/genome/genebuild/canonical.html",
+      "description":"We are running Ensembl VEP to annotate the variants. In this process we are picking the isoform that has the most severe consequence according to Ensemble. This not necessarily the canonical transcript",
+      "displayable":true
+    },
+    {
+      "name":"Matched Annotation between NCBI and EBI",
+      "id":"info_csq_mane",
+      "link":"https://www.ensembl.org/info/genome/genebuild/mane.html",
+      "description":"NCBI Reference Sequence ID matched to Ensembl IDs; The MANE Project aims to produce a genome-wide transcript set that can be useful as a default set for display on genomics browsers and resources. For an Ensembl transcript to be designated as a MANE transcript it must perfectly align to GRCh38, have complete sequence identity with a corresponding RefSeq transcript and be high-confidence in terms of its overall support. tsl1 – all splice junctions of the transcript are supported by at least one non-suspect mRNA; tsl2 – the best supporting mRNA is flagged as suspect or the support is from multiple ESTs ",
+      "displayable":true
+    },
+    {
+      "name":"Transcript support level",
+      "id":"info_csq_tsl",
+      "link":"https://www.ensembl.org/info/genome/genebuild/transcript_quality_tags.html",
+      "description":"The Transcript Support Level (TSL) is a method to highlight the well-supported and poorly-supported transcript models for users. The method relies on the primary data that can support full-length transcript structure: mRNA and EST alignments supplied by UCSC and Ensembl. tsl1 – all splice junctions of the transcript are supported by at least one non-suspect mRNA",
+      "displayable":true
+    },
+    {
+      "name":"APPRIS",
+      "id":"info_csq_appris",
+      "description":"APPRIS try to select a single CDS variant for each gene as the 'PRINCIPAL' isoform, however this is not always possible. Principal isoforms are tagged with the numbers 1 to 5, with 1 being the most significant. APPRIS is a system to annotate alternatively spliced transcripts based on a range of computational methods. It provides value to the annotations of the human, mouse, zebrafish, rat, and pig genomes. PRINCIPAL:1 Transcript(s) expected to code for the main functional isoform based solely on the core modules in the APPRIS. PRINCIPAL:2 Where the APPRIS core modules are unable to choose a clear principal variant (approximately 25% of human protein coding genes), the database chooses two or more of the CDS variants as candidates to be the principal variant. PRINCIPAL:3 Where the APPRIS core modules are unable to choose a clear principal variant and there more than one of the variants have distinct CCDS identifiers, APPRIS selects the variant with lowest CCDS identifier as the principal variant. The lower the CCDS identifier, the earlier it was annotated. PRINCIPAL:4 Where the APPRIS core modules are unable to choose a clear principal CDS and there is more than one variant with a distinct (but consecutive) CCDS identifiers, APPRIS selects the longest CCDS isoform as the principal variant. PRINCIPAL:5 Where the APPRIS core modules are unable to choose a clear principal variant and none of the candidate variants are annotated by CCDS, APPRIS selects the longest of the candidate isoforms as the principal variant. ALTERNATIVE:1 Candidate transcript(s) models that are conserved in at least three tested species. ALTERNATIVE:2 Candidate transcript(s) models that appear to be conserved in fewer than three tested species.",
+      "link":"http://europepmc.org/article/MED/23161672",
+      "displayable":true
+    },
+    {
+      "name":"CCDS ID",
+      "id":"info_csq_ccds",
+      "description":"The CCDS set is built by consensus among Ensembl, the National Center for Biotechnology Information (NCBI), and the HUGO Gene Nomenclature Committee (HGNC). The CCDS project is a collaborative effort to identify a core set of protein coding regions that are consistently annotated and of high quality.",
+      "link":"https://www.ncbi.nlm.nih.gov/projects/CCDS/CcdsBrowse.cgi",
+      "displayable": true,
+      "displaytype": "ccds"
+    },
+    {
+      "name":"Ensemble protein ID",
+      "id":"info_csq_ensp",
+      "description":"Ensemble protein ID",
+      "link":"http://www.ensembl.org/Multi/Search/New?db=core",
+      "displayable":true,
+      "displaytype": "ensp"
+    },
+    {
+      "name":"UniProtKB/Swiss-Prot",
+      "id":"info_csq_swissprot",
+      "description":"Best match UniProtKB/Swiss-Prot accession of protein product",
+      "link":"https://www.uniprot.org",
+      "displayable":true,
+      "displaytype": "uniprot"
+    },
+    {
+      "name":"UniProtKB/Swiss-Prot Isoform",
+      "id":"info_csq_uniprot_isoform",
+      "description":"Best match UniProtKB/Swiss-Prot accession of protein product",
+      "link":"https://www.uniprot.org",
+      "displayable":true,
+      "displaytype": "uniprot"
+    },
+    {
+      "name":"UniProtKB/TrEMBL",
+      "id":"info_csq_trembl",
+      "description":"Best match UniProtKB/TrEMBL accession of protein product",
+      "link":"http://www.bioinfo.pte.hu/more/TrEMBL.htm",
+      "displayable":true,
+      "displaytype": "uniprot"
+    },
+    {
+      "name":"UniParc ID",
+      "id":"info_csq_uniparc",
+      "description":"Best match UniParc accession of protein product",
+      "link":"https://www.uniprot.org/uniparc/",
+      "displayable":true,
+      "displaytype": "uniparc"
+    },
+    {
+      "name":"SIFT",
+      "id":"info_csq_sift",
+      "description":"The SIFT prediction and/or score, with both given as prediction(score); SIFT predicts whether an amino acid substitution affects protein function based on sequence homology and the physical properties of amino acids. SIFT can be applied to naturally occurring nonsynonymous polymorphisms and laboratory-induced missense mutations. If SIFTori is smaller than 0.05 (rankscore>0.39575) the corresponding nsSNV ispredicted as D(amaging); otherwise it is predicted as T(olerated)",
+      "link":"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC168916/",
+      "displayable":true
+    },
+    {
+      "name":"PolyPhen",
+      "id":"info_csq_polyphen",
+      "description":"PolyPhen-2(Polymorphism Phenotyping) predicts the effect of an amino acid substitution on the structure and function of a protein using sequence homology, Pfam annotations, 3D structures from PDB where available, and a number of other databases and tools (including DSSP, ncoils etc.). ",
+      "link":"http://genetics.bwh.harvard.edu/pph2/",
+      "displayable":true
+    },
+    {
+      "name":"miRNA",
+      "id":"info_csq_mirna",
+      "description":"Variant on miRNA can take values: miRNA_loop; miRNA_loop&miRNA_stem; miRNA_stem",
+      "displayable":true
+    },
+    {
+      "name":"HGSV name",
+      "id":"info_csq_hgvsg",
+      "description":"HGSV name in genome context offset begins at chromosome start",
+      "link":"https://varnomen.hgvs.org/recommendations/general/",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AF",
+      "id":"info_csq_af",
+      "description":"Frequency of existing variant in 1000 Genomes (across all ancestries)",
+      "link":"https://www.nature.com/articles/nature15393",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes alllele count",
+      "id":"info_csq_1000gp3_ac",
+      "description":"Allele count of existing variant in 1000 Genomes (across all ancestries)",
+      "link":"https://www.internationalgenome.org/home",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AF",
+      "id":"info_csq_1000gp3_af",
+      "description":"Frequency of existing variant in 1000 Genomes",
+      "link":"https://www.internationalgenome.org/home",
+      "sample":"0.02",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AC AA",
+      "id":"info_csq_1000gp3_afr_ac",
+      "description":"Allele count of existing variant in 1000 Genomes African Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AF AA",
+      "id":"info_csq_1000gp3_afr_af",
+      "description":"Frequency of existing variant in 1000 Genomes African Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AC AMR",
+      "id":"info_csq_1000gp3_amr_ac",
+      "description":"Allele count of existing variant in 1000 Genomes American Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AF AMR",
+      "id":"info_csq_1000gp3_amr_af",
+      "description":"Frequency of existing variant in 1000 Genomes American Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AC EAS",
+      "id":"info_csq_1000gp3_eas_ac",
+      "description":"Allele count of existing variant in 1000 Genomes East Asian Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AF EAS",
+      "id":"info_csq_1000gp3_eas_af",
+      "description":"Frequency of existing variant in 1000 Genomes East Asian Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AC EUR",
+      "id":"info_csq_1000gp3_eur_ac",
+      "description":"Allele count of existing variant in 1000 Genomes European Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AF EUR",
+      "id":"info_csq_1000gp3_eur_af",
+      "description":"Fequency of existing variant in 1000 Genomes European Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AC SAS",
+      "id":"info_csq_1000gp3_sas_ac",
+      "description":"Allele count of existing variant in 1000 Genomes South Asian Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "displayable":true
+    },
+    {
+      "name":"1000Genomes AF SAS",
+      "id":"info_csq_1000gp3_sas_af",
+      "description":"Frequency of existing variant in 1000 Genomes South Asian Ancestries",
+      "link":"https://www.internationalgenome.org/home",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF",
+      "id":"info_csq_gnomad_af",
+      "description":"Frequency of existing variant in gnomAD exomes combined population (125,748 samples)",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF AFR",
+      "id":"info_csq_gnomad_afr_af",
+      "description":"Frequency of existing variant in gnomAD exomes African/American population",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF AMR",
+      "id":"info_csq_gnomad_amr_af",
+      "description":"Frequency of existing variant in gnomAD exomes American population",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF ASJ",
+      "id":"info_csq_gnomad_asj_af",
+      "description":"Frequency of existing variant in gnomAD exomes Ashkenazi Jewish population",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF EAS",
+      "id":"info_csq_gnomad_eas_af",
+      "description":"Frequency of existing variant in gnomAD exomes East Asian population",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF FIN",
+      "id":"info_csq_gnomad_fin_af",
+      "description":"Frequency of existing variant in gnomAD exomes Finnish population",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF NFE",
+      "id":"info_csq_gnomad_nfe_af",
+      "description":"Frequency of existing variant in gnomAD exomes Non-Finnish European population",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF OTH",
+      "id":"info_csq_gnomad_oth_af",
+      "description":"Frequency of existing variant in gnomAD exomes combined other combined populations",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD exomes AF SAS",
+      "id":"info_csq_gnomad_sas_af",
+      "description":"Frequency of existing variant in gnomAD exomes South Asian population",
+      "link":"https://gnomad.broadinstitute.org",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"Maximum AF",
+      "id":"info_csq_max_af",
+      "description":"Maximum observed allele frequency in 1000 Genomes, ESP and gnomAD",
+      "displayable":true,
+      "sample": "0.01"
+    },
+    {
+      "name":"Maximum AF population",
+      "id":"info_csq_max_af_pops",
+      "description":"Populations in which maximum allele frequency (1000 Genomes, ESP and gnomAD) was observed",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar clinical significance",
+      "id":"info_csq_clin_sig",
+      "description":"ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alonside with combinations of terms",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/",
+      "displayable":true,
+      "displaytype":"clinsig"
+    },
+    {
+      "name":"known somatic mutation",
+      "id":"info_csq_somatic",
+      "description":"Somatic status of existing variant(s); multiple values correspond to multiple values in the Existing_variation field",
+      "displayable":true
+    },
+    {
+      "name":"known assocation to phenotype",
+      "id":"info_csq_pheno",
+      "description":"Indicates if existing variant is associated with a phenotype, disease or trait; multiple values correspond to multiple values in the Existing_variation field",
+      "displayable":true
+    },
+    {
+      "name":"TF motif",
+      "id":"info_csq_motif_name",
+      "description":"the source and identifier of a transcription factor binding profile aligned at this position",
+      "link":"https://www.ensembl.info/2018/10/15/new-ensembl-motif-features/",
+      "displayable":true
+    },
+    {
+      "name":"TF motif pos",
+      "id":"info_csq_motif_pos",
+      "description":"The relative position of the variation in the aligned TFBP",
+      "link":"http://www.ensembl.org/info/genome/funcgen/regulatory_build.html",
+      "displayable":true
+    },
+    {
+      "name":"TF motif info",
+      "id":"info_csq_high_inf_pos",
+      "description":"a flag indicating if the variant falls in a high information position of a transcription factor binding profile (TFBP)",
+      "link":"http://www.ensembl.org/info/genome/funcgen/regulatory_build.html",
+      "displayable":true
+    },
+    {
+      "name":"TF motif score",
+      "id":"info_csq_motif_score_change",
+      "description":"The difference in motif score of the reference and variant sequences for the TFBP",
+      "link":"http://www.ensembl.org/info/genome/funcgen/regulatory_build.html",
+      "displayable":true
+    },
+    {
+      "name":"TF name",
+      "id":"info_csq_transcription_factors",
+      "description":"the source and identifier of a transcription factor binding profile aligned at this position",
+      "link":"https://www.ensembl.info/2018/10/15/new-ensembl-motif-features/",
+      "displayable":true
+    },
+    {
+      "name":"CADD phred",
+      "id":"info_csq_cadd_phred",
+      "description":"CADD raw score for functional prediction of a SNP. The larger the score the more likely the SNP has damaging effect. Scores range from -6.458163 to 18.301497 in dbNSFP. ",
+      "link":"https://www.nature.com/articles/ng.2892",
+      "displayable":true,
+      "from": -6.458163,
+      "to": 18.301497,
+      "sample": "10",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"CADD raw",
+      "id":"info_csq_cadd_raw",
+      "description":"CADD raw score for functional prediction of a SNP.  The larger the score the more likely the SNP has damaging effect. Scores range from -6.458163 to 18.301497 in dbNSFP. ",
+      "link":"https://www.nature.com/articles/ng.2892",
+      "displayable":true,
+      "from": -6.458163,
+      "to": 18.301497,
+      "sample": "10",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"CADD phred",
+      "id":"info_cadd_phred",
+      "description":"CADD phred score for functional prediction of an SNP. The larger the score the more likely the SNP has damaging effect. Scores range from -6.458163 to 18.301497.\nCADD scores are interpretable as the extent to which the annotation profile for a given variant suggests that the variant is likely to be 'observed' (negative values) vs 'simulated' (positive values), with higher values indicating that a variant is more likely to be simulated (or 'not observed') and therefore more likely to have deleterious effects.\nCADD score combines the Ensembl Variant Effect Predictor (VEP), data from the ENCODE Project and information from UCSC Genome Browser tracks. Annotations spanned a range of data types, including conservation metrics such as GERP, phastCons and phyloP; regulatory information such as genomic regions of DNase I hypersensitivity and transcription factor binding; transcript information such as distance to exon-intron boundaries or expression levels in commonly studied cell lines; and protein-level scores such as those generated with Grantham, SIFT and PolyPhen",
+      "link":"https://www.nature.com/articles/ng.2892",
+      "displayable":true,
+      "from": -6.458163,
+      "to": 18.301497,
+      "sample": "10",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"CADD raw",
+      "id":"info_cadd_raw",
+      "description":"CADD phred score for functional prediction of an SNP. The larger the score the more likely the SNP has damaging effect. Scores range from -6.458163 to 18.301497.\nCADD scores are interpretable as the extent to which the annotation profile for a given variant suggests that the variant is likely to be 'observed' (negative values) vs 'simulated' (positive values), with higher values indicating that a variant is more likely to be simulated (or 'not observed') and therefore more likely to have deleterious effects.\nCADD score combines the Ensembl Variant Effect Predictor (VEP), data from the ENCODE Project and information from UCSC Genome Browser tracks. Annotations spanned a range of data types, including conservation metrics such as GERP, phastCons and phyloP; regulatory information such as genomic regions of DNase I hypersensitivity and transcription factor binding; transcript information such as distance to exon-intron boundaries or expression levels in commonly studied cell lines; and protein-level scores such as those generated with Grantham, SIFT and PolyPhen",
+      "link":"https://www.nature.com/articles/ng.2892",
+      "displayable":true,
+      "from": -6.458163,
+      "to": 18.301497,
+      "sample": "10",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"CADD Indel phred",
+      "id":"info_caddind_phred",
+      "description":"CADD phred score for functional prediction of an indel. The larger the score the more likely the SNP has damaging effect. Scores range from -6.458163 to 18.301497.\nCADD scores are interpretable as the extent to which the annotation profile for a given variant suggests that the variant is likely to be 'observed' (negative values) vs 'simulated' (positive values), with higher values indicating that a variant is more likely to be simulated (or 'not observed') and therefore more likely to have deleterious effects.\nCADD score combines the Ensembl Variant Effect Predictor (VEP), data from the ENCODE Project and information from UCSC Genome Browser tracks. Annotations spanned a range of data types, including conservation metrics such as GERP, phastCons and phyloP; regulatory information such as genomic regions of DNase I hypersensitivity and transcription factor binding; transcript information such as distance to exon-intron boundaries or expression levels in commonly studied cell lines; and protein-level scores such as those generated with Grantham, SIFT and PolyPhen",
+      "link":"https://www.nature.com/articles/ng.2892",
+      "displayable":true,
+      "from": -6.458163,
+      "to": 18.301497,
+      "sample": "10",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"CADD Indel raw",
+      "id":"info_caddind_raw",
+      "description":"CADD phred score for functional prediction of an indel. The larger the score the more likely the SNP has damaging effect. Scores range from -6.458163 to 18.301497.\nCADD scores are interpretable as the extent to which the annotation profile for a given variant suggests that the variant is likely to be 'observed' (negative values) vs 'simulated' (positive values), with higher values indicating that a variant is more likely to be simulated (or 'not observed') and therefore more likely to have deleterious effects.\nCADD score combines the Ensembl Variant Effect Predictor (VEP), data from the ENCODE Project and information from UCSC Genome Browser tracks. Annotations spanned a range of data types, including conservation metrics such as GERP, phastCons and phyloP; regulatory information such as genomic regions of DNase I hypersensitivity and transcription factor binding; transcript information such as distance to exon-intron boundaries or expression levels in commonly studied cell lines; and protein-level scores such as those generated with Grantham, SIFT and PolyPhen",
+      "link":"https://www.nature.com/articles/ng.2892",
+      "displayable":true,
+      "from": -6.458163,
+      "to": 18.301497,
+      "sample": "10",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"SATMUTMPRA",
+      "id":"info_csq_satmutmpra",
+      "description":"results from a saturation mutagenesis in conjunction with massively parallel reporter assays on 20 disease-associated gene promoters and enhancers",
+      "link":"https://www.nature.com/articles/s41467-019-11526-w",
+      "displayable":true
+    },
+    {
+      "name":"Ensemble phenotypes",
+      "id":"info_csq_phenotypes",
+      "description":"overlapping phenotype information; Ensembl provides phenotype annotations mapped to a number of genomic feature types, including genes, variants and QTLs (HGMD and COSMIC annotations are excluded).",
+      "link":"http://www.ensembl.org/info/genome/variation/phenotype/sources_phenotype_documentation.html",
+      "displayable":true,
+      "displaytype":"prettyampersand"
+    },
+    {
+      "name":"SpliceAI ag",
+      "id":"info_csq_spliceai_pred_ds_ag",
+      "description":"acceptor gain: SpliceAI is a deep neural network, developed by Illumina, Inc junctions from an arbitrary pre-mRNA transcript sequence. Delta score of a variant, defined as the maximum of (DS_AG, DS_AL, DS_DG, DS_DL), ranges from 0 to 1 and can be interpreted as the probability of the variant being splice-altering. The author-suggested cutoffs are: 0.2 (high recall); 0.5 (recommended); 0.8 (high precision)",
+      "link":"https://pubmed.ncbi.nlm.nih.gov/30661751/",
+      "displayable":true,
+      "sample": "0.5",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"SpliceAI al",
+      "id":"info_csq_spliceai_pred_ds_al",
+      "description":"acceptor loss: SpliceAI is a deep neural network, developed by Illumina, Inc junctions from an arbitrary pre-mRNA transcript sequence. Delta score of a variant, defined as the maximum of (DS_AG, DS_AL, DS_DG, DS_DL), ranges from 0 to 1 and can be interpreted as the probability of the variant being splice-altering. The author-suggested cutoffs are: 0.2 (high recall); 0.5 (recommended); 0.8 (high precision)",
+      "link":"https://pubmed.ncbi.nlm.nih.gov/30661751/",
+      "displayable":true,
+      "sample": "0.5",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"SpliceAI dg",
+      "id":"info_csq_spliceai_pred_ds_dg",
+      "description":"donor gain: SpliceAI is a deep neural network, developed by Illumina, Inc junctions from an arbitrary pre-mRNA transcript sequence. Delta score of a variant, defined as the maximum of (DS_AG, DS_AL, DS_DG, DS_DL), ranges from 0 to 1 and can be interpreted as the probability of the variant being splice-altering. The author-suggested cutoffs are: 0.2 (high recall); 0.5 (recommended); 0.8 (high precision)",
+      "link":"https://pubmed.ncbi.nlm.nih.gov/30661751/",
+      "displayable":true,
+      "sample": "0.5",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"SpliceAI dl",
+      "id":"info_csq_spliceai_pred_ds_dl",
+      "description":"donor loss: SpliceAI is a deep neural network, developed by Illumina, Inc junctions from an arbitrary pre-mRNA transcript sequence. Delta score of a variant, defined as the maximum of (DS_AG, DS_AL, DS_DG, DS_DL), ranges from 0 to 1 and can be interpreted as the probability of the variant being splice-altering. The author-suggested cutoffs are: 0.2 (high recall); 0.5 (recommended); 0.8 (high precision)",
+      "link":"https://pubmed.ncbi.nlm.nih.gov/30661751/",
+      "displayable":true,
+      "sample": "0.5",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"Mastermind",
+      "id":"info_csq_mastermind_mmid3",
+      "description":"Mastermind Genomic Search Engine (https://www.genomenon.com/mastermind) reports variants that have clinical evidence cited in the medical literature.",
+      "link":"https://www.genomenon.com/mastermind",
+      "displayable":true,
+      "displaytype": "mastermind"
+    },
+    {
+      "name":"Mastermind counts",
+      "id":"info_csq_mastermind_counts",
+      "description":"Gives counts per term found in Mastermind Genomic Search Engine (https://www.genomenon.com/mastermind). Mastermind reports variants that have clinical evidence cited in the medical literature.",
+      "link":"https://www.genomenon.com/mastermind",
+      "displayable":true
+    },
+    {
+      "name":"ALoFT fraction transcripts affected",
+      "id":"info_csq_aloft_fraction_transcripts_affected",
+      "description":"ALoFT (annotation of loss-of-function transcripts), the fraction of the transcripts of the gene affected i.e. No. of transcripts affected by the SNP/Total no. of protein_coding transcripts for the gene multiple values separated by semicolon, corresponding to Ensembl_proteinid.",
+      "link":"https://www.nature.com/articles/s41467-017-00443-5",
+      "displayable":true
+    },
+    {
+      "name":"ALoFT prediction",
+      "id":"info_csq_aloft_pred",
+      "description":"ALoFT (annotation of loss-of-function transcripts), final classification predicted by ALoFT; values can be Tolerant, Recessive or Dominant multiple values separated by semicolon, corresponding to Ensembl_proteinid.",
+      "link":"https://www.nature.com/articles/s41467-017-00443-5",
+      "displayable":true
+    },
+    {
+      "name":"ALoFT prob. Dominant",
+      "id":"info_csq_aloft_prob_dominant",
+      "description":"ALoFT (annotation of loss-of-function transcripts), Probability of the SNP being classified as dominant disease-causing by ALoFT multiple values separated by semicolon, corresponding to Ensembl_proteinid.",
+      "link":"https://www.nature.com/articles/s41467-017-00443-5",
+      "displayable":true
+    },
+    {
+      "name":"ALoFT prob. recessive",
+      "id":"info_csq_aloft_prob_recessive",
+      "description":"ALoFT (annotation of loss-of-function transcripts), Probability of the SNP being classified as recessive disease-causing by ALoFT multiple values separated by semicolon, corresponding to Ensembl_proteinid.",
+      "link":"https://www.nature.com/articles/s41467-017-00443-5",
+      "displayable":true
+    },
+    {
+      "name":"DANN score",
+      "id":"info_csq_dann_score",
+      "description":"CADD score calculated with a neural network instead of a support vector matching algorithm: DANN is a functional prediction score retrained based on the training data of CADD using deep neural network. Scores range from 0 to 1. A larger number indicate a higher probability to be damaging.",
+      "link":"https://academic.oup.com/bioinformatics/article/31/5/761/2748191",
+      "sample": "0.5",
+      "samplecomparator": ">",
+      "displayable":true
+    },
+    {
+      "name":"FATHMM score",
+      "id":"info_csq_fathmm_score",
+      "description":"Functional Analysis through Hidden Markov Models predicts the functional consequences of both coding variants, i.e. non-synonymous single nucleotide variants (nsSNVs), and non-coding variants in the human genome. FATHMM default score (weighted for human inherited-disease mutations with Disease Ontology) (FATHMMori). Scores range from -16.13 to 10.64. The smaller the score the more likely the SNP has damaging effect.",
+      "link":"http://fathmm.biocompute.org.uk/index.html",
+      "displayable":true,
+      "normalizationfunction": "inverse",
+      "from": -16.13,
+      "to": 10.64
+    },
+    {
+      "name":"FATHMM prediction",
+      "id":"info_csq_fathmm_pred",
+      "description":"Functional Analysis through Hidden Markov Models predicts the functional consequences of both coding variants, i.e. non-synonymous single nucleotide variants (nsSNVs), and non-coding variants in the human genome. FATHMM default score (weighted for human inherited-disease mutations with Disease Ontology) (FATHMMori). Scores range from -16.13 to 10.64. FATHMMori score is <=-1.5 (or rankscore >=0.81332) the corresponding nsSNV is predicted as D(AMAGING); otherwise it is predicted as T(OLERATED)",
+      "link":"http://fathmm.biocompute.org.uk/index.html",
+      "displayable":true
+    },
+    {
+      "name":"Interpro Domain",
+      "id":"info_csq_interpro_domain",
+      "description":"InterPro provides functional analysis of proteins by classifying them into families and predicting domains and important sites. A Domain or conserved site on which the variant locates. Domain annotations come from Interpro database. The number in the brackets following a specific domain is the count of times Interpro assigns the variant position to that domain, typically coming from different predicting databases.",
+      "link":"https://www.ebi.ac.uk/interpro/search/text/",
+      "displayable":true,
+      "displaytype":"prettyampersand"
+    },
+    {
+      "name":"LRT score",
+      "id":"info_csq_lrt_score",
+      "description":"A likelihood ratio test method that compares genomics data sets of 32 vertebrate species to perform a likelihood ratio test (LRT) tha can accurately identify a subset of deleterious mutations that disrupt highly conserved amino acids within protein-coding sequences, which are likely to be unconditionally deleterious. The original LRT two-sided p-value (LRTori), ranges from 0 to 1.",
+      "link":"https://pubmed.ncbi.nlm.nih.gov/19602639/",
+      "displayable":true
+    },
+    {
+      "name":"LRT prediction",
+      "id":"info_csq_lrt_pred",
+      "description":"A likelihood ratio test method that compares genomics data sets of 32 vertebrate species to perform a likelihood ratio test (LRT) tha can accurately identify a subset of deleterious mutations that disrupt highly conserved amino acids within protein-coding sequences, which are likely to be unconditionally deleterious. LRT prediction, D(eleterious), N(eutral) or U(nknown), which is not solely determined by the score.",
+      "link":"https://pubmed.ncbi.nlm.nih.gov/19602639/",
+      "displayable":true
+    },
+    {
+      "name":"M-CAP score",
+      "id":"info_csq_mcap_score",
+      "description":"Mendelian Clinically Applicable Pathogenicity (M-CAP) uses nine established pathogenicity likelihood scores: SIFT13, PolyPhen-2, CADD15, MutationTaster, MutationAssessor, FATHMM, LRT, MetaLR, and MetaSVM. It also incorporates seven established measures of base-pair, amino acid, genomic region, and gene conservation: RVIS, PhyloP, PhastCons, PAM250, BLOSUM62, SIPHY, and GERP. Scores range from 0 to 1. The larger the score the more likely the SNP has damaging effect.",
+      "link":"https://www.nature.com/articles/ng.3703",
+      "displayable":true
+    },
+    {
+      "name":"M-CAP prediction",
+      "id":"info_csq_mcap_pred",
+      "description":"Mendelian Clinically Applicable Pathogenicity (M-CAP) uses nine established pathogenicity likelihood scores: SIFT13, PolyPhen-2, CADD15, MutationTaster, MutationAssessor, FATHMM, LRT, MetaLR, and MetaSVM. It also incorporates seven established measures of base-pair, amino acid, genomic region, and gene conservation: RVIS, PhyloP, PhastCons, PAM250, BLOSUM62, SIPHY, and GERP. Prediction of M-CAP score based on the authors' recommendation, T(olerated) or D(amaging). The score cutoff between D and T is 0.025 ",
+      "link":"https://www.nature.com/articles/ng.3703",
+      "displayable":true
+    },
+    {
+      "name":"MVP score",
+      "id":"info_csq_mvp_score",
+      "description":"MVP (Missense Variant Pathogenicity prediction), a prediction method that uses deep residual network to leverage large training data sets and many correlated predictors. The range of MVP score is from 0 to 1. The larger the score, the more likely the variant is pathogenic. The authors suggest thresholds of 0.7 and 0.75 for separating damaging vs tolerant variants in constrained genes (ExAC pLI >=0.5) and non-constrained genes (ExAC pLI<0.5), respectively.",
+      "link":"https://www.nature.com/articles/s41467-020-20847-0",
+      "displayable":true,
+      "sample": "0.7",
+      "samplecomparator": ">"
+    },
+    {
+      "name":"metaLR score",
+      "id":"info_csq_metalr_score",
+      "description":"This logistic regression (LR) based ensemble prediction score, which incorporated 10 scores (SIFT, PolyPhen-2 HDIV, PolyPhen-2 HVAR, GERP++, MutationTaster, Mutation Assessor, FATHMM, LRT, SiPhy, PhyloP) and the maximum frequency observed in the 1000 genomes populations. Larger value means the SNV is more likely to be damaging. Scores range from 0 to 1.",
+      "link":"https://www.biorxiv.org/content/10.1101/2021.04.09.438706v3",
+      "displayable":true
+    },
+    {
+      "name":"metaLR pred",
+      "id":"info_csq_metalr_pred",
+      "description":"This logistic regression (LR) based ensemble prediction score, which incorporated 10 scores (SIFT, PolyPhen-2 HDIV, PolyPhen-2 HVAR, GERP++, MutationTaster, Mutation Assessor, FATHMM, LRT, SiPhy, PhyloP) and the maximum frequency observed in the 1000 genomes populations. Prediction of our MetaLR based ensemble prediction score, T(olerated) or D(amaging). The score cutoff between D and T is 0.5. The rankscore cutoff between D and T is 0.81101.",
+      "link":"https://www.biorxiv.org/content/10.1101/2021.04.09.438706v3",
+      "displayable":true
+    },
+    {
+      "name":"MetaSVM score",
+      "id":"info_csq_metasvm_score",
+      "description":"This support vector machine (SVM) based ensemble prediction score, which incorporated 10 scores (SIFT, PolyPhen-2 HDIV, PolyPhen-2 HVAR, GERP++, MutationTaster, Mutation Assessor, FATHMM, LRT, SiPhy, PhyloP) and the maximum frequency observed in the 1000 genomes populations. Larger value means the SNV is more likely to be damaging. Scores range from -2 to 3 in dbNSFP.",
+      "link":"https://academic.oup.com/nargab/article/2/2/lqaa014/5763100",
+      "from": -2,
+      "to": 3,
+      "displayable":true
+    },
+    {
+      "name":"MetaSVM prediction",
+      "id":"info_csq_metasvm_pred",
+      "description":"This support vector machine (SVM) based ensemble prediction score, which incorporated 10 scores (SIFT, PolyPhen-2 HDIV, PolyPhen-2 HVAR, GERP++, MutationTaster, Mutation Assessor, FATHMM, LRT, SiPhy, PhyloP) and the maximum frequency observed in the 1000 genomes populations. Larger value means the SNV is more likely to be damaging. Prediction of our SVM based ensemble prediction score,T(olerated) or D(amaging). The score cutoff between D and T is 0. The rankscore cutoff between D and T is 0.82257.",
+      "link":"https://academic.oup.com/nargab/article/2/2/lqaa014/5763100",
+      "displayable":true
+    },
+    {
+      "name":"MutationTaster score",
+      "id":"info_csq_mutationtaster_score",
+      "description":"MutationTaster2021 runs a random forest model for pathogenicity prediciton based on Gene, Transcript, Position, Alteration type, ClinVar,ENCODE project,JASPAR,MaxEntScan, genotype counts from ExAC and gnomAD and ExAC pLI scores. With the aim of increasing prediction accuracy, they run Random Forest models tailored to different types of variants. When training these models, they focused on the balanced accuracy, i.e. the same prediction quality for benign and deleterious variants. This significantly improved the prediction results. P-value (MTori), ranges from 0 to 1.",
+      "link":"https://academic.oup.com/nargab/article/2/2/lqaa014/5763100",
+      "displayable":true
+    },
+    {
+      "name":"MutationTaster prediciton",
+      "id":"info_csq_mutationtaster_pred",
+      "description":"MutationTaster2021 runs a random forest model for pathogenicity prediciton based on Gene, Transcript, Position, Alteration type, ClinVar,ENCODE project,JASPAR,MaxEntScan, genotype counts from ExAC and gnomAD and ExAC pLI scores. With the aim of increasing prediction accuracy, they run Random Forest models tailored to different types of variants. When training these models, they focused on the balanced accuracy, i.e. the same prediction quality for benign and deleterious variants. This significantly improved the prediction results. utationTaster prediction, A (disease_causing_automatic), D (disease_causing), N (polymorphism) or P (polymorphism_automatic). The score cutoff between D and N is 0.5 for MTnew and 0.31733 for the rankscore.",
+      "link":"https://academic.oup.com/nargab/article/2/2/lqaa014/5763100",
+      "displayable":true
+    },
+    {
+      "name":"MutationTaster altered amini acid prediciton",
+      "id":"info_csq_mutationtaster_aae",
+      "description":"MutationTaster predicted amino acid change.",
+      "link":"https://academic.oup.com/nargab/article/2/2/lqaa014/5763100",
+      "displayable":true
+    },
+    {
+      "name":"PolyPhen-2 HDIV score",
+      "id":"info_csq_polyphen2_hdiv_score",
+      "description":"Polyphen2 HDIV score: Polyphen2 score based on HumDiv,(Polymorphism Phenotyping v2) is a software tool which predicts possible impact of amino acid substitutions on the structure and function of human proteins using straightforward physical and evolutionary comparative considerations. HumDiv-trained model should be used for evaluating rare alleles at loci potentially involved in complex phenotypes, dense mapping of regions identified by genome-wide association studies, and analysis of natural selection from sequence data, where even mildly deleterious alleles must be treated as damaging. The score ranges from 0 to 1. olyphen2 prediction based on HumDiv, D (probably damaging,HDIV score in [0.957,1] , P (possibly damaging, HDIV score in [0.454,0.956] and B (benign, HDIV score in [0,0.452]",
+      "link":"http://genetics.bwh.harvard.edu/pph2/dokuwiki/start",
+      "displayable":true
+    },
+    {
+      "name":"PolyPhen-2 HDIV pred",
+      "id":"info_csq_polyphen2_hdiv_score",
+      "description":"Polyphen2 HDIV score: Polyphen2 score based on HumDiv,(Polymorphism Phenotyping v2) is a software tool which predicts possible impact of amino acid substitutions on the structure and function of human proteins using straightforward physical and evolutionary comparative considerations. HumDiv-trained model should be used for evaluating rare alleles at loci potentially involved in complex phenotypes, dense mapping of regions identified by genome-wide association studies, and analysis of natural selection from sequence data, where even mildly deleterious alleles must be treated as damaging. Polyphen2 prediction based on HumDiv, D (probably damaging, HDIV score in [0.957,1] or rankscore in [0.55859,0.91137]), P (possibly damaging, HDIV score in [0.454,0.956] or rankscore in [0.37043,0.55681]) and B (benign, HDIV score in [0,0.452] or rankscore in [0.03061,0.36974]). Score cutoff for binary classification is 0.5 for HDIV score or 0.38028 for rankscore, i.e. the prediction is neutral if the HDIV score is smaller than 0.5 (rankscore is smaller than 0.38028), and deleterious if the HDIV score is larger than 0.5 (rankscore is larger than 0.38028). Multiple entries are separated by ;, corresponding to Uniprot_acc.",
+      "link":"http://genetics.bwh.harvard.edu/pph2/dokuwiki/start",
+      "displayable":true
+    },
+    {
+      "name":"PrimateAI score",
+      "id":"info_csq_primateai_score",
+      "description":"A pathogenicity prediction score for missense variants based on common variants of non-human primate species using a deep neural network. They demonstrate that common missense variants in other primate species are largely clinically benign in human. The range of PrimateAI score is 0 to 1. The larger the score, the more likely the variant is pathogenic. The authors suggest a threshold of 0.803 for separating damaging vs tolerant variants.",
+      "link":"https://doi.org/10.1038/s41588-018-0167-z",
+      "displayable":true
+    },
+    {
+      "name":"PrimateAI prediction",
+      "id":"info_csq_primateai_pred",
+      "description":"A pathogenicity prediction score for missense variants based on common variants of non-human primate species using a deep neural network. They demonstrate that common missense variants in other primate species are largely clinically benign in human. The range of PrimateAI score is 0 to 1. The larger the score, the more likely the variant is pathogenic. Prediction of PrimateAI score based on the authors' recommendation, T(olerated) or D(amaging). The score cutoff between D and T is 0.803.",
+      "link":"https://doi.org/10.1038/s41588-018-0167-z",
+      "displayable":true
+    },
+    {
+      "name":"REVEL score",
+      "id":"info_csq_revel_score",
+      "description":"REVEL (rare exome variant ensemble learner) is an ensemble score based on 13 individual scores (MutPred, FATHMM v2. 3, VEST 3.0, PolyPhen-2, SIFT, PROVEAN, MutationAssessor, MutationTaster, LRT, GERP++, SiPhy, phyloP, and phastCons.) for predicting the pathogenicity of missense variants. Scores range from 0 to 1. The larger the score the more likely the SNP has damaging effect.",
+      "link":"https://doi.org/10.1038/s41588-018-0167-z",
+      "displayable":true
+    },
+    {
+      "name":"Reliability for MetLR and MetaSVM",
+      "id":"info_csq_reliability_index",
+      "description":"Number of observed component scores (except the maximum frequency in the 1000 genomes populations) for MetaSVM and MetaLR. Ranges from 1 to 10. As MetaSVM  and MetaLR scores are calculated based on imputed data, the less missing component scores, the higher the reliability of the scores and predictions.",
+      "link":"https://pubmed.ncbi.nlm.nih.gov/25552646/",
+      "displayable":true
+    },
+    {
+      "name":"SIFT 4G score",
+      "id":"info_csq_sift4g_score",
+      "description":"SIFT 4G is a faster version of SIFT. SIFT prediction and/or score, with both given as prediction(score); SIFT predicts whether an amino acid substitution affects protein function based on sequence homology and the physical properties of amino acids. SIFT can be applied to naturally occurring nonsynonymous polymorphisms and laboratory-induced missense mutations. SIFT 4G score (SIFT4G). Scores range from 0 to 1. The smaller the score the more likely the SNP has damaging effect. If SIFT4G is < 0.05 the corresponding nsSNV is predicted as D(amaging) otherwise it is predicted as T(olerated)",
+      "link":"https://sift.bii.a-star.edu.sg/sift4g/AboutSIFT4G.html",
+      "displayable":true,
+      "normalizationfunction": "inverse"
+    },
+    {
+      "name":"VEST score",
+      "id":"info_csq_vest4_score",
+      "description":"VEST (Variant Effect Scoring Tool) s a machine learning method that predicts the functional significance of missense mutations based on the probability that they are pathogenic. The VEST classifier training set comprised ~ 45,000 disease mutations from the latest Human Gene Mutation Database release and another ~45,000 high frequency (allele frequency >1%) putatively neutral missense variants from the Exome Sequencing Project. Score ranges from 0 to 1. The larger the score the more likely the mutation may cause functional change.",
+      "link":"https://sift.bii.a-star.edu.sg/sift4g/AboutSIFT4G.html",
+      "displayable":true
+    },
+    {
+      "name":"altered amino acid",
+      "id":"info_csq_aaalt",
+      "description":"alternative amino acid . is . if the variant is a splicing site SNP (2bp on each end of an intron)",
+      "displayable":true
+    },
+    {
+      "name":"reference amino acid",
+      "id":"info_csq_aaref",
+      "description":"reference amino acid . is . if the variant is a splicing site SNP (2bp on each end of an intron)",
+      "displayable":true
+    },
+    {
+      "name":"postition on codon",
+      "id":"info_csq_codonpos",
+      "description":"position on the codon (1, 2 or 3)",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar OMIM-id",
+      "id":"info_csq_clinvar_omim_id",
+      "description":"OMIM(Online Mendelian Inheritance in Man) ID of the trait/disease the clinvar_trait referring to",
+      "link":"https://www.omim.org/about",
+      "displayable": true,
+      "displaytype": "clinvaromims"
+    },
+    {
+      "name":"1000 Genomes AF",
+      "id":"info_csq_af",
+      "description":"1000 genomes allele frequency across all populations",
+      "link":"https://www.internationalgenome.org/home",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AC",
+      "id":"info_csq_gnomadg_ac",
+      "description":"Alternative allele count in the whole gnomAD genome samples (71,702 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF",
+      "id":"info_csq_gnomadg_af",
+      "description":"Alternative allele frequency in the whole gnomAD genome samples (71,702 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD controls genomes AC",
+      "id":"info_csq_gnomadg_controls_ac",
+      "description":"Alternative allele count in the gnomAD genome samples not involved in any disease cohort",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD controls genomes AF",
+      "id":"info_csq_gnomadg_controls_af",
+      "description":"Alternative allele frequency in the gnomAD genome samples not involved in any disease cohort",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"Number of homozygot altered alleles in genomes of GnomAD controls",
+      "id": "info_csq_gnomadg_controls_nhomalt",
+      "description":"Homozygot altered alleles in the whole gnomAD genome samples not involved in any disease cohort",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "displayable":true
+    },
+    {
+      "name":"Number of homozygot altered alleles of GnomAD NFE",
+      "id": "info_csq_gnomadg_nhomalt_nfe",
+      "description":"number of homozygot altered alleles in genomes of GnomAD Non-Finish-Europeans",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF AFR",
+      "id":"info_csq_gnomadg_af_afr",
+      "description":"Alternative allele frequency in the African/African American gnomAD genome samples (21,042 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF AMR",
+      "id":"info_csq_gnomadg_af_amr",
+      "description":"Alternative allele frequency in the Latino gnomAD genome samples (6,835 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF ASJ",
+      "id":"info_csq_gnomadg_af_asj",
+      "description":"Alternative allele frequency in the Latino gnomAD genome samples (6,835 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF EAS",
+      "id":"info_csq_gnomadg_af_eas",
+      "description":"Alternative allele frequency in the East Asian gnomAD genome samples (1,567 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF FIN",
+      "id":"info_csq_gnomadg_af_fin",
+      "description":"Alternative allele frequency in the Finnish gnomAD genome samples (5,244 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF NFE",
+      "id":"info_csq_gnomadg_af_nfe",
+      "description":"Alternative allele frequency in the Non-Finnish European gnomAD genome samples (32,399 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF OTH",
+      "id":"info_csq_gnomadg_af_oth",
+      "description":"Alternative allele frequency for other gnomAD genome samples",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF SAS",
+      "id":"info_csq_gnomad_genomes_sas_af",
+      "description":"Alternative allele frequency in the South Asian gnomAD genome samples (1,526 samples)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"Allele frequency",
+      "id":"info_af_raw",
+      "description":"Frequency of existing variant in gnomAD across all ancestries population. The v2.1.1 data set accessed with this tool spans 125,748 exome sequences and 15,708 whole-genome sequences from unrelated individuals sequenced as part of various disease-specific and population genetic studies. https://www.nature.com/articles/s41586-020-2267-z",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AC popmax",
+      "id":"info_csq_gnomad_genomes_popmax_ac",
+      "description":"Allele count in the population with the maximum AF",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AF popmax",
+      "id":"info_csq_gnomad_genomes_popmax_af",
+      "description":"Maximum allele frequency across populations (excluding samples of Ashkenazi, Finnish, and indeterminate ancestry)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD controls AF POPMAX",
+      "id":"info_controls_af_popmax",
+      "description":"Maximum allele frequency across control populations (excluding samples of Ashkenazi, Finnish, and indeterminate ancestry)",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"GnomAD genomes AN popmax",
+      "id":"info_csq_gnomad_genomes_popmax_an",
+      "description":"Total number of alleles in the population with the maximum AF",
+      "link":"https://gnomad.broadinstitute.org/about",
+      "sample":"0.01",
+      "displayable":true
+    },
+    {
+      "name":"HGVS coding sequence name",
+      "id":"info_csq_hgvs_ref",
+      "description":"the HGVS coding sequence name based on RefSeq. transcipt ID",
+      "link":"https://varnomen.hgvs.org/bg-material/simple/",
+      "displayable":true
+    },
+    {
+      "name":"HGVS sequence name (intron start)",
+      "id":"info_csq_hgvs_intronstartoffset",
+      "description":"the HGVS  sequence name based on intron start site",
+      "link":"https://varnomen.hgvs.org/bg-material/simple/",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar ID",
+      "id":"info_csq_clinvar",
+      "description":"clinvar variation ID",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/",
+      "displayable":true,
+      "displaytype": "clinvarid"
+    },
+    {
+      "name":"ClinVar clincal significance",
+      "id":"info_csq_clinvar_clnsig",
+      "description":"ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alongside with combinations of terms",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar clincal significance",
+      "id":"info_csq_clinvar_clnsig",
+      "description":"ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alongside with combinations of terms",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar assertion criteria",
+      "id":"info_csq_clinvar_clnrevstat",
+      "description":"Clinvar assertion criteria. Can get the following values: criteria_provided&_conflicting_interpretations; criteria_provided&_multiple_submitters&_no_conflicts; criteria_provided&_single_submitter; no_assertion_criteria_provided; no_assertion_provided; no_interpretation_for_the_single_variant; reviewed_by_expert_panel",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/review_status/",
+      "displayable":true,
+      "displaytype":"prettyampersand"
+    },
+    {
+      "name":"ClinVar condition",
+      "id":"info_csq_clinvar_clndn",
+      "description":"ClinVar Diagnosis/Condition (free text provided by ClinVar submitter)",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/spreadsheet/#condition",
+      "displayable":true,
+      "displaytype":"prettyampersand"
+    },
+    {
+      "name":"ClinVar terms",
+      "id":"info_csq_clinvar_clndisdb",
+      "description":"ClinVar. Terms associated to variant. Those are HPO terms, SNOMED, OMIM, Orphanet, MedGen, Mondo, NCBI Mesh, EFO",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/spreadsheet/#condition",
+      "displayable":true,
+      "displaytype":"prettyampersand"
+    },
+    {
+      "name":"ClinVar terms",
+      "id":"info_csq_clinvar_clndisdb",
+      "description":"ClinVar. Terms associated to variant. Those are HPO terms, SNOMED, OMIM, Orphanet, MedGen, Mondo, NCBI Mesh, EFO",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/spreadsheet/#condition",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar HGVS genome",
+      "id":"info_csq_clinvar_clnhgvs",
+      "description":"the HGVS  sequence name based on chromosome start",
+      "link":"https://varnomen.hgvs.org/bg-material/simple/",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar significance & confidence",
+      "id":"info_csq_clinvar_clnsigconf",
+      "description":"ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alongside with combinations of terms. This field also includes how many times ClinVar the particular variant has been rated with each clinical significance term.",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar variation ID and significance",
+      "id":"info_csq_clinvar_clnsigincl",
+      "description":"Clinvar variation ID plus clinical significance. ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alongside with combinations of terms",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar variant class",
+      "id":"info_csq_clinvar_clnvc",
+      "description":"Clinvar variation ID plus clinical significance. ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alongside with combinations of terms",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar SO term",
+      "id":"info_csq_clinvar_clnvcso",
+      "description":"Clinvar SO (Sequence Ontology) term",
+      "link":"https://m.ensembl.org/info/genome/variation/prediction/predicted_data.html",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar SO term",
+      "id":"info_csq_clinvar_clnvcso",
+      "description":"Clinvar SO (Sequence Ontology) term",
+      "link":"https://m.ensembl.org/info/genome/variation/prediction/predicted_data.html",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar Symbol",
+      "id":"info_csq_clinvar_dbvarid",
+      "description":"ClinVar GeneSymbol",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/intro/",
+      "displayable":true
+    },
+    {
+      "name":"ClinVar variant description",
+      "id":"info_csq_clinvar_mc",
+      "description":"ClinVar Sequence Ontology term (SO) including description of variant",
+      "link":"https://www.ncbi.nlm.nih.gov/clinvar/intro/",
+      "displayable":true,
+      "displaytype":"prettyampersand"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+.Home {
+}
+
+.samplesBackground {
+	width: 100%;
+	position: absolute;
+	background: #fff;
+	/*
+	#91d1c2
+	#8491b4
+	#b09c85
+	#3c5488
+	#4dbbd5
+	*/
+}
+
+.samplesBox {
+	margin: auto;
+	background: #fff;
+	width: 500px;
+	padding: 30px;
+	border-radius: 5px;
+	margin-top: 50px;
+	border: 1px solid #ccc;
+}
+
+.samplesBox h1 {
+	font-size: 16pt;
+}
+
+.hidden {
+	display: none;
+}
+
+.studyBox {
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.studyBox .studies {
+	margin-left: 20px;
+}

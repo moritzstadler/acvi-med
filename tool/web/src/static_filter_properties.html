@@ -1,0 +1,22 @@
+The variant filtering procedure is comprised of four steps:
+<ol>
+	<li>Filter for variant pathogenicity</li>
+	<li>Filter for gene panels</li>
+	<li>Filter for genotype</li>
+	<li>Sort your result</li>
+</ol>
+Click on one item in the menu on the left or search for specific variant properties. A detailed description of the selected property will appear.
+If you have decided to use the selected property, click on “Add to filter”.
+The corresponding icon will appear in the filter builder below. Choose your threshold.
+You can use AND or OR links to connect filtering criteria.
+Use “Create group for selection” to add parentheses around the selected statements.
+<br/>
+<br/>
+Here you can filter for variant pathogenicity and allele frequency. Ensemble IMPACT
+rating, SIFT and Polyphen pathogenicity prediction and SpliceAI predictions are available
+across the entire genome. Most scores (FatHMM, M-CAP, DANN, PrimateAI etc.) however
+are available exclusively for non-synonymous mutations, which are based on a database
+with 80 million entries <a href="https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-
+020-00803-9">https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-
+020-00803-9</a>. GnomAD, and 1000 Genomes phase 3 allele frequencies are available for
+filtering. Variants not present in those 2 datasets are treated as if their frequency were 0.

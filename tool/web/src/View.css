@@ -1,0 +1,277 @@
+.View {
+}
+
+.center {
+	width: 800px;
+	margin: auto;
+}
+
+.bar {
+	height: 12px;
+	background: #3c5488;
+	display: inline-block;
+	float: left;
+	border-radius: 3px 0px 0px 3px;
+}
+
+.barBackground {
+	height: 12px;	
+	background: #eee;
+	border-radius: 3px;
+	width: 250px;
+	display: inline-block;
+	padding: 0px;
+	margin-left: 10px;
+}
+
+.bar.inverse {
+}
+
+span.inverse {
+	color: #883c3c;
+	font-weight: bold;
+}
+
+.overflowhidden {
+	overflow: hidden;
+}
+
+.halfinlineblockleft {
+	width: calc(50% - 10px);
+	display: inline-block;
+	float: left;
+	margin-right: 10px;
+}
+
+.halfinlineblockright {
+	width: 50%;
+	display: inline-block;
+	overflow: hidden;
+}
+
+table.top {
+	width: 100%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+table.top td.key {
+	width: 150px;
+}
+
+table.top td.value {
+	font-weight: bold;
+}
+
+table.top td {
+	border: 1px solid #ccc;
+	padding: 5px;
+}
+
+div.field {
+	/*border-bottom: 1px solid #ccc;*/
+	word-wrap: break-word;
+	/*padding-top: 12px;
+	padding-bottom: 16px;*/
+	padding-bottom: 3px;
+}
+
+div.field:hover {
+	background: #f9f9f9;
+}
+
+.externalBoxData div.field:hover {
+	background: none;
+}
+
+.externalBoxDataTitle {
+	display: inline-block;
+	font-size: 14pt;
+	padding-bottom: 5px;
+	padding-top: 0px;
+}
+
+.fielddata .title {
+	font-weight: bold;
+	display: inline-block;
+	width: 35%;
+	word-wrap: break-word;
+}
+
+.rightValue {
+	width: 65%;
+	word-wrap: break-word;
+	float: right;
+	text-align: right;
+}
+
+.informationButton {
+	color: #00a087;
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin: 0px;
+	margin-left: 8px;
+	font-size: 18px;
+	cursor: pointer;
+}
+
+.information {
+	margin-top: 10px;
+}
+
+span.fielddata {
+	width: calc(100% - 25px);
+}
+
+.field span {
+	display: inline-block;
+}
+
+.hidden {
+	display: none;
+}
+
+.externalBoxData {
+	background: #eee;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.externalLogo {
+	height: 40px;
+	position: absolute;
+	top: 20px;
+	right: 30px;
+}
+
+div.listItem {
+	margin-bottom: 5px;
+	border-right: 2px solid #f39b7f;/*8491b4*/
+	padding-right: 5px;
+}
+
+.inlineBox {
+	display: inline-block;
+	padding: 5px;
+	color: #fff;
+	font-weight: bold;
+	border-radius: 3px;
+	text-transform: uppercase;
+	margin-left: 3px;
+}
+
+.heatMap {
+	background: #eee;
+}
+
+.heatMapElement {
+    display: inline-block;
+    height: 0px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #555, 1px 0px 2px #555, 1px -1px 2px #555, 0px 1px 2px #555, 0px -1px 2px #555, -1px 1px 2px #555, -1px 0px 2px #555, -1px -1px 2px #555;
+}
+
+.tableOfContents {
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	background: #f5f5f5;
+	padding: 15px;
+	margin-bottom: 20px;
+}
+
+@media only screen and (min-width: 1300px) {
+	.tableOfContents {
+		border: none;
+		/*border-left: 3px solid #ccc;*/
+		background: #fff;
+		position: fixed;
+		left: 20px;
+		padding-top: 0px;
+		top: 50px;
+	}
+}
+
+.tableOfContentsLink.active {
+	background: red;
+}
+
+.contentHeading {
+	color: #3c5488;
+}
+
+.otherFields {
+	font-size: 24px;
+}
+
+.graphBarBackground {
+	background: #eee;
+	height: 12px;
+	/*position: relative;*/
+	border-radius: 3px;
+}
+
+.graphBar {
+	height: 12px;
+	background: #3c5488;
+	border-radius: 3px 0px 0px 3px;	
+}
+
+.graphBarText {
+	font-size: 12px;
+	width: 100%;
+	cursor: default;
+}
+
+.rightAlignClear {
+	margin-right: 0px;
+	display: inline-block;
+	text-align: right;
+	float: right;
+}
+
+.fullGeneNameDetail {
+	padding-top: 0px;
+	font-size: 14pt;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 10px;
+}
+
+.fullPanelNameDetail {
+	font-size: 12pt;
+	cursor: pointer;
+}
+
+.singlePanelGeneData {
+	margin-top: 10px;
+	margin-left: 20px;
+}
+
+.expansionDiv {
+	overflow: hidden;
+}
+
+.linkStyle {
+	cursor: pointer;
+	text-decoration: underline;
+	color: #0d6efd;
+}
+
+.alleleFrequencies {
+	position: relative;
+}
+
+.informationButtonRight {
+	margin-left: 0px;
+}
+
+.note {
+	font-size: 8pt;
+	font-style: italic;
+}
+

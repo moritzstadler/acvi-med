@@ -1,0 +1,75 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: 'sample'
+    volumes:
+      - /data/vv/postgres:/var/lib/postgresql/data
+    networks:
+      - vcfvisualize
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    volumes:
+      - ~/data/vv/mysql:/var/lib/mysql
+    networks:
+      - vcfvisualize
+    depends_on:
+      - postgres
+  core:
+    restart: always
+    build: core/
+    environment: #3lM8jJgp3fhJh946  34.90.25.240
+      SPRING_APPLICATION_JSON: '{
+        "database.postgres.url": "postgres:5432/sample",
+        "database.postgres.user": "postgres",
+        "database.postgres.password": "password",
+        "database.mysql.host": "mysql",
+        "database.mysql.user": "root",
+        "database.mysql.password": "password",
+        "storage.reads.usegoogle": "false",
+        "storage.reads.google.credentials": "s",
+        "storage.reads.google.projectid": "genomics-324511",
+        "storage.reads.google.bucketname": "genomics-324511-data"
+      }'
+    volumes:
+      - ~/data/vv/core:/var
+      - /data/WGS_data/:/bam  
+    networks:
+      - vcfvisualize
+    depends_on:
+      - mysql
+    ports:
+      - 8080:8080
+  web:
+    restart: always
+    build: web/
+    networks:
+      - vcfvisualize
+    depends_on:
+      - core
+    ports:
+      - 3000:3000
+networks:
+  vcfvisualize:
+    driver: bridge
+volumes:
+    vcf-visualize:
+

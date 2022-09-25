@@ -1,0 +1,25 @@
+.GenotypeSelector {
+	margin: 20px;
+}
+
+.GenotypeSelector select.genotype {
+	width: 200px;
+    height: 30px;
+    font-weight: bold;
+    outline: none;
+    display: inline-block;
+}
+
+span.patientId {
+	font-weight: bold;
+	width: 150px;
+	display: inline-block;
+}
+
+div.genotype {
+	border: 2px solid #ccc;
+	padding: 10px;
+	margin-top: 10px;
+	border-radius: 5px;
+	width: 374px;
+}

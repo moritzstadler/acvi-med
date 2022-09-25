@@ -1,0 +1,30 @@
+.Admin {
+	margin: 20px;
+}
+
+button.small {
+	border: 1px solid;
+	margin: 0px !important;
+}
+
+.Admin table {
+	margin-top: 10px;
+	width: 100%;
+}
+
+.Admin input {
+	margin-left: 10px;
+}
+
+.Admin label {
+	margin-right: 10px;
+}
+
+.Admin td {
+	border: 1px solid #000;
+}
+
+.sampleBox {
+	height: 100px;
+	overflow-y: scroll;
+}

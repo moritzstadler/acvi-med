@@ -1,0 +1,248 @@
+.VariantList {
+  background: #eee;
+  margin: 0px;
+  padding: 0px;
+  height: calc(100% - 55px);
+  overflow-y: scroll;
+  position: fixed;
+  width: inherit;
+  width: 100%;
+}
+
+table.list {
+  background: #fff;
+  min-width: calc(100% - 40px); 
+  margin: 20px;
+  box-shadow: 0px 0px 10px #999;
+}
+
+.tableWrapper {
+  border-radius: 5px !important;
+}
+
+.VariantList td {
+  border: 1px solid #ddd !important;
+  padding: 2px;
+  cursor: pointer;
+  max-width: 50px;
+  word-wrap: break-word;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.flexleft {
+  width: 80%;
+}
+
+.flexright {
+  width: 20%;
+  background: #b09c85;
+  height: auto;
+}
+
+.nooutline {
+  outline: none;
+}
+
+.selected {
+  background-image: linear-gradient(to right, #93c2ff, #a3ffe8);
+}
+
+.tableFixedHead thead th { 
+  position: sticky; 
+  top: 0; 
+  z-index: 1;
+  background: #3c5488;
+  color: #fff;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  box-shadow: 0px -1px 0px #000 inset;
+}
+
+.listHeader {
+  background: #91d1c2;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.listHeaderRight {
+  width: 70%;
+  text-align: right;
+  display: inline-block;
+}
+
+.listHeaderLeft {
+  width: 30%;
+  text-align: left;
+  display: inline-block;
+}
+
+.popupBackground {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  overflow-y: scroll;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  top: 0px;
+  display: none;
+}
+
+.popup {
+  z-index: 1000;
+  background: #fff;
+  position: absolute;
+  margin-top: 50px;
+  width: 90%;
+  margin-left: 5%;
+  box-shadow: 0px 0px 100px #000;
+  border-radius: 5px;
+}
+
+.visible {
+  display: block;
+}
+
+.right {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+.closeButton {
+  font-size: 35px;
+  line-height: 35px;
+  color: #000;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 50px;
+  color: #999;
+  font-size: 15px;
+}
+
+.end {
+  text-align: center;
+  margin-top: 50px;
+  color: #555;
+  font-size: 15px;
+}
+
+.smallBar {
+  height: 12px;
+  background: #3c548899;
+  display: inline-block;
+  float: left;
+  border-radius: 3px 0px 0px 3px;
+}
+
+.smallBarBackground {
+  height: 12px; 
+  background: #eee;
+  border-radius: 3px;
+  width: 150px;
+  max-width: 100%;
+  display: inline-block;
+  padding: 0px;
+  margin-right: 10px;
+}
+
+.heatSplash {
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  border-radius: 10px;
+}
+
+.heatSplashBackground {
+  background: #eee;
+  display: inline-flex;
+  border-radius: 10px;
+}
+
+.smallInlineBox {
+  display: inline-block;
+  padding: 3px;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 3px;
+  text-transform: uppercase;
+  margin-left: 3px;
+  font-size: 10px;
+}
+
+span {
+  position: relative;
+}
+
+span[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  top: -25px;
+  left: -10px;
+  color: #000;
+  background: #fff;
+  z-index: 2500;
+  padding: 5px;
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px #999;
+  font-weight: bold;
+  font-size: 11px;
+  width: fit-content;
+  max-width: fit-content;
+  min-width: 300px;
+}
+
+.queryDataBox {
+  background: #eee;
+}
+
+.queryData {
+  margin: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 5px;
+  background: #81b7a9;
+}
+
+.tutorialCircle {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  border-radius: 500px;
+  box-shadow: 0px 0px 50px #000 inset;
+  outline: 10000px solid #00000099;
+  z-index: 9995;
+  cursor: pointer;
+}
+
+.tutorialMessage {
+  position: absolute;
+  left: calc(50% - 200px);
+  top: 100px;
+  box-shadow: 0px 0px 10px #000;
+  border-radius: 5px;
+  padding: 20px;
+  width: 400px;
+  z-index: 9999;
+  background: #fff;
+}
+
+span.larger {
+  font-size: 12pt;
+}
+
+
+

@@ -1,0 +1,25 @@
+.StatusBar {
+}
+
+.statusBar {
+	padding: 5px;
+	/*background: #7e6148;*/
+	background: #47645c;
+	color: #fff;
+	/*
+	#e64b35
+	#4dbbd5
+	#b09c85
+	#7e6148
+	*/
+}
+
+.statusBar a {
+	color: #fff;
+	padding-left: 5px;
+}
+
+.statusBar a:hover {
+	color: #fff;
+	text-decoration: overline;
+}

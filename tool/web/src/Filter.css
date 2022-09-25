@@ -1,0 +1,284 @@
+.Filter {
+}
+
+* {
+	font-size: 13px;
+}
+
+.filterHeader {
+	border-bottom: 1px solid #ccc;
+	padding: 20px;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.filterList {
+  width: 45%;
+  border: 2px solid #ccc;
+  margin: 15px;
+  border-radius: 10px;
+  height: 350px;
+  overflow: scroll;
+}
+
+.filterList input {
+	border-radius: 8px 8px 0px 0px;
+	padding: 10px;
+	width: 100%;
+	height: 40px;
+	outline: none;
+	border: none;
+	border-bottom: 3px solid #ddd;
+}
+
+.filterList .body {
+}
+
+.filterList .filterRow {
+	border-bottom: 1px solid #ddd;
+	padding: 7px;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.filterDetail {
+  width: 55%;
+  padding: 15px;
+  padding-left: 0px;
+}
+
+.filterDetail .title {
+	font-size: 20pt;
+	font-weight: bold;
+	width: 80%;
+}
+
+.filterDetail .adder {
+	text-align: right;
+	width: 20%;
+	word-wrap: break-word;
+}
+
+.filterDetail .body {
+	height: 210px;
+	margin-bottom: 10px;
+}
+
+.overflowAuto {
+	overflow: auto;
+}
+
+.filterDetail .sample {
+	width: 70%;
+}
+
+.filterDetail .range {
+	display: inline-block;
+	margin-left: 5px;
+	font-weight: bold;
+}
+
+.filterDetail .foot .paper {
+	text-align: right;
+	width: 30%;
+	word-wrap: break-word;
+}
+
+.inner-addon { 
+    position: relative; 
+}
+
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+.selected {
+	background: #eee;
+}
+
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+
+.filterBuilder {
+	border-top: 1px solid #ccc;
+	padding: 20px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;	
+	background: #eee;
+	position: relative;
+}
+
+button.clearFilter {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.connector {
+	color: #fff;
+	padding: 5px;
+	border-radius: 5px;
+	background: #e64b35;
+	font-weight: bold;
+	cursor: pointer;
+	min-width: 40px;
+	text-align: center;
+	display: inline-block;
+	width: 40px;
+	margin: 3px;
+	font-size: 10px;
+}
+
+.basic {
+	border-radius: 5px;
+	padding: 7px;
+	margin: 2px;
+	background: #3c5488;
+	color: #fff;
+	font-weight: bold;
+	display: inline-block;
+	min-width: 120px;
+	cursor: pointer;
+}
+
+.lightBasic {
+	background: #8492b4 !important;
+}
+
+.groupingBox {
+	background: rgba(176, 156, 133, 0.2);
+	padding: 7px;
+	border: 1px solid #7e6148;
+	border-radius: 5px;
+	display: inline-block;
+}
+
+.groupingBox:hover {
+	/*outline: 3px solid yellow;*/
+}
+
+.selectedFilter {
+	outline: 3px solid yellow;
+}
+
+.filterTextview {
+	border-top: 1px solid #ccc;
+	padding: 20px;
+}
+
+.filterTextview textarea {
+	width: 100%;
+	outline: none;
+	font-family: monospace;
+	color: #777;
+	border: 1px solid #aaa;
+	border-radius: 3px;
+}
+
+input.smallInput {
+	width: 65px;
+	background: none;
+	border: 1px solid #fff;
+	color: #fff;
+	border-radius: 3px;
+	outline: none;
+	text-align: right;
+}
+
+input.wide {
+	width: 195px;
+}
+
+.comparator {
+    font-size: 18px;
+    line-height: 18px;
+    border: 1px solid #fff;
+    height: 23px;
+    display: inline-block;
+    border-radius: 100px;
+    width: 23px;
+    padding-left: 4px;
+    margin-right: 5px;
+}
+
+.enumItem {
+	font-weight: normal;
+}
+
+button {
+	font-weight: bold;
+	padding: 5px;
+	margin: 3px !important;
+	border-radius: 3px !important;
+}
+
+button.prim {
+	background: #dc0000;
+	border: 1px solid #9d0303;
+	color: #fff;
+}
+
+button.sec {
+	background: #00a087;
+	border: 1px solid #006e5d;
+	color: #fff;
+}
+
+button.tert {
+	background: #aaa;
+	color: #fff;
+	border: 1px solid #555;
+}
+
+.filterHeader .heading {
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.filterHeader .headingNumber {
+	font-size: 16px;
+	border: 2px solid #000;
+	font-weight: bold;
+	width: 22px;
+	height: 22px;
+	border-radius: 22px;
+	line-height: 18px;
+	vertical-align: text-bottom;
+	text-align: center;
+	display: inline-block;
+	margin-right: 5px;
+}
+
+.rightAlign {
+	display: inline-block;
+	text-align: right;
+	float: right;
+	margin-right: 15px;
+}
+
+.hidden {
+	display: none;
+}
+
+.hint {
+	display: inline-block;
+	color: #555;
+	font-weight: bold;
+	margin-left: 10px;
+}
+
+.disabledButton {
+	opacity: 0.5;
+	cursor: initial !important;
+}
+

@@ -1,0 +1,109 @@
+.PanelSelector {
+}
+
+.filterRowType {
+	display: inline-block;
+    color: #fff;
+    padding: 3px;
+    font-size: 8pt;
+    text-transform: uppercase;
+    border-radius: 3px;
+    float: right;
+}
+
+.typepanel {
+	background: #3c5488;
+}
+
+.typegene {
+	background: #8491b4;
+}
+
+.typealias {
+	background: #8491b4;
+}
+
+.typeproperty {
+    background: #3c5488;
+}
+
+.filterListLarge {
+	width: 45% !important;
+}
+
+.filterListLarge .body {
+  height: 300px;
+  overflow: scroll !important;
+}
+
+.filterListLarge .filterRow {
+  overflow: hidden;
+}
+
+.filterDetailSmall {
+	width: 55% !important;
+	overflow-y: scroll;
+	border-bottom: 3px solid #fff;
+}
+
+.titleWide {
+	width: 100% !important;
+}
+
+span.geneSymbol {
+    display: inline-block;
+    margin-right: 3px;
+    background: #8491b4;
+    color: #fff;
+    font-weight: bold;
+    font-size: 9pt;
+    padding: 3px;
+    margin-bottom: 3px;
+    border-radius: 6px 2px;
+    cursor: pointer;
+}
+
+span.panelName {
+	display: inline-block;
+    margin-right: 3px;
+    background: #3c5488;
+    color: #fff;
+    font-weight: bold;
+    font-size: 9pt;
+    padding: 3px;
+    margin-bottom: 3px;
+    border-radius: 6px 2px;
+    cursor: pointer;
+}
+
+.diseaseGroup {
+	font-size: 13pt;
+	color: #555;
+}
+
+.mainDiseaseGroup {
+	font-size: 13pt;
+	color: #000;
+}
+
+.relevantDisorders {
+    margin-top: 10px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.geneSymbols {
+	margin-top: 10px;
+}
+
+.fullGeneName {
+	font-size: 13pt;
+	color: #000;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+.floatright {
+	float: right;
+}

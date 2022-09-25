@@ -1,0 +1,106 @@
+{
+  "chapters":[
+    {
+      "title": "Genomic location",
+      "fields": [],
+      "subchapters": [
+        {
+          "title": "Transcript",
+          "fields": ["info_csq_feature", "info_csq_mane", "info_csq_canonical", "info_csq_tsl", "info_csq_appris", "info_csq_hgvsc", "info_csq_hgvs_ref", "info_csq_aloft_fraction_transcripts_affected", "info_csq_aloft_pred", "info_csq_aloft_prob_dominant", "info_csq_aloft_prob_recessive"],
+          "subchapters": []
+        },
+        {
+          "title": "Whole genome",
+          "fields": ["info_csq_hgvsg", "info_csq_hgvs_intronstartoffset", "info_csq_strand", "info_csq_exon", "info_csq_intron", "info_csq_distance", "info_csq_feature_type", "info_csq_biotype", "info_csq_mirna", "info_csq_motif_name", "info_csq_motif_pos", "info_csq_high_inf_pos", "info_csq_motif_score_change", "info_csq_transcription_factors", "info_csq_satmutmpra"],
+          "subchapters": []
+        }
+      ]
+    },
+    {
+      "title": "Protein",
+      "fields": [],
+      "subchapters": [
+        {
+          "title": "Transcript",
+          "fields": ["info_csq_hgvsp", "info_csq_aaalt", "info_csq_aaref", "info_csq_mutationtaster_aae", "info_csq_codonpos", "info_csq_cds_position", "info_csq_protein_position", "info_csq_codons"],
+          "subchapters": []
+        },
+        {
+          "title": "Annotation",
+          "fields": ["info_csq_ccds", "info_csq_ensp", "info_csq_swissprot", "info_csq_trembl", "info_csq_uniparc", "info_csq_uniprot_isoform", "info_csq_interpro_domain"],
+          "subchapters": []
+        }
+      ]
+    },
+    {
+      "title": "Literature",
+      "fields": [],
+      "subchapters": [
+        {
+          "title": "Existing literature",
+          "fields": ["info_csq_existing_variation", "info_csq_somatic"],
+          "subchapters": []
+        },
+        {
+          "title": "Annotation",
+          "fields": ["info_csq_pheno", "info_csq_pubmed", "info_csq_phenotypes", "info_csq_mastermind_mmid3", "info_csq_mastermind_counts"],
+          "subchapters": []
+        }
+      ]
+    },
+    {
+      "title": "Variant annotation",
+      "fields": [],
+      "subchapters": [
+        {
+          "title": "ClinVar",
+          "fields": ["info_csq_clinvar_mc", "info_csq_clinvar_clnhgvs", "info_csq_clinvar_clndn", "info_csq_clinvar_clnsigconf", "info_csq_clinvar_clnsigincl", "info_csq_clinvar_clnsig", "info_csq_clinvar_clnrevstat", "info_csq_clinvar_clnvc", "info_csq_clinvar_clnvcso", "info_csq_clinvar_clndisdb", "info_csq_clinvar", "info_csq_clinvar_omim_id", "info_csq_clin_sig"],
+          "subchapters": []
+        }
+      ]
+    },
+    {
+      "title": "Gene",
+      "fields": [],
+      "subchapters": [
+        {
+          "title": "Annotation",
+          "fields": ["info_csq_symbol", "info_csq_symbol_source", "info_csq_hgnc_id"],
+          "subchapters": []
+        }
+      ]
+    },
+    {
+      "title": "Pathogenicity predictions",
+      "fields": [],
+      "subchapters": [
+        {
+          "title": "Scores",
+          "fields": ["info_csq_impact", "info_csq_sift", "info_csq_sift4g_score", "info_csq_polyphen", "info_cadd_phred", "info_cadd_raw", "info_caddind_phred", "info_caddind_raw", "info_csq_dann_score", "info_csq_fathmm_pred", "info_csq_fathmm_score", "info_csq_gerp_rs", "info_csq_vest4_score", "info_csq_primateai_pred", "info_csq_primateai_score", "info_csq_mutationtaster_pred", "info_csq_mutationtaster_score", "info_csq_spliceai_pred_ds_ag", "info_csq_spliceai_pred_ds_al", "info_csq_spliceai_pred_ds_dg", "info_csq_spliceai_pred_ds_dl", "info_csq_polyphen2_hdiv_pred", "info_csq_polyphen2_hdiv_score"],
+          "subchapters": []
+        },
+        {
+          "title": "Combined scores",
+          "fields": ["info_csq_mcap_pred", "info_csq_mcap_score", "info_csq_mvp_score", "info_csq_lrt_pred", "info_csq_lrt_score", "info_csq_revel_score", "info_csq_metalr_pred", "info_csq_metalr_score", "info_csq_metasvm_pred", "info_csq_metasvm_score", "info_csq_reliability_index"],
+          "subchapters": []
+        }
+      ]
+    },
+    {
+      "title": "Allele frequencies",
+      "fields": [],
+      "subchapters": [
+        {
+          "title": "Genomes",
+          "fields": ["info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af","info_csq_gnomadg_ac","info_csq_gnomadg_af","info_csq_gnomadg_controls_ac","info_csq_gnomadg_controls_af","info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe","info_csq_gnomadg_af_afr","info_csq_gnomadg_af_amr","info_csq_gnomadg_af_asj","info_csq_gnomadg_af_eas","info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe","info_csq_gnomadg_af_oth"],
+          "subchapters": []
+        },
+        {
+          "title": "Exomes",
+          "fields": ["info_csq_gnomad_af", "info_csq_gnomad_afr_af", "info_csq_gnomad_amr_af", "info_csq_gnomad_asj_af", "info_csq_gnomad_eas_af", "info_csq_gnomad_fin_af", "info_csq_gnomad_nfe_af", "info_csq_gnomad_oth_af", "info_csq_gnomad_sas_af"],
+          "subchapters": []
+        }
+      ]
+    }
+  ]
+}
