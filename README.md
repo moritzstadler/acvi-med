@@ -67,3 +67,8 @@ If you import a file twice or a file with an equal name, the first table is over
 ### Configurating index creation
 
 Database indices are created after every variant has been inserted into the table. In order to optimize performance and storage consumption, the columns which are to be indexed can be individually defined. The <code>application.properties</code> file in the root directory contains a list of these column names. In case your VCF files contain an additional info or consequence field that needs to be indexed (i. e. searched for or filtered), note that in the `application.properties`file  VCF `INFO` fields are to be denominated with a leading `info_`and VCF Consequence fields are to be denominated with a leading `info_csq_`. 
+
+  
+  
+  
+  TODO add fav and notes to variants
