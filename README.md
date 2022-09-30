@@ -34,7 +34,10 @@ in the [config.js file](tool/web/src/config.js). `appBaseUrl` refers to the URL 
 ## Deploying the System
 
 Starting the web application and the server backend alongside the database can be done with the following command
+
 <pre><code>docker-compose up --build</code></pre>
+
+You should be able to view the web application in your browser by accessing `localhost:3030`. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering the your email, checking 'Admin' and clicking 'Create'. After that you should open the Activation Link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
 
 # Annotation and Import
 
@@ -45,8 +48,6 @@ Before importing a VCF file make sure that the PostgreSQL database is running on
 After cloning the repository and navigating to the folder containing the Dockerfile, you can use the following command to build the container. Depending on your local setup you might need to prepend `sudo`.
 
 <pre><code>docker build -t vcfimport .</code></pre>
-
-You should be able to view the web application in your browser by accessing `localhost:3030`. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering the your email, checking 'Admin' and clicking 'Create'. After that you should open the Activation Link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
 
 ## Import the file
 
