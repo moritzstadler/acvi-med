@@ -46,6 +46,8 @@ After cloning the repository and navigating to the folder containing the Dockerf
 
 <pre><code>docker build -t vcfimport .</code></pre>
 
+You should be able to view the web application in your browser by accessing `localhost:3030`. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering the your email, checking 'Admin' and clicking 'Create'. After that you should open the Activation Link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
+
 ## Import the file
 
 Once the container has been built successfully, you can start the import by executing the following command:
