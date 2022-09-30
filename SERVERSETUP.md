@@ -32,3 +32,19 @@ export const Config = {
 
 export default Config;
 ```
+
+TODO
+
+```
+sudo vim /var/www/html/.htaccess    
+
+RewriteEngine On  
+RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+RewriteRule ^ - [L]
+RewriteRule ^ /index.html [L]
+
+sudo chmod 777 .htaccess
+sudo systemctl restart apache2
+```
