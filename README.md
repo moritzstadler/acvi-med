@@ -80,3 +80,9 @@ Database indices are created after every variant has been inserted into the tabl
   
   
   TODO add fav and notes to variants
+  
+  TODO add ACMG
+  
+  TODO change logo
+  
+  TODO docu for jsons (view.json...)
