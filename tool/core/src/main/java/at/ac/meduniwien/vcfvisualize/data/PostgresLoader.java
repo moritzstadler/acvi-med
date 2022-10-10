@@ -112,16 +112,21 @@ public class PostgresLoader {
         );
 
         PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
 
-        long result = resultSet.getLong("n");
+        try {
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
 
-        resultSet.close();
-        statement.close();
-        returnConnection(connection);
+            long result = resultSet.getLong("n");
+            resultSet.close();
+            statement.close();
+            returnConnection(connection);
 
-        return result;
+            return result;
+        } catch (Exception ex) {
+            System.err.println(ex.toString());
+            return 1;
+        }
     }
 
     @SneakyThrows
