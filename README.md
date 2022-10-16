@@ -1,5 +1,7 @@
 __TOC__
 
+TODO: Add DOI and citation info
+
 # Introduction
 
 This tool ...
