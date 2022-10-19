@@ -67,7 +67,6 @@ public class Clinvar {
         int sum = 0;
         for (String key : genomicPositionsByHpoTerm.keySet()) {
             int size = genomicPositionsByHpoTerm.get(key).size();
-            System.out.println(key + ": " + size);
             sum += size;
         }
 
