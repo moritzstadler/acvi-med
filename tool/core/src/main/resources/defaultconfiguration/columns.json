@@ -1167,13 +1167,6 @@
       "displayable":true
     },
     {
-      "name":"ClinVar clincal significance",
-      "id":"info_csq_clinvar_clnsig",
-      "description":"ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alongside with combinations of terms",
-      "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/",
-      "displayable":true
-    },
-    {
       "name":"ClinVar assertion criteria",
       "id":"info_csq_clinvar_clnrevstat",
       "description":"Clinvar assertion criteria. Can get the following values: criteria_provided&_conflicting_interpretations; criteria_provided&_multiple_submitters&_no_conflicts; criteria_provided&_single_submitter; no_assertion_criteria_provided; no_assertion_provided; no_interpretation_for_the_single_variant; reviewed_by_expert_panel",
