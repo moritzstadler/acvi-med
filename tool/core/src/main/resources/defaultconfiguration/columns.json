@@ -12,7 +12,6 @@
     "info_af_nfe",
     "info_af_oth",
     "info_csq_clinvar_clnsig",
-    "info_csq_clin_sig",
     "filter"
   ],
   "columns":[
@@ -1161,9 +1160,9 @@
       "displaytype": "clinvarid"
     },
     {
-      "name":"ClinVar clincal significance",
+      "name":"ClinVar clinical significance",
       "id":"info_csq_clinvar_clnsig",
-      "description":"ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alongside with combinations of terms",
+      "description":"ClinVar uses standard terms for clinical significance recommended by an authoritative source when available. These standards include: Five terms for Mendelian diseases recommended by ACMG/AMP plus non-standard terms alongside with combinations of terms",
       "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/",
       "displayable":true
     },
