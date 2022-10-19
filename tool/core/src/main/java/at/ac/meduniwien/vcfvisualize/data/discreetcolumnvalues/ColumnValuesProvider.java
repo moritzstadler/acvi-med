@@ -3,12 +3,13 @@ package at.ac.meduniwien.vcfvisualize.data.discreetcolumnvalues;
 import at.ac.meduniwien.vcfvisualize.data.MySqlLoader;
 import at.ac.meduniwien.vcfvisualize.data.PostgresLoader;
 import at.ac.meduniwien.vcfvisualize.model.Column;
+import at.ac.meduniwien.vcfvisualize.security.ConfigurationService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,7 +73,25 @@ public class ColumnValuesProvider {
         List<String> sampleIds = postgresLoader.getSampleIds();
 
         for (String sampleId : sampleIds) {
-            List<Column> columns = postgresLoader.getColumns(sampleId);
+            List<Column> allColumns = postgresLoader.getColumns(sampleId);
+
+            //the values computed in this method are only needed for filterable columns
+            String columnsMetaDataString = ConfigurationService.read("columns.json");
+            JSONArray filterableIds = new JSONObject(columnsMetaDataString).getJSONArray("filterable");
+            HashSet<String> filterableColumns = new HashSet<>();
+            for (int i = 0; i < filterableIds.length(); i++) {
+                filterableColumns.add(filterableIds.getString(i));
+            }
+
+            //after this columns only contains filterables
+            List<Column> columns = new LinkedList<>();
+            for (Column column : allColumns) {
+                if (filterableColumns.contains(column.getName())) {
+                    columns.add(column);
+                }
+            }
+            
+            //get row count
             long actualRowCount = postgresLoader.estimateAllVariantsCount(sampleId);
             long persistedRowCount = loadCountFromSampleMeta(sampleId);
             boolean numberOfRowsChanged = actualRowCount != persistedRowCount;//!rowsBySample.containsKey(sampleId) || rowsBySample.get(sampleId) != rowCountForSample;
@@ -108,6 +127,37 @@ public class ColumnValuesProvider {
                 persistCountAsSampleMeta(sampleId, actualRowCount);
             } else {
                 System.out.println("retrieving persisted samplemeta for " + sampleId);
+
+                //load all for which discreet values are available
+                List<String> discreetColumns = columns.stream().filter(c -> c.getDatatype().equals(DISCREET_DATA_TYPE)).map(Column::getName).collect(Collectors.toList());
+                HashMap<String, List<String>> alreadyPersistedDiscreedValuesByColumn = loadDiscreetValuesFromSampleMeta(sampleId, discreetColumns);
+                Set<String> alreadyPersistedDiscreetColumns = alreadyPersistedDiscreedValuesByColumn.keySet();
+
+                //compare with list of necessary columns
+                for (String discreetColumn : discreetColumns) {
+                    if (!alreadyPersistedDiscreetColumns.contains(discreetColumn)) {
+                        //persist missing column
+                        System.out.println("determining discreet values for " + sampleId + "." + discreetColumn);
+                        List<String> values = postgresLoader.getGroupedColumnValues(sampleId, discreetColumn, DISCREET_COLUMN_LIMIT + 1);
+                        if (values.size() <= DISCREET_COLUMN_LIMIT) {
+                            persistDiscreetValueAsSampleMeta(sampleId, discreetColumn, values);
+                        }
+                    }
+                }
+
+                //load all for which non-null counts are available
+                HashMap<String, Long> alreadyPersistedNonNullCountsByColumn = loadNonNullCountFromSampleMeta(sampleId, columns.stream().map(Column::getName).collect(Collectors.toList()));
+
+                //compare with list of necessary columns
+                for (Column column : columns) {
+                    if (!alreadyPersistedNonNullCountsByColumn.containsKey(column.getName())) {
+                        System.out.println("counting non null values for " + sampleId + "." + column.getName());
+                        long currentNonNullCount = postgresLoader.countNonNullColumnValues(sampleId, column.getName());
+                        persistNonNullCountAsSampleMeta(sampleId, column.getName(), currentNonNullCount);
+                    }
+                }
+
+                //load local state from persisted values
                 columnValuesBySample.put(sampleId, loadDiscreetValuesFromSampleMeta(sampleId, columns.stream().filter(c -> c.getDatatype().equals(DISCREET_DATA_TYPE)).map(Column::getName).collect(Collectors.toList())));
                 columnNonNullCountsBySample.put(sampleId, loadNonNullCountFromSampleMeta(sampleId, columns.stream().map(Column::getName).collect(Collectors.toList())));
             }
@@ -124,11 +174,20 @@ public class ColumnValuesProvider {
         }
     }
 
+    private void persistDiscreetValueAsSampleMeta(String sampleId, String column, List<String> discreetValues) {
+        mySqlLoader.deleteSampleMeta(sampleId, column, DISCREET_VALUES_METANAME);
+        for (String value : discreetValues) {
+            mySqlLoader.insertSampleMeta(sampleId, column, DISCREET_VALUES_METANAME, value);
+        }
+    }
+
     private HashMap<String, List<String>> loadDiscreetValuesFromSampleMeta(String sampleId, List<String> columns) {
         HashMap<String, List<String>> result = new HashMap<>();
         for (String column : columns) {
             List<String> values = mySqlLoader.loadSampleMeta(sampleId, column, DISCREET_VALUES_METANAME);
-            result.put(column, values);
+            if (values != null && values.size() > 0) {
+                result.put(column, values);
+            }
         }
         return result;
     }
