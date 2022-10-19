@@ -1,6 +1,8 @@
 package at.ac.meduniwien.vcfvisualize.cron;
 
 import at.ac.meduniwien.vcfvisualize.data.discreetcolumnvalues.ColumnValuesProvider;
+import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.Clinvar;
+import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.Hpo;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.PanelApp;
 import at.ac.meduniwien.vcfvisualize.study.StudyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,20 @@ public class Cron {
     PanelApp panelApp;
 
     @Autowired
+    Hpo hpo;
+
+    @Autowired
+    Clinvar clinvar;
+
+    @Autowired
     StudyService studyService;
 
     @Scheduled(cron = "0 0 2 * * ?")
     public void performCronJobs() {
         new Thread(() -> studyService.synchronizeSamples()).start();
-        new Thread(() -> panelApp.loadDataFromAPI()).start();
+        panelApp.loadDataFromAPI();
+        hpo.loadDataFromAPI();
+        clinvar.loadDataFromAPI();
     }
 
     @PostConstruct
@@ -31,8 +41,14 @@ public class Cron {
         //load all samples from big query
         new Thread(() -> studyService.synchronizeSamples()).start();
 
+        //load data from hpo
+        hpo.loadDataFromAPI();
+
+        //load data from clinvar
+        clinvar.loadDataFromAPI();
+
         //load data from panel app api
-        new Thread(() -> panelApp.loadDataFromAPI()).start();
+        panelApp.loadDataFromAPI();
     }
 
 }

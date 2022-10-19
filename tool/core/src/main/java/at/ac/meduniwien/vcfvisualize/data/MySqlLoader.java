@@ -25,7 +25,9 @@ public class MySqlLoader {
         dataSource.setPassword(password);
         dataSource.setServerName(host);
 
-        String databaseName = "vcfvisualizetest";
+        return;
+
+        /*String databaseName = "vcfvisualizetest";
         boolean datbaseExists = databaseExists(databaseName);
         if (datbaseExists) {
             System.out.println("MySql database found");
@@ -37,7 +39,7 @@ public class MySqlLoader {
 
         if (!datbaseExists) {
             createTables();
-        }
+        }*/
     }
 
     @SneakyThrows

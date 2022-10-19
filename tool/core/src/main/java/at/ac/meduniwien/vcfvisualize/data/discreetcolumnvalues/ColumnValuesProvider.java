@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class ColumnValuesProvider {
 
-    public static final int DISCREET_COLUMN_LIMIT = 10; //if a column has more than this many distinct values, it is regarded as continuous.
+    public static final int DISCREET_COLUMN_LIMIT = 100; //if a column has more than this many distinct values, it is regarded as continuous.
     public static final String DISCREET_DATA_TYPE = "character varying"; //only columns with this datatype can even be discreet
     public static final String DISCREET_VALUES_METANAME = "VALUE";
     public static final String COUNT_METANAME = "COUNT";

@@ -11,6 +11,8 @@
     "info_af_eas",
     "info_af_nfe",
     "info_af_oth",
+    "info_csq_clinvar_clnsig",
+    "info_csq_clin_sig",
     "filter"
   ],
   "columns":[

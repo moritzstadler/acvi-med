@@ -56,4 +56,24 @@ public class RestClient {
         return new ApiResponse(LocalDateTime.now(), actualResponse);
     }
 
+    public String callApiRaw(ApiRequest apiRequest) {
+        WebClient webClient = WebClient.builder()
+                .baseUrl(apiRequest.getUrl())
+                .exchangeStrategies(ExchangeStrategies.builder()
+                        .codecs(config -> config
+                                .defaultCodecs()
+                                .maxInMemorySize(16 * 1024 * 1024))
+                        .build())
+                .build();
+
+
+        String stringResponse = webClient
+                .get()
+                .retrieve()
+                .bodyToMono(String.class)
+                .block(REQUEST_TIMEOUT);
+
+        return stringResponse;
+    }
+
 }
