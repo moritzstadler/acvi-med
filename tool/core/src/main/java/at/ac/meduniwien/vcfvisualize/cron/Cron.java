@@ -30,8 +30,9 @@ public class Cron {
 
     @Scheduled(cron = "0 0 2 * * ?")
     public void performCronJobs() {
+        new Thread(() -> studyService.synchronizeSamples()).start();
+
         new Thread(() -> {
-            studyService.synchronizeSamples();
             panelApp.loadDataFromAPI();
             hpo.loadDataFromAPI();
             clinvar.loadDataFromAPI();
@@ -40,8 +41,9 @@ public class Cron {
 
     @PostConstruct
     public void init() {
+        new Thread(() -> studyService.synchronizeSamples()).start();
+
         new Thread(() -> {
-            studyService.synchronizeSamples();
             panelApp.loadDataFromAPI();
             hpo.loadDataFromAPI();
             clinvar.loadDataFromAPI();
