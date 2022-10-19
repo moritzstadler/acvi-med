@@ -35,9 +35,7 @@ public class PostgresLoader {
         this.databaseUser = databaseUser;
         this.databasePassword = databasePassword;
 
-        return;
-
-        //initConnectionPool();
+        initConnectionPool();
     }
 
     private void initConnectionPool() {
