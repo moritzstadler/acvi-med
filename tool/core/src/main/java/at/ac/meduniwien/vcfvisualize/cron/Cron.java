@@ -30,25 +30,22 @@ public class Cron {
 
     @Scheduled(cron = "0 0 2 * * ?")
     public void performCronJobs() {
-        new Thread(() -> studyService.synchronizeSamples()).start();
-        panelApp.loadDataFromAPI();
-        hpo.loadDataFromAPI();
-        clinvar.loadDataFromAPI();
+        new Thread(() -> {
+            studyService.synchronizeSamples();
+            panelApp.loadDataFromAPI();
+            hpo.loadDataFromAPI();
+            clinvar.loadDataFromAPI();
+        }).start();
     }
 
     @PostConstruct
     public void init() {
-        //load all samples from big query
-        new Thread(() -> studyService.synchronizeSamples()).start();
-
-        //load data from hpo
-        hpo.loadDataFromAPI();
-
-        //load data from clinvar
-        clinvar.loadDataFromAPI();
-
-        //load data from panel app api
-        panelApp.loadDataFromAPI();
+        new Thread(() -> {
+            studyService.synchronizeSamples();
+            panelApp.loadDataFromAPI();
+            hpo.loadDataFromAPI();
+            clinvar.loadDataFromAPI();
+        }).start();
     }
 
 }
