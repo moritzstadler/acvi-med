@@ -5,6 +5,7 @@ import Admin from './Admin.jsx';
 import Authentication from './Authentication.jsx';
 import Home from './Home.jsx';
 import StatusBar from './StatusBar.jsx';
+import Tiering from './Tiering.jsx';
 import VariantList from './VariantList.jsx';
 import View from './View.jsx';
 
@@ -69,6 +70,7 @@ class App extends React.Component {
           <Route exact path="/" component={() => <Authentication response={this.state.loginResponse} login={this.login} />} />
           <Route exact path="/view/:name/:pid" component={() => <Authentication response={this.state.loginResponse} login={this.login} />} />
           <Route exact path="/sample/:name" component={() => <Authentication response={this.state.loginResponse} login={this.login} />} />
+          <Route exact path="/tiering/:name" component={() => <Authentication response={this.state.loginResponse} login={this.login} />} />
           <Route exact path="/admin" component={() => <Authentication response={this.state.loginResponse} login={this.login} />} />
           <Route exact path="/activate/:activationCode" component={(matchProps) => <Activate matchProps={matchProps.match.params} />} />
         </Router>
@@ -78,6 +80,7 @@ class App extends React.Component {
           <Route exact path="/" component={() => <Home token={this.state.token} />} />
           <Route exact path="/view/:name/:pid" component={(matchProps) => <View token={this.state.token} matchProps={matchProps.match.params} />} />
           <Route exact path="/sample/:name" component={(matchProps) => <VariantList refresh={this.refresh} token={this.state.token} matchProps={matchProps.match.params} />} />
+          <Route exact path="/tiering/:name" component={(matchProps) => <Tiering refresh={this.refresh} token={this.state.token} matchProps={matchProps.match.params} />} />
           <Route exact path="/admin" component={() => <Admin token={this.state.token} />} />
         </Router>
     } else {

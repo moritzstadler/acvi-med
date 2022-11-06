@@ -90,7 +90,7 @@ public class ColumnValuesProvider {
                     columns.add(column);
                 }
             }
-            
+
             //get row count
             long actualRowCount = postgresLoader.estimateAllVariantsCount(sampleId);
             long persistedRowCount = loadCountFromSampleMeta(sampleId);

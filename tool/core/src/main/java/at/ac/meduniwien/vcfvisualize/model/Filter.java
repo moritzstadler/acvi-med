@@ -22,6 +22,12 @@ public class Filter {
         this.expression = convertToExpression(filterDTO.expression);
     }
 
+    public Filter(Expression expression, List<Order> order, long offset) {
+        setExpression(expression);
+        setOrder(order);
+        setOffset(offset);
+    }
+
     //this needs to be replaced somehow
     @Getter
     @Setter

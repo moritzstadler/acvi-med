@@ -20,10 +20,13 @@ public class Hpo {
     @Autowired
     RestClient restClient;
 
+    boolean apiLoaded;
     HashMap<String, HpoTerm> hpoTermById;
+    ArrayList<HpoTerm> hpoTerms;
 
     public Hpo() {
         hpoTermById = new HashMap<>();
+        apiLoaded = false;
     }
 
     public void loadDataFromAPI() {
@@ -31,6 +34,20 @@ public class Hpo {
         String apiResponse = geHpoTermsFromAPISkippingCache();
         parseHpoTerms(apiResponse);
         System.out.println(hpoTermById.size() + " HPO terms found");
+        apiLoaded = true;
+    }
+
+    public ArrayList<HpoTerm> getHpoTerms() {
+        if (!apiLoaded) {
+            loadDataFromAPI();
+        }
+
+        HashSet<HpoTerm> hpoTerms = new HashSet<>();
+        for (String id : hpoTermById.keySet()) {
+            hpoTerms.add(hpoTermById.get(id));
+        }
+
+        return new ArrayList<>(hpoTerms);
     }
 
     private void parseHpoTerms(String apiResponse) {

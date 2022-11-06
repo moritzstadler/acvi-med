@@ -1,5 +1,7 @@
 package at.ac.meduniwien.vcfvisualize.rest;
 
+import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.Hpo;
+import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.HpoTerm;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.Gene;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.Panel;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.PanelApp;
@@ -11,6 +13,8 @@ import at.ac.meduniwien.vcfvisualize.rest.dto.genepanelsearch.GenePanelIndexDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.genepanelsearch.IndexedGeneAliasDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.genepanelsearch.IndexedGeneDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.genepanelsearch.IndexedPanelDTO;
+import at.ac.meduniwien.vcfvisualize.rest.dto.hpotermserach.HpoTermDTO;
+import at.ac.meduniwien.vcfvisualize.rest.dto.hpotermserach.HpoTermsDTO;
 import at.ac.meduniwien.vcfvisualize.security.AuthenticationService;
 import at.ac.meduniwien.vcfvisualize.security.ConfigurationService;
 import lombok.SneakyThrows;
@@ -37,6 +41,9 @@ public class KnowledgebaseLoader {
     PanelApp panelApp;
 
     @Autowired
+    Hpo hpo;
+
+    @Autowired
     AuthenticationService authenticationService;
 
     @CrossOrigin
@@ -50,6 +57,31 @@ public class KnowledgebaseLoader {
         }
 
         return getGenePanelIndexDTO();
+    }
+
+    @CrossOrigin
+    @PostMapping("/knowledgebase/panelapp/getpanelindex")
+    public GenePanelIndexDTO getPanels(@RequestBody AuthenticationDTO authenticationDTO) {
+        //evaluate whether this is necessary given it it public information
+        User user = authenticationService.getUserForToken(authenticationDTO.tokenString);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "not logged in");
+        }
+
+        return getPanelIndexDTO();
+    }
+
+    private GenePanelIndexDTO getPanelIndexDTO() {
+        GenePanelIndexDTO genePanelIndexDTO = new GenePanelIndexDTO();
+        genePanelIndexDTO.panelIndex = new ArrayList<>();
+
+        List<Panel> panels = panelApp.getPanels();
+        for (Panel panel : panels) {
+            genePanelIndexDTO.panelIndex.add(new IndexedPanelDTO(panel));
+        }
+
+        return genePanelIndexDTO;
     }
 
     private GenePanelIndexDTO getGenePanelIndexDTO() {
@@ -120,6 +152,36 @@ public class KnowledgebaseLoader {
                 allIndexedGeneAliasDTOs.addAll(Arrays.stream(gene.getString("aliases").split(",")).map(a -> new IndexedGeneAliasDTO(a, symbol)).collect(Collectors.toList()));
             }
         }
+    }
+
+    @CrossOrigin
+    @PostMapping("/knowledgebase/hpo/gethpoterms")
+    public HpoTermsDTO getHpoTerms(@RequestBody AuthenticationDTO authenticationDTO) {
+        //evaluate whether this is necessary given it it public information
+        User user = authenticationService.getUserForToken(authenticationDTO.tokenString);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "not logged in");
+        }
+
+        return getHpoTermsDTO();
+    }
+
+    private HpoTermsDTO getHpoTermsDTO() {
+        HpoTermsDTO hpoTermsDTO = new HpoTermsDTO();
+
+        hpoTermsDTO.hpoTerms = new ArrayList<>();
+
+        for (HpoTerm hpoTerm : hpo.getHpoTerms()) {
+            HpoTermDTO hpoTermDTO = new HpoTermDTO();
+            hpoTermDTO.name = hpoTerm.getName();
+            hpoTermDTO.id = hpoTerm.getId();
+            //hpoTermDTO.def = hpoTerm.getDef();
+            hpoTermDTO.synonyms = hpoTerm.getSynonym();
+            hpoTermsDTO.hpoTerms.add(hpoTermDTO);
+        }
+
+        return hpoTermsDTO;
     }
 
 }

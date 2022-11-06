@@ -3,6 +3,8 @@ package at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 public class GenomicPosition {
 
     @Getter
@@ -21,4 +23,19 @@ public class GenomicPosition {
     @Setter
     String alt;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GenomicPosition that = (GenomicPosition) o;
+        return pos == that.pos &&
+                chrom.equals(that.chrom) &&
+                ref.equals(that.ref) &&
+                alt.equals(that.alt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chrom, pos, ref, alt);
+    }
 }

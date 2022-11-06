@@ -2,9 +2,9 @@ package at.ac.meduniwien.vcfvisualize.model.expression;
 
 import java.util.*;
 
-public class BasicExpression implements Expression {
+public class BasicExpression<T> implements Expression {
 
-    public BasicExpression(String name, String comparator, double value) {
+    public BasicExpression(String name, String comparator, T value) {
         this.name = name;
         this.comparator = comparator;
         this.value = value;
@@ -13,7 +13,7 @@ public class BasicExpression implements Expression {
     //TODO security avoid SQL injection
     String name;
     String comparator;
-    double value;
+    T value;
 
     @Override
     public String toSQLString() {
