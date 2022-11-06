@@ -190,7 +190,7 @@ export default function Tiering(props) {
                             {searchResults.length == 0 && query.length !== 0 ? <span className="info">no results found</span> : ""}
                         </div>
                         {selected.map(item => (
-                            <div className="selected">{item.value.name} <i onClick={(e) => handleRemove(item)} className="pointer bi bi-x"></i></div>
+                            <div className="tieringSelected">{item.value.name} <i onClick={(e) => handleRemove(item)} className="pointer bi bi-x"></i></div>
                         ))}
                         {selected.length > 1 ? <a href='#' onClick={(e) => handleRemove(null)}><i>clear</i></a> : ""}
                         {selected.length > 0 ? <div className="tieringRight"><button onClick={(e) => handleTiering()} className="sec">Perform Tiering <i className="bi bi-play-circle"></i></button></div> : ""}
@@ -220,7 +220,7 @@ export default function Tiering(props) {
                                         <div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div>
                                     ))}
                                 </div>
-                                {results.length == 0 ? <span className="info">No matching variants found. Try modifying your phenotypes!</span> : ""}
+                                {results.variants.length == 0 ? <span className="info">No matching variants found. Try modifying your phenotypes!</span> : ""}
                             </div>
                         ))}
                     </div>
