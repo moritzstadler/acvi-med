@@ -24,14 +24,14 @@ public class VariantProvider {
      * @param filter the filter
      * @return a list of filtered variants
      */
-    public List<Variant> getVariants(User user, String sample, Filter filter) {
+    public List<Variant> getVariants(User user, String sample, Filter filter, boolean useLimit) {
         List<Variant> cachedVariants = variantCache.get(user, sample, filter);
         if (cachedVariants != null) {
             System.out.println("retrieve cache");
             return cachedVariants;
         }
 
-        List<Variant> variants = postgresLoader.getVariants(sample, filter);
+        List<Variant> variants = postgresLoader.getVariants(sample, filter, useLimit);
         variantCache.cache(user, sample, filter, variants);
         return variants;
     }

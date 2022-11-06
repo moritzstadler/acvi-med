@@ -78,7 +78,7 @@ public class PostgresLoader {
     }
 
     @SneakyThrows
-    protected List<Variant> getVariants(String sample, Filter filter) {
+    protected List<Variant> getVariants(String sample, Filter filter, boolean useLimit) {
         Connection connection = getConnection();
         String sql = String.format("SELECT * FROM %s WHERE %s LIMIT %s OFFSET %s",
                 sample,
@@ -86,6 +86,13 @@ public class PostgresLoader {
                 GLOBAL_LIMIT,
                 filter.getOffset()
             );
+
+        if (!useLimit) {
+            sql = String.format("SELECT * FROM %s WHERE %s",
+                    sample,
+                    filter.toSqlString()
+            );
+        }
 
         System.out.println(sql);
 

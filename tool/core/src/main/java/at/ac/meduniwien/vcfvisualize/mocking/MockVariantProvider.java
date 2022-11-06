@@ -15,7 +15,7 @@ public class MockVariantProvider {
         return true;
     }
 
-    public List<Variant> getVariants(User user, String sample, Filter filter) {
+    public List<Variant> getVariants(User user, String sample, Filter filter, boolean useLimit) {
         List<Variant> variants = new LinkedList<>();
 
         Variant variant1 = new Variant();

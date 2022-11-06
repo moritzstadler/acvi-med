@@ -102,7 +102,7 @@ public class VariantLoader {
         infoFieldsToKeep.addAll(filter.getFields());
 
         System.out.println(LocalDateTime.now() + ": " + user.getEmail() + " accessing " + sample);
-        queryResultDTO.variants = variantProvider.getVariants(user, sample, filter)
+        queryResultDTO.variants = variantProvider.getVariants(user, sample, filter, true)
                 .stream()
                 .skip(loadRequestDTO.page * PAGE_SIZE - calculatedOffset)
                 .limit(PAGE_SIZE)

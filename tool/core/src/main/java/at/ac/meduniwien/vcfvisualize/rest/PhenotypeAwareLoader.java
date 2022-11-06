@@ -70,13 +70,21 @@ public class PhenotypeAwareLoader {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "user not authorized");
         }
 
+        //TODO empty filters are possible but produce an error e. g. select * from x where ()
+
         long startTime = System.currentTimeMillis();
         List<GenomicPosition> genomicPositionsByHpo = clinvar.getGenomicPositionsByHpoTerms(phenotypeAwareLoadRequestDTO.hpoTerms);
-        Filter filterHpoTerms = new Filter(buildExpressionSelectingByGenomicPositions(genomicPositionsByHpo), new LinkedList<>(), 0);
-        List<Variant> variantsByHpoTerms = variantProvider.getVariants(user, sample, filterHpoTerms);
+        List<Variant> variantsByHpoTerms = new LinkedList<>();
+        if (genomicPositionsByHpo.size() > 0) {
+            Filter filterHpoTerms = new Filter(buildExpressionSelectingByGenomicPositions(genomicPositionsByHpo), new LinkedList<>(), 0);
+            variantsByHpoTerms = variantProvider.getVariants(user, sample, filterHpoTerms, false);
+        }
 
-        Filter filterGenes = new Filter(buildExpressionByGenes(phenotypeAwareLoadRequestDTO.genes), new LinkedList<>(), 0);
-        List<Variant> variantsByGenes = variantProvider.getVariants(user, sample, filterGenes);
+        List<Variant> variantsByGenes = new LinkedList<>();
+        if (phenotypeAwareLoadRequestDTO.genes.size() > 0) {
+            Filter filterGenes = new Filter(buildExpressionByGenes(phenotypeAwareLoadRequestDTO.genes), new LinkedList<>(), 0);
+            variantProvider.getVariants(user, sample, filterGenes, false);
+        }
 
         //TODO only take green panels!!!!
 

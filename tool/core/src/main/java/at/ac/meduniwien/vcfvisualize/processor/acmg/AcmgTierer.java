@@ -74,6 +74,8 @@ public class AcmgTierer {
         //TODO test this thoroughly
         //TODO check if the whole system can find stuff like Huntington's disease mutations?
 
+        return false;
+        /*
         String changeInCodons = variant.getInfo().get("info_csq_codons"); // aAg/aGg or aAA/aGG
         if (changeInCodons == null) {
             return false;
