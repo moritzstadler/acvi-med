@@ -197,7 +197,7 @@ export default function Tiering(props) {
                     </div>
                 </div>
                 <br/><br/>
-                check for trios, add explaining for tiers<br/>
+                check for trios, add explaining for tiers. There might be a problem with the likely pathogenic stuff. This should be checked the same way the enum is in a filter<br/>
             </div>
         )
     } else {

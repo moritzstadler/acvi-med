@@ -84,7 +84,7 @@ public class Clinvar {
                     }
 
                     if (clnsigs.contains("Pathogenic".toLowerCase()) || clnsigs.contains("Likely_pathogenic".toLowerCase())) {
-                        likelyPathogenicAndPathogenicTerms.add(clnsig);
+                        likelyPathogenicAndPathogenicTerms.add(clnsig.replaceAll("[|]", "&")); //in the imported file the values are connected via & instead of |
                         cnt++;
 
                         //make genomic position
