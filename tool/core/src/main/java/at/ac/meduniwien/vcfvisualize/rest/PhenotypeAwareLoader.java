@@ -83,7 +83,7 @@ public class PhenotypeAwareLoader {
         List<Variant> variantsByGenes = new LinkedList<>();
         if (phenotypeAwareLoadRequestDTO.genes.size() > 0) {
             Filter filterGenes = new Filter(buildExpressionByGenes(phenotypeAwareLoadRequestDTO.genes), new LinkedList<>(), 0);
-            variantProvider.getVariants(user, sample, filterGenes, false);
+            variantsByGenes = variantProvider.getVariants(user, sample, filterGenes, false);
         }
 
         //TODO only take green panels!!!!
