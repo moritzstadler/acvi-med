@@ -115,7 +115,9 @@ public class PhenotypeAwareLoader {
 
     private Expression buildExpressionByGenes(List<String> genes) {
         Expression geneExpression = new EnumExpression(symbolKey, genes);
-        Expression pathogenicityExpression = new EnumExpression("info_csq_clinvar_clnsig", new LinkedList<>(clinvar.getLikelyPathogenicAndPathogenicTerms()));
+        Expression clinvarEnum = new EnumExpression("info_csq_clinvar_clnsig", new LinkedList<>(clinvar.getLikelyPathogenicAndPathogenicTerms()));
+        Expression clinEnum = new EnumExpression("info_csq_clin_sig", new LinkedList<>(clinvar.getLikelyPathogenicAndPathogenicTerms()));
+        Expression pathogenicityExpression = new IntermediateExpression(new ArrayList<>(Collections.singletonList("OR")), new ArrayList<>(Arrays.asList(clinEnum, clinvarEnum)));
         return new IntermediateExpression(new ArrayList<>(Collections.singletonList("AND")), new ArrayList<>(Arrays.asList(geneExpression, pathogenicityExpression)));
     }
 
