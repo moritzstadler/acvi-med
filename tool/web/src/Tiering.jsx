@@ -212,7 +212,7 @@ export default function Tiering(props) {
                             <div className="tieringResult">
                                 <div className="resultName">
                                     <a target="_blank" href={Config.appBaseUrl + "/view/" + props.matchProps.name + "/" + item.variant.pid}>
-                                        {item.variant.info["info_csq_hgvsc"]}
+                                        {item.variant.info["info_csq_hgvsc"]} ({item.variant.chrom}:{item.variant.pos})
                                     </a>
                                 </div>
                                 <div className="resultTiers">
