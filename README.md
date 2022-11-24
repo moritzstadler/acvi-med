@@ -26,7 +26,7 @@ The following programs are required for starting the system: (TODO spellcheck)
 
 ## Necessary Configurations
 
-Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.
+Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs. **TODO Remove Google refs**
 Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
 choosing an appropriate location for storing its files. Adapt line 15 in [docker-compose.yaml file](tool/docker-compose.yaml) <code>- <b>/data/vv/postgres</b>:/var/lib/postgresql/data</code> to change
 the location. 
