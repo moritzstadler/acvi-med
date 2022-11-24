@@ -51,7 +51,7 @@ Before importing a VCF file make sure that the PostgreSQL database is running on
 
 ## Build the container
 
-After cloning the repository and navigating to the folder containing the Dockerfile, you can use the following command to build the container. Depending on your local setup you might need to prepend `sudo`.
+After cloning the repository and navigating to the folder containing the Dockerfile ``/importer/Dockerfile``, you can use the following command to build the container. Depending on your local setup you might need to prepend `sudo`.
 
 <pre><code>docker build -t vcfimport .</code></pre>
 
