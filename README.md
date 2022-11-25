@@ -27,7 +27,7 @@ The following programs are required for starting the system: (TODO spellcheck)
 Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs. **TODO Remove Google refs**
 Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
 choosing an appropriate location for storing its files. Adapt line 15 in [docker-compose.yaml file](tool/docker-compose.yaml) <code>- <b>/data/vv/postgres</b>:/var/lib/postgresql/data</code> to change
-the location. 
+the location. **TODO adapt lines 31, 53 and 54**
 Secondly if you are not running the system on localhost and rather want to provide access to other user, replace the URLs
 in the [config.js file](tool/web/src/config.js). `appBaseUrl` refers to the URL the application can be accessed through in the web browser. `apiBaseUrl` defines the URL core is accessed through. Please consider that if you are not running the project on your local machine but a server you need to adapt these values and potentially create some form of URL forwarding.
 
@@ -80,6 +80,10 @@ If you import a file twice or a file with an equal name, the first table is over
 3. The variants are inserted into the table.
 4. The <code>CREATE INDEX</code> commands are executed increasing the performance of further requests.
 
+### Add a .cram or .bam file
+  
+
+  
 ### Configurating index creation
 
 Database indices are created after every variant has been inserted into the table. In order to optimize performance and storage consumption, the columns which are to be indexed can be individually defined. The <code>application.properties</code> file in the root directory contains a list of these column names. In case your VCF files contain an additional info or consequence field that needs to be indexed (i. e. searched for or filtered), note that in the `application.properties`file  VCF `INFO` fields are to be denominated with a leading `info_`and VCF Consequence fields are to be denominated with a leading `info_csq_`. 
