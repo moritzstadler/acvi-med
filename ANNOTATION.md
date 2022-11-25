@@ -99,7 +99,7 @@ cd $HOME/vep_data/libs/phenotypes</code></pre>
 Finally everything is set up to start annotating your VCF file.
 Move the file you want to annotate to your ``$HOME/vep_data`` folder and run the following command. Replace ``yourvcffile.vcf`` with the actual name your the VCF file you want to annotate,
 
-<pre><code>sudo docker run --rm -it -v /data/vep:/opt/vep/.vep vcfimport ./vep -i /opt/vep/.vep/yourvcffile.vcf --dir_cache /opt/vep/.vep --everything --cache --offline --format vcf --warning_file /opt/vep/.vep/warnings --verbose \
+<pre><code>sudo docker run --rm -it -v $HOME/vep_data:/opt/vep/.vep vcfimport ./vep -i /opt/vep/.vep/yourvcffile.vcf --dir_cache /opt/vep/.vep --everything --cache --offline --format vcf --warning_file /opt/vep/.vep/warnings --verbose \
 --plugin CADD,"/opt/vep/.vep/libs/cadd/whole_genome_SNVs.tsv.gz","/opt/vep/.vep/libs/cadd/gnomad.genomes.r3.0.indel.tsv.gz" \
 --plugin Phenotypes,file="/opt/vep/.vep/libs/phenotypes/Phenotypes.pm_homo_sapiens_102_GRCh38.gvf.gz",include_types=Gene \
 --plugin Mastermind,"/opt/vep/.vep/libs/mastermind/mastermind_cited_variants_reference-2021.08.03-grch38.vcf.gz" \
