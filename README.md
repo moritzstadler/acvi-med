@@ -55,6 +55,10 @@ After cloning the repository and navigating to the folder containing the Dockerf
 
 <pre><code>docker build -t vcfimport .</code></pre>
 
+## Annotating your vcf file
+
+We strongly reccommend 
+
 ## Import the file
 
 Once the container has been built successfully, you can start the import by executing the following command:
@@ -65,6 +69,8 @@ Once the container has been built successfully, you can start the import by exec
 
 <i>Note that if you decided to use a different PostgreSQL host, username or password that change needs to be reflected in the command:
 ```docker run --rm -it --net="host" -v <folderpath>:/files vcfimport:latest /files/<filename> <postgreshost>/<database> <postgresusername> <postgrespassword>```</i>
+
+> We recommend starting your first import with one of the **annotated** sample files provided in this repository like ```demo_data/HG001_GIAB_annotated_downsampled.vcf```
 
 The importer should now import your file and will terminate upon completion. 
 This may take some time depending on the size of your VCF file. The file is traversed a total of two times.
