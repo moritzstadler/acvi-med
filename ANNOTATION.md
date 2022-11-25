@@ -26,7 +26,41 @@ Then install all vep plugins in your container by running the following command.
 
 Some plugins need additional data to run. You need to perform all steps presented below or otherwise the annotion of your VCF file cannot be completed.
 
-### some lib
+Start by creating a directory for the data needed by the plugins in your ``vep_data`` directory.
+<pre><code>mkdir $HOME/vep_data/libs/</code></pre>
+
+Navigate to the newly created ``libs`` directory.
+<pre><code>cd $HOME/vep_data/libs/</code></pre>
+
+### CADD
+
+Create a directory for CADD
+<pre><code>cd $HOME/vep_data/libs/cadd</code></pre>
+
+### ClinVar
+
+Create a directory for ClinVar
+<pre><code>cd $HOME/vep_data/libs/clinvar</code></pre>
+
+### dbNSFP
+
+Create a directory for dbNSFP
+<pre><code>cd $HOME/vep_data/libs/dbnsfp</code></pre>
+
+### gnomAD
+
+Create a directory for gnomAD
+<pre><code>cd $HOME/vep_data/libs/gnomad</code></pre>
+
+### Mastermind
+
+Create a directory for Mastermind
+<pre><code>cd $HOME/vep_data/libs/mastermind</code></pre>
+
+### Phenotypes
+
+Create a directory for Phenotypes
+<pre><code>cd $HOME/vep_data/libs/phenotypes</code></pre>
 
 ## Annotate your file
 
