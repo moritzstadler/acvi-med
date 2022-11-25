@@ -33,9 +33,6 @@ Some plugins need additional data to run. You need to perform all steps presente
 Start by creating a directory for the data needed by the plugins in your ``vep_data`` directory.
 <pre><code>mkdir $HOME/vep_data/libs/</code></pre>
 
-Navigate to the newly created ``libs`` directory.
-<pre><code>cd $HOME/vep_data/libs/</code></pre>
-
 ### CADD
 
 Create a directory for CADD
