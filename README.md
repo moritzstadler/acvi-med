@@ -1,15 +1,13 @@
-__TOC__
-
 TODO: Add DOI and citation info
 
 # Introduction
 
 This tool ...
-TODO add video here
+**TODO add video here**
 
 ## Architecture
 
-TODO add diagram
+![system architecture](/misc/diagrams/architecture.png)
 
 ## System Requirements
 
@@ -55,9 +53,11 @@ After cloning the repository and navigating to the folder containing the Dockerf
 
 <pre><code>docker build -t vcfimport .</code></pre>
 
-## Annotating your vcf file
+## Annotating a VCF file
 
-We strongly reccommend 
+Annotating a VCF file requires downloading a number of libraries and databases containing genomic information.
+
+<b>[Instructions on how to annotate your VCF file](ANNOTATION.md)</b>
 
 ## Import the file
 
