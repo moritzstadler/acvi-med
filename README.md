@@ -45,7 +45,7 @@ If you have chosen another URL for the application by configuring a ProxyPass an
 
 # Annotation and Import
 
-Before importing a VCF file make sure that the PostgreSQL database is running on port `5432`. 
+Before importing a VCF file make sure that the PostgreSQL database is running on port `5432`. Only annotated files can be imported.
 
 ## Build the container
 
@@ -55,7 +55,7 @@ After cloning the repository and navigating to the folder containing the Dockerf
 
 ## Annotating a VCF file
 
-Annotating a VCF file requires downloading a number of libraries and databases containing genomic information.
+Annotating a VCF file requires downloading a number of libraries and databases containing genomic information. Annotation needs to be done before importing a VCF file.
 
 <b>[Instructions on how to annotate your VCF file](ANNOTATION.md)</b>
 
