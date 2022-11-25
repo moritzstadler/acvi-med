@@ -82,7 +82,7 @@ If you import a file twice or a file with an equal name, the first table is over
 
 ### Add a .cram or .bam file
   
-
+**TODO also change the volumes in docker-compose**
   
 ### Configurating index creation
 
