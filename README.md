@@ -28,8 +28,8 @@ Before deploying the system make sure to adapt the [docker-compose.yaml file](to
 Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
 choosing an appropriate location for storing its files. Adapt line 15 in [docker-compose.yaml file](tool/docker-compose.yaml) <code>- <b>/data/vv/postgres</b>:/var/lib/postgresql/data</code> to change
 the location. **TODO adapt lines 31, 53 and 54**
-Secondly if you are not running the system on localhost and rather want to provide access to other user, replace the URLs
-in the [config.js file](tool/web/src/config.js). `appBaseUrl` refers to the URL the application can be accessed through in the web browser. `apiBaseUrl` defines the URL core is accessed through. Please consider that if you are not running the project on your local machine but a server you need to adapt these values and potentially create some form of URL forwarding.
+Secondly if you are not running the system on localhost and rather want to provide access to other users in a production environment, replace the URLs
+in the [config.js file](tool/web/src/config.js). `appBaseUrl` refers to the URL the application can be accessed through in the web browser. `apiBaseUrl` defines the URL core (the backend of this application) is accessed through. Please consider that if you are not running the project on your local machine but a server you need to adapt these values and potentially create some form of URL forwarding.
 
 ## Deploying the System
 
