@@ -1,9 +1,9 @@
-# Setting up the application on a linux server
+# Setting up the application on a Linux server
 
 This is an introduction to setting up the system on a server for providing it to your university or hospital.
 These instructions assume your running a linux server for your instituation on the domain `yourdomain.edu`.
 
-`/etc/apache2/sites-available/000-default.conf`
+Your `/etc/apache2/sites-available/000-default.conf` file should look like this
 
 ```
 <VirtualHost *:80>
@@ -23,6 +23,7 @@ These instructions assume your running a linux server for your instituation on t
 </VirtualHost>
 
 ```
+
 Your [config.js file](tool/web/src/config.js) should look like this
 ```
 export const Config = { 
@@ -33,18 +34,21 @@ export const Config = {
 export default Config;
 ```
 
-TODO
+Finally create a http to https redirect witht the following rewrite rule. Open your .htaccess file with any text editor.
+<pre><code>sudo vim /var/www/html/.htaccess</code></pre>
 
+Add the following to the .htaccess file
 ```
-sudo vim /var/www/html/.htaccess    
-
 RewriteEngine On  
 RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
 RewriteRule ^ - [L]
 RewriteRule ^ /index.html [L]
-
-sudo chmod 777 .htaccess
-sudo systemctl restart apache2
 ```
+
+Finally change the access of the file
+<pre><code>sudo chmod 777 .htaccess</code></pre>
+
+And restart apache
+<pre><code>sudo systemctl restart apache2</code></pre>
