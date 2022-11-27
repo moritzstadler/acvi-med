@@ -88,10 +88,14 @@ Database indices are created after every variant has been inserted into the tabl
 Lastly you can add a `.cram`or `.bam` file to allow researchers and clinicians to view the individual reads via [IGV]().
 Add these files to the `~/data/files/` directory (or your directory in case you changed the [docker-compose.yaml file](tool/docker-compose.yaml)). You can now link these files to your patient samples by entering the location `/bam/somebam.bam` alongside the sample in the GUI of your admin panel.
 
-[Learn how customize the application like changing filterable items, names and descriptions.](CUSTOMIZATION.md)
+  
+**[Learn how customize the application like changing filterable items, names and descriptions.](CUSTOMIZATION.md)**
 
   
 **TODO add fav and notes to variants**
+  
 **TODO add ACMG**
+  
 **TODO change logo**
+  
 **TODO docu for jsons (view.json...)**
