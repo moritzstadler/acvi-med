@@ -1,9 +1,9 @@
-TODO: Add DOI and citation info
+**TODO: Add DOI and citation info**
 
 # Introduction
 
 This tool is designed to allow clinicians and researcherst to annotate and analyze VCF files.
-**TODO add video here**
+**TODO add video here once everything is finished**
 
 ## Architecture
 
