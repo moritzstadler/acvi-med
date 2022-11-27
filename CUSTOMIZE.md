@@ -1,3 +1,7 @@
 # Customizing the Application
 
-You can change 
+**TODO what can you change**
+
+~/data/vv/core
+
+
