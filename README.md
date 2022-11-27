@@ -12,7 +12,7 @@ This tool is designed to allow clinicians and researcherst to annotate and analy
 ## System Requirements
 
 It is highly recommended to install the system on Linux. If you wish to annotate the files before importing them (this is necessary if your
-VCF files are not annotated with vep already) roughly 709GB of free disk space are needed.
+VCF files are not annotated with vep already) roughly 709GB of free disk space are needed for genomic databases - in order to simply test the application this is not necessary however.
 The following programs are required for starting the system:
 
 - <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">git</a>
@@ -26,9 +26,8 @@ The following programs are required for starting the system:
 
 Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.
 Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
-choosing an appropriate location for storing its files. Adapt line 15 in [docker-compose.yaml file](tool/docker-compose.yaml) <code>- <b>/data/vv/postgres</b>:/var/lib/postgresql/data</code> to change
-the location. **TODO adapt lines 31, 53 and 54**
-Secondly if you are not running the system on localhost and rather want to provide access to other users in a production environment, replace the URLs
+choosing an appropriate location for storing its files. You might want to adapt the accordingly commented lines in [docker-compose.yaml file](tool/docker-compose.yaml).
+Secondly if you are not running the system on localhost but rather want to provide access to other users in a production environment, replace the URLs
 in the [config.js file](tool/web/src/config.js). `appBaseUrl` refers to the URL the application can be accessed through in the web browser. `apiBaseUrl` defines the URL core (the backend of this application) is accessed through. Please consider that if you are not running the project on your local machine but a server you need to adapt these values and potentially create some form of URL forwarding.
 
 ## Deploying the System
@@ -41,7 +40,7 @@ You should be able to view the web application in your browser by accessing `loc
 
 If you have chosen another URL for the application by configuring a ProxyPass and a ReverseProxyPass and set the appropriate URLs in the [config.js file](tool/web/src/config.js) you can access your application via that URL. Note that anytime you change the [config.js file](tool/web/src/config.js) another execution of the docker-compose up command is needed.
 
-<b>[How to set up TOOLNAME on a linux server for your institution](SERVERSETUP.md)</b>
+<b>[Instructions on how to set up the application on a Linux server for your institution.](SERVERSETUP.md)</b>
 
 # Annotation and Import
 
@@ -57,7 +56,7 @@ After cloning the repository and navigating to the folder containing the Dockerf
 
 Annotating a VCF file requires downloading a number of libraries and databases containing genomic information. Annotation needs to be done before importing a VCF file.
 
-<b>[Instructions on how to annotate your VCF file](ANNOTATION.md)</b>
+<b>[Instructions on how to annotate your VCF file.](ANNOTATION.md)</b>
 
 ## Import the file
 
@@ -79,21 +78,20 @@ If you import a file twice or a file with an equal name, the first table is over
 2. The <code>CREATE TABLE</code> command is executed.
 3. The variants are inserted into the table.
 4. The <code>CREATE INDEX</code> commands are executed increasing the performance of further requests.
+  
+#### Configurating index creation
+
+Database indices are created after every variant has been inserted into the table. In order to optimize performance and storage consumption, the columns which are to be indexed can be individually defined. The <code>application.properties</code> file in the root directory contains a list of these column names. In case your VCF files contain an additional info or consequence field that needs to be indexed (i. e. searched for or filtered), note that in the `application.properties`file  VCF `INFO` fields are to be denominated with a leading `info_`and VCF Consequence fields are to be denominated with a leading `info_csq_`.   
 
 ### Add a .cram or .bam file
-  
-**TODO also change the volumes in docker-compose**
-  
-### Configurating index creation
 
-Database indices are created after every variant has been inserted into the table. In order to optimize performance and storage consumption, the columns which are to be indexed can be individually defined. The <code>application.properties</code> file in the root directory contains a list of these column names. In case your VCF files contain an additional info or consequence field that needs to be indexed (i. e. searched for or filtered), note that in the `application.properties`file  VCF `INFO` fields are to be denominated with a leading `info_`and VCF Consequence fields are to be denominated with a leading `info_csq_`. 
+Lastly you can add a `.cram`or `.bam` file to allow researchers and clinicians to view the individual reads via [IGV]().
+Add these files to the `~/data/files/` directory (or your directory in case you changed the [docker-compose.yaml file](tool/docker-compose.yaml)). You can now link these files to your patient samples by entering the location `/bam/somebam.bam` alongside the sample in the GUI of your admin panel.
+
+[Learn how customize the application like changing filterable items, names and descriptions.](CUSTOMIZATION.md)
 
   
-  
-  TODO add fav and notes to variants
-  
-  TODO add ACMG
-  
-  TODO change logo
-  
-  TODO docu for jsons (view.json...)
+**TODO add fav and notes to variants**
+**TODO add ACMG**
+**TODO change logo**
+**TODO docu for jsons (view.json...)**
