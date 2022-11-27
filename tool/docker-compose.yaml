@@ -12,7 +12,8 @@ services:
       POSTGRES_PASSWORD: 'password'
       POSTGRES_DB: 'sample'
     volumes:
-      - /data/vv/postgres:/var/lib/postgresql/data
+      # change ~/data/vv/postgres to change the location of the postgresql database which handles patient samples
+      - ~/data/vv/postgres:/var/lib/postgresql/data
     networks:
       - vcfvisualize
   mysql:
@@ -28,6 +29,7 @@ services:
     ports:
       - 3306:3306
     volumes:
+      # change ~/data/vv/mysql to change the location of the mysql database which stores user credentials and access rights
       - ~/data/vv/mysql:/var/lib/mysql
     networks:
       - vcfvisualize
@@ -51,7 +53,8 @@ services:
       }'
     volumes:
       - ~/data/vv/core:/var
-      - /data/WGS_data/:/bam  
+      # change ~/data/files/ to change the location of your bam files
+      - ~/data/files/:/bam  
     networks:
       - vcfvisualize
     depends_on:
