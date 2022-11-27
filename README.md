@@ -1,4 +1,4 @@
-**TODO: Add DOI and citation info**
+**TODO: Add DOI and citation info and paper**
 
 # Introduction
 
@@ -33,19 +33,19 @@ in the [config.js file](tool/web/src/config.js). `appBaseUrl` refers to the URL 
 
 ## Deploying the System
 
-Starting the web application and the server backend alongside the database can be done comfortably with the following command
+Starting the web application and the server backend alongside the database can be done comfortably with the following command. Depending on your local setup you might need to prepend `sudo`.
 
 <pre><code>docker-compose up --build</code></pre>
 
-You should be able to view the web application in your browser by accessing `localhost:3030`. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering the your email, checking 'Admin' and clicking 'Create'. After that you should open the Activation Link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
+You should be able to view the web application in your browser by accessing `localhost:3000`. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering the your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
 
-If you have chosen another URL for the application by configuring a ProxyPass and a ReverseProxyPass and set the appropriate URLs in the [config.js file](tool/web/src/config.js) you can access your application via that location. Note that anytime you change the [config.js file](tool/web/src/config.js) another execution of the docker-compose up command is needed.
+If you have chosen another URL for the application by configuring a ProxyPass and a ReverseProxyPass and set the appropriate URLs in the [config.js file](tool/web/src/config.js) you can access your application via that URL. Note that anytime you change the [config.js file](tool/web/src/config.js) another execution of the docker-compose up command is needed.
 
 <b>[How to set up TOOLNAME on a linux server for your institution](SERVERSETUP.md)</b>
 
 # Annotation and Import
 
-Before importing a VCF file make sure that the PostgreSQL database is running on port `5432`. Only annotated files can be imported.
+Before importing a VCF file make sure that the application is up and running. Only annotated files can be imported.
 
 ## Build the container
 
