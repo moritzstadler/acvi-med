@@ -2,7 +2,7 @@ TODO: Add DOI and citation info
 
 # Introduction
 
-This tool is designed to allow clinicians and researchers to analayze and annotate VCF files.
+This tool is designed to allow clinicians and researcherst to annotate and analyze VCF files.
 **TODO add video here**
 
 ## Architecture
@@ -24,7 +24,7 @@ The following programs are required for starting the system: (TODO spellcheck)
 
 ## Necessary Configurations
 
-Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs. **TODO Remove Google refs**
+Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.
 Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
 choosing an appropriate location for storing its files. Adapt line 15 in [docker-compose.yaml file](tool/docker-compose.yaml) <code>- <b>/data/vv/postgres</b>:/var/lib/postgresql/data</code> to change
 the location. **TODO adapt lines 31, 53 and 54**
