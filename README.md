@@ -85,7 +85,7 @@ Database indices are created after every variant has been inserted into the tabl
 
 ### Add a .cram or .bam file
 
-Lastly you can add a `.cram`or `.bam` file to allow researchers and clinicians to view the individual reads via [IGV]().
+Lastly you can add a `.cram`or `.bam` file to allow researchers and clinicians to view the individual reads via [the Integrative Genomics Viewer IGV](https://igv.org/).
 Add these files to the `~/data/files/` directory (or your directory in case you changed the [docker-compose.yaml file](tool/docker-compose.yaml)). You can now link these files to your patient samples by entering the location `/bam/somebam.bam` alongside the sample in the GUI of your admin panel.
 
   
