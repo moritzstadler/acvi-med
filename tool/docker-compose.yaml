@@ -36,7 +36,7 @@ services:
   core:
     restart: always
     build: core/
-    environment:
+    environment: #3lM8jJgp3fhJh946  34.90.25.240
       SPRING_APPLICATION_JSON: '{
         "database.postgres.url": "postgres:5432/sample",
         "database.postgres.user": "postgres",
@@ -45,13 +45,13 @@ services:
         "database.mysql.user": "root",
         "database.mysql.password": "password",
         "storage.reads.usegoogle": "false",
-        "storage.reads.google.credentials": "",
-        "storage.reads.google.projectid": "",
-        "storage.reads.google.bucketname": ""
+        "storage.reads.google.credentials": "s",
+        "storage.reads.google.projectid": "genomics-324511",
+        "storage.reads.google.bucketname": "genomics-324511-data"
       }'
     volumes:
       - ~/data/vv/core:/var
-      - /data/WGS_data/:/bam  
+      - /data/WGS_data/:/bam
     networks:
       - vcfvisualize
     depends_on:
@@ -71,5 +71,4 @@ networks:
   vcfvisualize:
     driver: bridge
 volumes:
-    vcf-visualize:
-
+    vcf-visualize:    
