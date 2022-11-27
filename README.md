@@ -89,7 +89,7 @@ Lastly you can add a `.cram`or `.bam` file to allow researchers and clinicians t
 Add these files to the `~/data/files/` directory (or your directory in case you changed the [docker-compose.yaml file](tool/docker-compose.yaml)). You can now link these files to your patient samples by entering the location `/bam/somebam.bam` alongside the sample in the GUI of your admin panel.
 
   
-**[Learn how customize the application like changing filterable items, names and descriptions.](CUSTOMIZATION.md)**
+**[Learn how customize the application like changing filterable items, names and descriptions.](CUSTOMIZE.md)**
 
   
 **TODO add fav and notes to variants**
