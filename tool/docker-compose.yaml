@@ -1,5 +1,13 @@
 version: '3'
 services:
+  nginx: 
+    image: nginx:latest
+    container_name: production_nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/error.log:/etc/nginx/error_log.log
+    network_mode: host
+
   postgres:
     image: postgres:latest
     restart: always
@@ -13,9 +21,10 @@ services:
       POSTGRES_DB: 'sample'
     volumes:
       # change ~/data/vv/postgres to change the location of the postgresql database which handles patient samples
-      - ~/data/vv/postgres:/var/lib/postgresql/data
+      - /data/vv/postgres:/var/lib/postgresql/data
     networks:
       - vcfvisualize
+
   mysql:
     image: mysql:5.7
     restart: always
@@ -35,6 +44,7 @@ services:
       - vcfvisualize
     depends_on:
       - postgres
+
   core:
     restart: always
     build: core/
@@ -54,13 +64,14 @@ services:
     volumes:
       - ~/data/vv/core:/var
       # change ~/data/files/ to change the location of your bam files
-      - ~/data/files/:/bam  
+      - ~/data/files/:/bam
     networks:
       - vcfvisualize
     depends_on:
       - mysql
     ports:
       - 8080:8080
+
   web:
     restart: always
     build: web/
@@ -70,6 +81,7 @@ services:
       - core
     ports:
       - 3000:3000
+
 networks:
   vcfvisualize:
     driver: bridge
