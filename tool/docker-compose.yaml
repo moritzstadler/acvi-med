@@ -64,7 +64,7 @@ services:
     volumes:
       - ~/data/vv/core:/var
       # change ~/data/files/ to change the location of your bam files
-      - ~/data/files/:/bam
+      - /data/WGS_data:/bam
     networks:
       - vcfvisualize
     depends_on:
