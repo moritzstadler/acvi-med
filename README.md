@@ -30,7 +30,7 @@ choosing an appropriate location for storing its files. You might want to adapt 
 
 ## Deploying the System
 
-Starting the web application and the server backend alongside the database can be done comfortably with the following command. Depending on your local setup you might need to prepend `sudo`.
+First navigate to the `/vcfimport/tool` folder. Starting the web application and the server backend alongside the database can be done comfortably with the following command. Depending on your local setup you might need to prepend `sudo`.
 
 <pre><code>docker-compose up --build</code></pre>
 
