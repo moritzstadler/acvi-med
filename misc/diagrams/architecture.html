@@ -43,10 +43,13 @@
 				margin-left: 55px;
 			}
 
-			.external {
+			.inner {
+				margin-top: 20px;
 				background: #eee;
+				height: 90px;
+				padding: 5px;
+				padding-top: 10px;
 				border: 3px solid #ccc;
-				background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg');
 				background-size: 60px;
 				background-repeat: no-repeat;
 				background-position: 5px 5px;
@@ -93,22 +96,49 @@
 				border-left: 1px solid;
 			}
 
+			.text {
+				background: #eee;
+				padding: 10px;
+				position: absolute;
+				margin-top: 385px;
+				margin-left: 190px;
+				width: 246px;
+				font-size: 10pt;
+			}
+
+			li {
+				margin-bottom: 10px;
+				margin-left: 0px;
+			}
+
+			ol {
+				padding-left: 20px;
+			}
+
 			.project {
 				position: absolute;
-				height: 690px;
-				width: 900px;
-				margin-left: 475px;
+				height: 350px;
+				width: 280px;
+				margin-left: 180px;
+				margin-top: 0px;
 				border: 2px dashed #b96a00;
 				background: #fffcf8;
+				padding: 3px;
+				color: #b96a00;
+				font-weight: bold;
+				z-index: -1;
 			}
 
 			.compose {
 				position: absolute;
-				height: 655px;
-				width: 585px;
-				margin-left: 775px;
-				margin-top: 15px;
+				height: 675px;
+				width: 885px;
+				margin-left: 525px;
+				margin-top: 0px;
+				padding: 3px;
 				border: 2px dashed green;
+				color: green;
+				font-weight: bold;
 				background: #f5fff5;
 			}
 
@@ -116,32 +146,54 @@
 				position: absolute;
 				z-index: 1000;
 			}
+
+			.filetextsmall {
+				font-size: 10pt;
+				display: block;
+				margin-left: 3px;
+			}
+
+			.port {
+				font-family: monospace;
+				font-weight: bold;
+				font-size: 15pt;
+			}
 		</style>
 	</head>
 	<body>
-		<div style="margin-left: 50px; margin-top: 200px;" class="file">
+		<div style="margin-left: 50px; margin-top: 50px;" class="file">
 			<div class="filedent"></div>
 			.VCF
 		</div>
-		<div style="margin-left: 200px; margin-top: 200px;" class="container half external">
-			<h2>VEP Ensembl.org</h2>
-			Annotating the plain VCF file
-		</div>
-		<div class="project"></div>
-		<div class="compose"></div>
-		<div style="margin-left: 500px; margin-top: 200px;" class="container half">
-			<h2>Importer (Java)</h2>
-			Importing and preprocessing the VCF
-		</div>
-		<div style="margin-left: 800px; margin-top: 400px;" class="container">
+		<div style="margin-left: 50px; margin-top: 200px; background: lightgreen" class="file">
+			<div class="filedent"></div>
+			.VCF<span class="filetextsmall">annotated</span>
+		</div>		
+		<div class="project">vcfimport docker container</div>
+		<div class="compose">docker-compose</div>
+		<div class="container half" style="margin-left: 200px;">
+			<div class="inner external">
+				<h2>VEP Ensembl.org</h2>
+				Annotating the plain VCF file
+			</div>
+			<div class="inner">
+				<h2>Importer (Java)</h2>
+				Importing and preprocessing the VCF
+			</div>
+		</div>	
+		<div style="margin-left: 550px; margin-top: 400px;" class="container">
 			<h2>Core (Spring)</h2>
 			Managing user access, performing DB queries and caching results
 		</div>
-		<div style="margin-left: 800px; margin-top: 560px;" class="container">
+		<div style="margin-left: 1150px; margin-top: 363px;" class="container half">
 			<h2>Web (React.JS)</h2>
 			Provinding a interface to users, accessible through a web browser 
 		</div>		
-		<div style="margin-left: 1100px;" class="container half">
+		<div class="container" style="margin-left: 550px; margin-top: 560px; width: 800px;">
+			<h2>NGINX</h2>
+			Routing calls to Web and /api calls to Core 
+		</div>				
+		<div style="margin-left: 850px;" class="container half">
 			<h2>MySQL</h2>
 			Containing userdata and configurations<br/><br/>
 			<div class="elipse">
@@ -152,7 +204,7 @@
 			<div class="elipse bottom">
 			</div>
 		</div>
-		<div style="margin-left: 800px;" class="container half">
+		<div style="margin-left: 550px;" class="container half">
 			<h2>Postgresql</h2>
 			Containing patient samples<br/><br/><br/>
 			<div class="elipse">
@@ -163,17 +215,39 @@
 			<div class="elipse bottom">
 			</div>
 		</div>
-		<img style="margin-left: 900px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- postgres to core -->
-		<img style="margin-left: 1000px; margin-top: 500px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- core to web -->		
-		<img style="margin-left: 1075px; margin-top: 500px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Arrow_head_up.svg" /> <!-- web to core -->		
+		<img style="margin-left: 650px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- postgres to core -->
+		<img style="margin-left: 750px; margin-top: 500px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- core to nginx -->		
+		<img style="margin-left: 825px; margin-top: 500px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Arrow_head_up.svg" /> <!-- nginx to core -->		
 
-		<img style="margin-left: 1150px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- mysql -->		
-		<img style="margin-left: 1225px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Arrow_head_up.svg" /> <!-- mysql -->	
 
-		<img style="margin-left: 445px; margin-top: 220px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to import -->
+		<img style="margin-left: 1210px; margin-top: 500px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- nginx to web -->		
+		<img style="margin-left: 1280px; margin-top: 500px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Arrow_head_up.svg" /> <!-- web to nginx -->		
 
-		<img style="margin-left: 745px; margin-top: 220px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to post -->
+		<img style="margin-left: 900px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- mysql -->		
+		<img style="margin-left: 975px; margin-top: 340px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Arrow_head_up.svg" /> <!-- mysql -->	
 
-		<img style="margin-left: 135px; margin-top: 220px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to vep -->		
+		<img style="margin-left: 145px; margin-top: 220px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to import -->
+
+		<img style="margin-left: 460px; margin-top: 220px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to post -->
+
+		<img style="margin-left: 145px; margin-top: 70px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- to vep -->		
+
+		<img style="margin-left: 145px; margin-top: 150px; transform: rotate(135deg);" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Arrow_head_right.svg" /> <!-- from vep to import -->	
+
+		<img style="margin-left: 925px; margin-top: 750px; width: 100px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/3/3d/ILF_User_Management.png" />
+
+		<img style="margin-left: 910px; margin-top: 690px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Arrow_head_down.svg" /> <!-- nginx to user -->		
+		<img style="margin-left: 980px; margin-top: 690px;" class="arrow" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Arrow_head_up.svg" /> <!-- user to nginx -->		
+
+		<div class="arrow port" style="margin-left: 950px; margin-top: 660px;">:80</div>
+		<div class="arrow port" style="margin-left: 475px; margin-top: 220px;">:10938</div>
+
+		<div class="text">
+			<ol>
+				<li>A VCF file is annotated by running a vep command in the vcfimport docker container</li>
+				<li>The annotated VCF is imported into the Postgresql DB via a custom importer in the vcfimport docker container</li>
+				<li>The data in the VCF can now be accessed and filtered via a web browser</li>
+			</ol>
+		</div>
 	</body>
 </html>
