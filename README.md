@@ -18,7 +18,7 @@ The following programs are required for starting the system:
 - <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">git</a>
 - <a href="https://docs.docker.com/engine/install/" target="_blank">Docker</a>
 - <a href="https://docs.docker.com/compose/install/" target="_blank">Docker-Compose</a>
-- Free ports on `8080`, `3000`, `5432`, `3306`
+- Free ports on `80` and `10938`
 
 # Tool **(TODO add name)**
 
@@ -27,8 +27,6 @@ The following programs are required for starting the system:
 Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.
 Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
 choosing an appropriate location for storing its files. You might want to adapt the accordingly commented lines in [docker-compose.yaml file](tool/docker-compose.yaml).
-Secondly if you are not running the system on localhost but rather want to provide access to other users in a production environment, replace the URLs
-in the [config.js file](tool/web/src/config.js). `appBaseUrl` refers to the URL the application can be accessed through in the web browser. `apiBaseUrl` defines the URL core (the backend of this application) is accessed through. Please consider that if you are not running the project on your local machine but a server you need to adapt these values and potentially create some form of URL forwarding.
 
 ## Deploying the System
 
@@ -36,11 +34,7 @@ Starting the web application and the server backend alongside the database can b
 
 <pre><code>docker-compose up --build</code></pre>
 
-You should be able to view the web application in your browser by accessing `localhost:3000`. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering the your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
-
-If you have chosen another URL for the application by configuring a ProxyPass and a ReverseProxyPass and set the appropriate URLs in the [config.js file](tool/web/src/config.js) you can access your application via that URL. Note that anytime you change the [config.js file](tool/web/src/config.js) another execution of the docker-compose up command is needed.
-
-<b>[Instructions on how to set up the application on a Linux server for your institution.](SERVERSETUP.md)</b>
+You should be able to view the web application in your browser by accessing `localhost` or the domain of the server you set the project up on. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering the your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
 
 # Annotation and Import
 
