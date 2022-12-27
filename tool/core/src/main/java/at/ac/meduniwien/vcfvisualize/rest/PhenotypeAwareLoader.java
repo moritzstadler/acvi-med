@@ -74,6 +74,7 @@ public class PhenotypeAwareLoader {
 
         long startTime = System.currentTimeMillis();
         List<GenomicPosition> genomicPositionsByHpo = clinvar.getGenomicPositionsByHpoTerms(phenotypeAwareLoadRequestDTO.hpoTerms);
+        System.out.println(genomicPositionsByHpo.size() + " ClinVar entries are associated with the phenotype");
         List<Variant> variantsByHpoTerms = new LinkedList<>();
         if (genomicPositionsByHpo.size() > 0) {
             Filter filterHpoTerms = new Filter(buildExpressionSelectingByGenomicPositions(genomicPositionsByHpo), new LinkedList<>(), 0);
