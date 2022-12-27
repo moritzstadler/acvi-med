@@ -2,7 +2,7 @@
 
 # Introduction
 
-This tool is designed to allow clinicians and researcherst to annotate and analyze VCF files.
+This tool is designed to allow clinicians and researchers to annotate and analyze VCF files.
 **TODO add video here once everything is finished**
 
 ## Architecture
@@ -12,7 +12,7 @@ This tool is designed to allow clinicians and researcherst to annotate and analy
 ## System Requirements
 
 It is highly recommended to install the system on Linux. If you wish to annotate the files before importing them (this is necessary if your
-VCF files are not annotated with vep already) roughly 709GB of free disk space are needed for genomic databases - in order to simply test the application this is not necessary however.
+VCF files are not annotated with vep already) roughly 709GB of free disk space are needed for genomic databases. In order to simply test the application this is not necessary however.
 The following programs are required for starting the system:
 
 - <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">git</a>
@@ -79,7 +79,7 @@ Database indices are created after every variant has been inserted into the tabl
 
 ### Add a .cram or .bam file
 
-Lastly you can add a `.cram`or `.bam` file to allow researchers and clinicians to view the individual reads via [the Integrative Genomics Viewer IGV](https://igv.org/).
+Lastly you can add a `.cram` or `.bam` file to allow researchers and clinicians to view the individual reads via [the Integrative Genomics Viewer IGV](https://igv.org/).
 Add these files to the `~/data/files/` directory (or your directory in case you changed the [docker-compose.yaml file](tool/docker-compose.yaml)). You can now link these files to your patient samples by entering the location `/bam/somebam.bam` alongside the sample in the GUI of your admin panel.
 
   
