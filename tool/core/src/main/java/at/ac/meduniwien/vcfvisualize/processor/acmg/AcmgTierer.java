@@ -58,6 +58,9 @@ public class AcmgTierer {
      * @return true if the tier applies
      */
     public boolean isPSV1(Variant variant) {
+        //TODO is wrong, does not work
+        //TODO all would be psv1 right now
+        //TODO needs to be pathogenic or panel or hpo
         List<GenomicPosition> result = clinvar.findPathogenics(variant.getChrom(), variant.getPos(), variant.getAlt());
         return result != null && !result.isEmpty();
     }
@@ -197,6 +200,8 @@ public class AcmgTierer {
      * @return true if the tier applies
      */
     public boolean isPS3(Variant variant) {
+        //TODO schicken wie ich jetzt tiere
+        //TODO das passt noch nicht
         //(iff gene is in a selected panel and green) OR (PS1 = true OR PVS1 = true)
         return foundThroughGreenPanelApp || (isPS1(variant) || isPSV1(variant)); //TODO evaluate if this is a performance problem
     }
@@ -325,7 +330,9 @@ public class AcmgTierer {
      * @return true if the variants confirms with the tier
      */
     public boolean isPP3(Variant variant) {
-        //TODO check DANN, GERP, Polyphen, SIFT, CADD (what thresholds), what if some values are not present
+        //TODO CADD Indel raw or CADD raw > 10 -> CADD+
+        //wenn nur cadd 1/1 oder 1/2 oder 2/3 oder 2/4
+        //TODO check GERP, Polyphen=deleterious,possiblydamaging, SIFT=deleterious,possiblydamaging, CADD (what thresholds), what if some values are not present
         return false;
     }
 

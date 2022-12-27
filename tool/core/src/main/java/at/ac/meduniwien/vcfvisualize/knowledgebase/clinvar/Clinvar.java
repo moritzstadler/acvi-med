@@ -75,6 +75,7 @@ public class Clinvar {
 
         for (String line : lines) {
             if (!line.startsWith("#")) {
+                //System.out.println(line);
                 String clnsig = getBetween(line, "CLNSIG=", ";");
                 if (clnsig != null) {
                     HashSet<String> clnsigs = new HashSet<>();
