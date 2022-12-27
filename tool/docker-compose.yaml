@@ -12,6 +12,8 @@ services:
     expose:
       - 80
       - 443
+    depends_on:
+      - web
     networks:
       - vcfvisualize
 
@@ -28,7 +30,7 @@ services:
       POSTGRES_DB: 'sample'
     volumes:
       # change ~/data/vv/postgres to change the location of the postgresql database which handles patient samples
-      - ~/data/vv/postgres:/var/lib/postgresql/data
+      - /data/vv/postgres:/var/lib/postgresql/data
     networks:
       - vcfvisualize
 
@@ -69,7 +71,7 @@ services:
     volumes:
       - ~/data/vv/core:/var
       # change ~/data/files/ to change the location of your bam files
-      - ~/data/WGS_data:/bam
+      - /data/WGS_data:/bam
     networks:
       - vcfvisualize
     depends_on:
