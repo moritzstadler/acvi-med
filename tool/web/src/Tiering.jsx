@@ -5,11 +5,15 @@ import Config from './config.js';
 
 export default function Tiering(props) {
 
-    const [searchData, setSearchData] = useState({panels: null, hpoTerms: null});
+    const [searchData, setSearchData] = useState({panels: null, hpoTerms: null, meta: null});
     const [searchDataLoaded, setSearchDataLoaded] = useState(false);
 
     const [query, setQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+
+    const [indexPerson, setIndexPerson] = useState(null);
+    const [affectedPatients, setAffectedPatients] = useState([]);
+    const [resultVisibility, setResultVisibility] = useState([]);
 
     const [selected, setSelected] = useState([]);
 
@@ -21,18 +25,46 @@ export default function Tiering(props) {
         setQuery(event.target.value);
     };
 
-    const handleSelectResult = (item) => {
-        if (!selected.includes(item)) {
-            setSelected(selected.concat([item]))
-        }
+    const toggleAffectedPatient = (item) => {
+      var newAffectedPatients = affectedPatients.slice();
+      if (affectedPatients.includes(item)) {
+        setAffectedPatients(newAffectedPatients.filter(p => p !== item));
+      } else {
+        newAffectedPatients.push(item);
+        setAffectedPatients(newAffectedPatients);
+      }
     };
+
+    const handleSelectResult = (item) => {
+      if (!selected.includes(item)) {
+          setSelected(selected.concat([item]))
+      }
+    };
+
+    const toggleResultVisibility = (index) => {
+      var newResultVisibility = resultVisibility.slice();
+      if (newResultVisibility[index] === undefined) {
+        newResultVisibility[index] = false;
+      }
+      newResultVisibility[index] = !newResultVisibility[index];
+      setResultVisibility(newResultVisibility);
+      console.log(resultVisibility);
+    }
 
     const handleTiering = (item) => {
         setLoading(true);
         const load = async () => {
-            const variants = await fetchVariants(props.token.tokenString, props.matchProps.name, selected);
+            var humans = [];
+            var formats = getFormats(searchData.meta);
+            for (var i = 0; i < formats.length; i++) {
+              var format = formats[i];
+              humans.push({pseudonym: format, isIndex: indexPerson === format, isAffected: affectedPatients.includes(format)});
+            }
+
+            const variants = await fetchVariants(props.token.tokenString, props.matchProps.name, selected, humans);
             setLoading(false);
-            setResults(variants);
+            const variantsGroupedByVid = groupVariantsByVid(variants);
+            setResults(variantsGroupedByVid);
             setOnResultPage(true);
         };
         load();
@@ -67,38 +99,6 @@ export default function Tiering(props) {
         var resultSynonym = [];
 
         var found = new Set();
-
-        for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
-            var hpoTerm = searchData.hpoTerms.hpoTerms[i];
-            if (hpoTerm.name.toLowerCase().startsWith(queryClean)) {
-                if (!found.has(hpoTerm)) {
-                    resultStartsWith.push({type: 'hpoTerm', value: hpoTerm});
-                    found.add(hpoTerm);
-                }
-            }
-        }
-
-        for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
-            var hpoTerm = searchData.hpoTerms.hpoTerms[i];
-            if (hpoTerm.name.toLowerCase().includes(queryClean)) {
-                if (!found.has(hpoTerm)) {
-                    resultIncludes.push({type: 'hpoTerm', value: hpoTerm});
-                    found.add(hpoTerm);
-                }
-            }
-        }
-
-        for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
-            var hpoTerm = searchData.hpoTerms.hpoTerms[i];
-            for (var j = 0; j < hpoTerm.synonyms.length; j++) {
-                if (hpoTerm.synonyms[j].includes(queryClean)) {
-                    if (!found.has(hpoTerm)) {
-                        resultSynonym.push({type: 'hpoTerm', value: hpoTerm});
-                        found.add(hpoTerm);
-                    }
-                }
-            }
-        }
 
         for (var i = 0; i < searchData.panels.panelIndex.length; i++) {
             var panel = searchData.panels.panelIndex[i];
@@ -137,6 +137,38 @@ export default function Tiering(props) {
             }
         }
 
+        for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
+            var hpoTerm = searchData.hpoTerms.hpoTerms[i];
+            if (hpoTerm.name.toLowerCase().startsWith(queryClean)) {
+                if (!found.has(hpoTerm)) {
+                    resultStartsWith.push({type: 'hpoTerm', value: hpoTerm});
+                    found.add(hpoTerm);
+                }
+            }
+        }
+
+        for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
+            var hpoTerm = searchData.hpoTerms.hpoTerms[i];
+            if (hpoTerm.name.toLowerCase().includes(queryClean)) {
+                if (!found.has(hpoTerm)) {
+                    resultIncludes.push({type: 'hpoTerm', value: hpoTerm});
+                    found.add(hpoTerm);
+                }
+            }
+        }
+
+        for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
+            var hpoTerm = searchData.hpoTerms.hpoTerms[i];
+            for (var j = 0; j < hpoTerm.synonyms.length; j++) {
+                if (hpoTerm.synonyms[j].includes(queryClean)) {
+                    if (!found.has(hpoTerm)) {
+                        resultSynonym.push({type: 'hpoTerm', value: hpoTerm});
+                        found.add(hpoTerm);
+                    }
+                }
+            }
+        }
+
         var result = resultStartsWith.concat(resultIncludes, resultSynonym);
         var trimmedResult = [];
 
@@ -151,8 +183,10 @@ export default function Tiering(props) {
         const load = async () => {
           const panels = await fetchPanels(props);
           const hpoTerms = await fetchHpoTerms(props);
+          const meta = await fetchMeta(props.token.tokenString, props.matchProps.name);
           console.log(panels);
-          setSearchData({panels: panels, hpoTerms: hpoTerms});
+          console.log(meta);
+          setSearchData({panels: panels, hpoTerms: hpoTerms, meta: meta});
           setSearchDataLoaded(true);
         };
         load();
@@ -179,6 +213,24 @@ export default function Tiering(props) {
                         <div className="info">
                             Perform an <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544753/" target="_blank">ACMG-Tiering</a> for the sample {props.matchProps.name}. Enter the observed phenotypes below to start!
                         </div>
+                        {searchDataLoaded && getFormats(searchData.meta).length > 1 ?
+                          <div className="trioBox">
+                            <b><i class="bi bi-info-circle-fill"></i> You are working with a trio! Improve the results by defining the index person and affected family members.</b><br/>
+                            Select the index person (primary affected patient, child):
+                            {getFormats(searchData.meta).map(item => (
+                              <div><input checked={indexPerson == item ? "checked": ""} onChange={(e) => setIndexPerson(e.currentTarget.value)} style={{verticalAlign: "middle"}} name="indexPerson" type="radio" value={item} /><label for={item}>{item}</label></div>
+                            ))}
+                            <br/>
+                            Define who is affected by the disease:
+                            {getFormats(searchData.meta).map(item => (
+                              <div><input checked={affectedPatients.includes(item) ? "checked": ""} onChange={(e) => {toggleAffectedPatient(e.target.value)}} value={item} style={{verticalAlign: "middle"}} type="checkbox" /><label>{item}</label></div>
+                            ))}
+                          </div>
+                          : null
+                        }
+                        {searchDataLoaded && getFormats(searchData.meta).length > 1 && selected.map(item => (
+                            <div className="tieringSelected">{item.value.name} <i onClick={(e) => handleRemove(item)} className="pointer bi bi-x"></i></div>
+                        ))}
                         {searchDataLoaded ?
                             <input value={query} onChange={handleQueryChange} placeholder="Phenotype" className="tieringInput" />
                             : <Loader/>
@@ -189,7 +241,7 @@ export default function Tiering(props) {
                             ))}
                             {searchResults.length == 0 && query.length !== 0 ? <span className="info">no results found</span> : ""}
                         </div>
-                        {selected.map(item => (
+                        {searchDataLoaded && getFormats(searchData.meta).length <= 1 && selected.map(item => (
                             <div className="tieringSelected">{item.value.name} <i onClick={(e) => handleRemove(item)} className="pointer bi bi-x"></i></div>
                         ))}
                         {selected.length > 1 ? <a href='#' onClick={(e) => handleRemove(null)}><i>clear</i></a> : ""}
@@ -197,7 +249,7 @@ export default function Tiering(props) {
                     </div>
                 </div>
                 <br/><br/>
-                check for trios, add explaining for tiers. There might be a problem with the likely pathogenic stuff. This should be checked the same way the enum is in a filter<br/>
+                Add explanation for tiers. SeverePaed in z (select all or no parents as affected). sm_llawd severpaed <br/>
             </div>
         )
     } else {
@@ -208,17 +260,33 @@ export default function Tiering(props) {
                         <button className="tert" onClick={(e) => setOnResultPage(false)}><i className="bi bi-arrow-left"> Back to search</i></button><br/><br/>
                         <h1>Possible causative variants</h1>
                         <b>{results.variants.length}</b> variants found in <b>{Number(results.elapsedMilliseconds / 1000).toFixed(2)} seconds</b><br/><br/>
-                        {results.variants.map(item => (
+                        {results.variants.map((item, i) => (
                             <div className="tieringResult">
-                                <div className="resultName">
-                                    <a target="_blank" href={Config.appBaseUrl + "/view/" + props.matchProps.name + "/" + item.variant.pid}>
-                                        {item.variant.info["info_csq_hgvsc"]} ({item.variant.chrom}:{item.variant.pos})
-                                    </a>
+                                <div onClick={(e) => toggleResultVisibility(i)} className="resultName">
+                                  <i className={"glyphicon bi bi-caret-" + (resultVisibility[i] === true ? "down" : "right") + "-fill"} ></i> <b>{item.chrom}:{item.pos}</b> <span className="note">click to view isoforms and details</span>
                                 </div>
-                                <div className="resultTiers">
+                                <div className={"resultTiers " + (resultVisibility[i] === true ? "hidden" : "")}>
                                     {item.acmgTiers.map(tier => (
                                         <div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div>
                                     ))}
+                                </div>
+                                <div  className={"isoforms " + (resultVisibility[i] === true ? "" : "hidden")}>
+                                  {item.isoforms.map(isoform => (
+                                    <div className="isoform">
+                                      <div className="resultName">
+
+                                          <a target="_blank" href={Config.appBaseUrl + "/view/" + props.matchProps.name + "/" + isoform.variant.pid}>
+                                            {isoform.variant.info["info_csq_hgvsc"] !== null ? isoform.variant.info["info_csq_hgvsc"] : isoform.variant.info["info_csq_hgvsg"]}
+                                            {isoform.variant.info["info_csq_canonical"] && <span className="smallInlineBox" style={{background: "#00a087"}}>Canonical</span>}
+                                          </a>
+                                      </div>
+                                      <div className="resultTiers">
+                                        {isoform.acmgTiers.map(tier => (
+                                            <div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
                                 </div>
                                 {results.variants.length == 0 ? <span className="info">No matching variants found. Try modifying your phenotypes!</span> : ""}
                             </div>
@@ -284,7 +352,7 @@ function fetchHpoTerms(props) {
       );
 }
 
-function fetchVariants(token, sample, selected) {
+function fetchVariants(token, sample, selected, humans) {
 
     var genes = [];
     var hpoTerms = [];
@@ -307,10 +375,14 @@ function fetchVariants(token, sample, selected) {
                 sample: sample,
                 genes: genes,
                 hpoTerms: hpoTerms,
-                humansDTO: null
+                humansDTO: {
+                  humans
+                }
             }
         )
     };
+
+    console.log(requestOptions);
 
     return fetch(Config.apiBaseUrl + '/phenotypeaware/load', requestOptions)
       .then(
@@ -324,4 +396,79 @@ function fetchVariants(token, sample, selected) {
           return data
         }
       );
+}
+
+function fetchMeta(token, sample) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, sample: sample })
+    };
+
+    return fetch(Config.apiBaseUrl + '/variant/loadmeta', requestOptions)
+      .then(response => response.json())
+      .then(
+        data => {
+          return data
+        }
+      );
+}
+
+function getFormats(meta) {
+   let result = [];
+
+   if (meta == null) {
+     return result;
+   }
+
+   for (var i = 0; i < meta.length; i++) {
+     if (meta[i].id.startsWith("format_")) {
+       let startString = "format_";
+       let formatName = meta[i].id.substring(meta[i].id.indexOf(startString) + startString.length, meta[i].id.lastIndexOf("_"));
+       if (!result.includes(formatName)) {
+         result.push(formatName);
+       }
+     }
+   }
+
+   return result;
+}
+
+function groupVariantsByVid(result) {
+  var variants = result.variants;
+  var groupedVariants = {};
+
+  for (var i = 0; i < variants.length; i++) {
+    var variant = variants[i].variant;
+    if (!(variant.vid in groupedVariants)) {
+      groupedVariants[variant.vid] = [];
+    }
+    groupedVariants[variant.vid].push(variants[i]);
+  }
+
+  console.log(groupedVariants);
+
+  var resultingVariants = [];
+  var keys = Object.keys(groupedVariants);
+  for (var i = 0; i < keys.length; i++) {
+    var acmgTiers = [];
+    for (var j = 0; j < groupedVariants[keys[i]].length; j++) {
+      for (var k = 0; k < groupedVariants[keys[i]][j].acmgTiers.length; k++) {
+        if (!(acmgTiers.includes(groupedVariants[keys[i]][j].acmgTiers[k]))) {
+          acmgTiers.push(groupedVariants[keys[i]][j].acmgTiers[k]);
+        }
+      }
+    }
+
+    var group = {
+      chrom: groupedVariants[keys[i]][0].variant.chrom,
+      pos: groupedVariants[keys[i]][0].variant.pos,
+      isoforms: groupedVariants[keys[i]],
+      acmgTiers: acmgTiers
+    };
+    resultingVariants.push(group);
+  }
+
+  result.variants = resultingVariants;
+  return result;
 }
