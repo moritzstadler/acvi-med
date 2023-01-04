@@ -24,7 +24,7 @@ public class ConfigurationService {
             return Files.readString(varPath);
         }
 
-        Path resourcesPath = new File("src/main/resources/defaultconfiguration" + filename).toPath();
+        Path resourcesPath = new File("src/main/resources/defaultconfiguration/" + filename).toPath();
         if (Files.exists(resourcesPath)) {
             return Files.readString(resourcesPath);
         }
