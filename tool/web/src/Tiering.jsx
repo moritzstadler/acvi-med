@@ -466,7 +466,7 @@ function groupVariantsByVid(result) {
         "BS1", "BS2", "BS3", "BS4",
         "BP1", "BP2", "BP3", "BP4", "BP5", "BP6", "BP7"];
 
-    var acmgTiersSorted = acmgTiers.sort((n1, n2) => order.indexOf(n2) - order.indexOf(n1));
+    var acmgTiersSorted = acmgTiers.sort((n1, n2) => order.indexOf(n1) - order.indexOf(n2));
 
     var group = {
       chrom: groupedVariants[keys[i]][0].variant.chrom,
