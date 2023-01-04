@@ -294,7 +294,7 @@ public class AcmgTierer {
 
         //info_csq_gerp_rs > 4
         String gerpKey = "info_csq_gerp_rs";
-        if (variant.getInfo().containsKey(gerpKey)) {
+        if (variant.getInfo().containsKey(gerpKey) && variant.getInfo().get(gerpKey) != null) {
             numberOfScores++;
             if (StringUtils.isNumeric(variant.getInfo().get(gerpKey))) {
                 if (Double.parseDouble(variant.getInfo().get(gerpKey)) >= 4.0) {
@@ -305,7 +305,7 @@ public class AcmgTierer {
 
         //info_cadd_raw > 10
         String caddKey = "info_cadd_raw";
-        if (variant.getInfo().containsKey(caddKey)) {
+        if (variant.getInfo().containsKey(caddKey) && variant.getInfo().get(caddKey) != null) {
             numberOfScores++;
             if (StringUtils.isNumeric(variant.getInfo().get(caddKey))) {
                 if (Double.parseDouble(variant.getInfo().get(caddKey)) >= 10.0) {
@@ -316,7 +316,7 @@ public class AcmgTierer {
 
         //info_csq_polyphen tolower contains 'damaging'
         String polyphenKey = "info_csq_polyphen";
-        if (variant.getInfo().containsKey(polyphenKey)) {
+        if (variant.getInfo().containsKey(polyphenKey) && variant.getInfo().get(polyphenKey) != null) {
             numberOfScores++;
             if (variant.getInfo().get(polyphenKey).toLowerCase().contains("damaging")) {
                 numberOfPathogenicScores++;
@@ -325,7 +325,7 @@ public class AcmgTierer {
 
         //OK info_csq_sift = deleterious
         String siftKey = "info_csq_sift";
-        if (variant.getInfo().containsKey(siftKey)) {
+        if (variant.getInfo().containsKey(siftKey) && variant.getInfo().get(siftKey) != null) {
             numberOfScores++;
             if (variant.getInfo().get(siftKey).toLowerCase().contains("deleterious")) {
                 numberOfPathogenicScores++;
