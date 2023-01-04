@@ -87,7 +87,7 @@ public class AcmgTierer {
             return false;
         }
 
-        return !clinvar.findPathogenicsByHgvsP(hgvsp).isEmpty();
+        return clinvar.findPathogenicsByHgvsP(hgvsp) != null && !clinvar.findPathogenicsByHgvsP(hgvsp).isEmpty();
     }
 
     /**
