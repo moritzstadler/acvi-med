@@ -480,13 +480,13 @@ function groupVariantsByVid(result) {
   var resultingVariantsSorted = resultingVariants.sort((v1, v2) => {
     var score1 = 0.0;
     for (var i = 0; i < v1.acmgTiers.length; i++) {
-      score1 += order.indexOf(v1.acmgTiers[i]) * order.length * order.length;
+      score1 += (order.length - order.indexOf(v1.acmgTiers[i])) * order.length * order.length;
     }
     var score2 = 0.0;
     for (var i = 0; i < v2.acmgTiers.length; i++) {
-      score2 += order.indexOf(v2.acmgTiers[i]) * order.length * order.length;
+      score2 += (order.length - order.indexOf(v2.acmgTiers[i])) * order.length * order.length;
     }
-    return score1 - score2;
+    return score2 - score1;
   });
 
   result.variants = resultingVariantsSorted;
