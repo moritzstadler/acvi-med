@@ -460,11 +460,19 @@ function groupVariantsByVid(result) {
       }
     }
 
+    var order = ["PSV1", "PS1", "PS2", "PS3", "PS4",
+        "PM1", "PM2", "PM3", "PM4", "PM5", "PM6",
+        "PP1", "PP2", "PP3", "PP4", "PP5", "BA1",
+        "BS1", "BS2", "BS3", "BS4",
+        "BP1", "BP2", "BP3", "BP4", "BP5", "BP6", "BP7"];
+
+    acmgTiersSorted = acmgTiers.sort((n1, n2) => order.indexOf(n2) - order.indexOf(n1));
+
     var group = {
       chrom: groupedVariants[keys[i]][0].variant.chrom,
       pos: groupedVariants[keys[i]][0].variant.pos,
       isoforms: groupedVariants[keys[i]],
-      acmgTiers: acmgTiers
+      acmgTiers: acmgTiersSorted
     };
     resultingVariants.push(group);
   }
