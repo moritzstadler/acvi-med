@@ -161,20 +161,17 @@ public class AcmgTierer {
     public boolean isPM2(Variant variant) {
         List<String> alleleFrequencies = Arrays.asList("info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af", "info_csq_gnomadg_ac", "info_csq_gnomadg_af", "info_csq_gnomadg_controls_ac", "info_csq_gnomadg_controls_af", "info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe", "info_csq_gnomadg_af_afr", "info_csq_gnomadg_af_amr", "info_csq_gnomadg_af_asj", "info_csq_gnomadg_af_eas", "info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe", "info_csq_gnomadg_af_oth", "info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af","info_csq_gnomadg_ac","info_csq_gnomadg_af","info_csq_gnomadg_controls_ac","info_csq_gnomadg_controls_af","info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe","info_csq_gnomadg_af_afr","info_csq_gnomadg_af_amr","info_csq_gnomadg_af_asj","info_csq_gnomadg_af_eas","info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe","info_csq_gnomadg_af_oth", "info_csq_gnomad_af", "info_csq_gnomad_afr_af", "info_csq_gnomad_amr_af", "info_csq_gnomad_asj_af", "info_csq_gnomad_eas_af", "info_csq_gnomad_fin_af", "info_csq_gnomad_nfe_af", "info_csq_gnomad_oth_af", "info_csq_gnomad_sas_af");
 
-        System.out.println("here0 " + variant.getChrom());
         for (String key : alleleFrequencies) {
-            System.out.println("here1 " + key );
             if (variant.getInfo().containsKey(key) && variant.getInfo().get(key) != null) {
                 String value = variant.getInfo().get(key);
-                System.out.println("here2 " + value);
                 //check if value is larger than a threshold, if yes return false
-                if (StringUtils.isNumeric(value)) {
-                    System.out.println("here3 " + value);
+                try {
                     double doubleValue = Double.parseDouble(value);
-                    System.out.println("here4 " + doubleValue);
                     if (doubleValue > 0.001) { //TODO maybe adapt this threshold
                         return false;
                     }
+                } catch (NumberFormatException e) {
+                    System.out.println("Cannot parse AF " + value);
                 }
             }
         }
@@ -301,10 +298,12 @@ public class AcmgTierer {
         String gerpKey = "info_csq_gerp_rs";
         if (variant.getInfo().containsKey(gerpKey) && variant.getInfo().get(gerpKey) != null) {
             numberOfScores++;
-            if (StringUtils.isNumeric(variant.getInfo().get(gerpKey))) {
+            try {
                 if (Double.parseDouble(variant.getInfo().get(gerpKey)) >= 4.0) {
                     numberOfPathogenicScores++;
                 }
+            } catch (Exception ex) {
+                System.out.println("Cannot parse " + variant.getInfo().get(gerpKey));
             }
         }
 
@@ -312,10 +311,12 @@ public class AcmgTierer {
         String caddKey = "info_cadd_raw";
         if (variant.getInfo().containsKey(caddKey) && variant.getInfo().get(caddKey) != null) {
             numberOfScores++;
-            if (StringUtils.isNumeric(variant.getInfo().get(caddKey))) {
+            try {
                 if (Double.parseDouble(variant.getInfo().get(caddKey)) >= 10.0) {
                     numberOfPathogenicScores++;
                 }
+            } catch (Exception ex) {
+                System.out.println("Cannot parse " + variant.getInfo().get(caddKey));
             }
         }
 
@@ -362,11 +363,13 @@ public class AcmgTierer {
         for (String key : alleleFrequencies) {
             if (variant.getInfo().containsKey(key)) {
                 String value = variant.getInfo().get(key);
-                if (StringUtils.isNumeric(value)) {
+                try {
                     double doubleValue = Double.parseDouble(value);
                     if (doubleValue > 0.05) {
                         return true;
                     }
+                } catch (Exception ex) {
+                    System.out.println("Cannot parse AF " + value);
                 }
             }
         }

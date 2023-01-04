@@ -477,6 +477,18 @@ function groupVariantsByVid(result) {
     resultingVariants.push(group);
   }
 
-  result.variants = resultingVariants;
+  var resultingVariantsSorted = resultingVariants.sort((v1, v2) => {
+    var score1 = 0.0;
+    for (var i = 0; i < v1.acmgTiers.length; i++) {
+      score1 += order.indexOf(v1.acmgTiers[i]) * order.length * order.length;
+    }
+    var score2 = 0.0;
+    for (var i = 0; i < v2.acmgTiers.length; i++) {
+      score1 += order.indexOf(v2.acmgTiers[i]) * order.length * order.length;
+    }
+    return score1 - score2;
+  });
+
+  result.variants = resultingVariantsSorted;
   return result;
 }
