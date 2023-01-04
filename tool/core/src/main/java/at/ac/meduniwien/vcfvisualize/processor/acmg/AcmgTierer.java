@@ -171,7 +171,7 @@ public class AcmgTierer {
                         return false;
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Cannot parse AF " + value);
+                    //System.out.println("Cannot parse AF " + value);
                 }
             }
         }
@@ -261,18 +261,44 @@ public class AcmgTierer {
             return false;
         }
 
-        //check if everyone who is not affected is 0/0 and everyone who is affected is not 0/0
+        HumanDTO indexPerson = null;
         for (HumanDTO humanDTO : humansDTO.getHumans()) {
-            String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
-            boolean hasNoMutation = genotypeParent.equals("0/0") || genotypeParent.equals("0|0");
-            boolean affectedButNoMutation = humanDTO.getIsAffected() && hasNoMutation;
-            boolean notAffectedButMutation = !humanDTO.getIsAffected() && !hasNoMutation;
-            if (affectedButNoMutation || notAffectedButMutation) {
-                return false;
+            if (humanDTO.getIsIndex()) {
+                indexPerson = humanDTO;
             }
         }
 
-        return true;
+        if (indexPerson == null) {
+            return false;
+        }
+        String genotypeIndexPerson = variant.getInfo().get("format_" + indexPerson.getPseudonym() + "_gt");
+
+        //TODO assumes index is affected
+        if (genotypeIndexPerson.contains("0")) {
+            //index person is 0/1 -> tier is only true if everyone who is affected has 1/1 or 0/1 and everyone who is not affected has 0/0
+            for (HumanDTO humanDTO : humansDTO.getHumans()) {
+                if (!humanDTO.getIsIndex()) {
+                    String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
+                    boolean hasMutation = !(genotypeParent.equals("0/0") || genotypeParent.equals("0|0"));
+                    if ((hasMutation && !humanDTO.getIsAffected()) || (!hasMutation && humanDTO.getIsAffected())) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            //index person is 1/1 -> tier is only true if everyone who is affected has 1/1 and everyone who is not affected has 0/0 or 0/1
+            for (HumanDTO humanDTO : humansDTO.getHumans()) {
+                if (!humanDTO.getIsIndex()) {
+                    String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
+                    boolean parent11 = !(genotypeParent.contains("0"));
+                    if ((parent11 && !humanDTO.getIsAffected()) || (!parent11 && humanDTO.getIsAffected())) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 
     public boolean isPP2(Variant variant) {
@@ -303,7 +329,7 @@ public class AcmgTierer {
                     numberOfPathogenicScores++;
                 }
             } catch (Exception ex) {
-                System.out.println("Cannot parse " + variant.getInfo().get(gerpKey));
+                //System.out.println("Cannot parse " + variant.getInfo().get(gerpKey));
             }
         }
 
@@ -316,7 +342,7 @@ public class AcmgTierer {
                     numberOfPathogenicScores++;
                 }
             } catch (Exception ex) {
-                System.out.println("Cannot parse " + variant.getInfo().get(caddKey));
+                //System.out.println("Cannot parse " + variant.getInfo().get(caddKey));
             }
         }
 
@@ -369,7 +395,7 @@ public class AcmgTierer {
                         return true;
                     }
                 } catch (Exception ex) {
-                    System.out.println("Cannot parse AF " + value);
+                    //System.out.println("Cannot parse AF " + value);
                 }
             }
         }
@@ -405,18 +431,44 @@ public class AcmgTierer {
             return false;
         }
 
-        //check if there is at least one person who is affected but has 0/0 or who is not affected but has not 0/0
+        HumanDTO indexPerson = null;
         for (HumanDTO humanDTO : humansDTO.getHumans()) {
-            String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
-            boolean hasNoMutation = genotypeParent.equals("0/0") || genotypeParent.equals("0|0");
-            boolean affectedButNoMutation = humanDTO.getIsAffected() && hasNoMutation;
-            boolean notAffectedButMutation = !humanDTO.getIsAffected() && !hasNoMutation;
-            if (affectedButNoMutation || notAffectedButMutation) {
-                return true;
+            if (humanDTO.getIsIndex()) {
+                indexPerson = humanDTO;
             }
         }
 
-        return false;
+        if (indexPerson == null) {
+            return false;
+        }
+        String genotypeIndexPerson = variant.getInfo().get("format_" + indexPerson.getPseudonym() + "_gt");
+
+        //TODO assumes index is affected
+        if (genotypeIndexPerson.contains("0")) {
+            //index person is 0/1, if parents are 1/1 or 0/1 but not affected this tier is true
+            for (HumanDTO humanDTO : humansDTO.getHumans()) {
+                if (!humanDTO.getIsIndex()) {
+                    String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
+                    boolean hasMutation = !(genotypeParent.equals("0/0") || genotypeParent.equals("0|0"));
+                    if ((hasMutation && !humanDTO.getIsAffected()) || (!hasMutation && humanDTO.getIsAffected())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } else {
+            //index person is 1/1, if parents are 1/1 but not affected this tier is true
+            for (HumanDTO humanDTO : humansDTO.getHumans()) {
+                if (!humanDTO.getIsIndex()) {
+                    String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
+                    boolean parent11 = !genotypeParent.contains("0");
+                    if ((parent11 && !humanDTO.getIsAffected()) || (!parent11 && humanDTO.getIsAffected())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     public boolean isBP1(Variant variant) {
