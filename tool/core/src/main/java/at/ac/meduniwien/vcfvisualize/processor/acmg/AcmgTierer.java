@@ -83,7 +83,10 @@ public class AcmgTierer {
             return false;
         }
         String hgvsp = variant.getInfo().get(hgvspKey);
-        System.out.println(hgvsp + "=hgvspkey");
+        if (hgvsp == null) {
+            return false;
+        }
+
         return !clinvar.findPathogenicsByHgvsP(hgvsp).isEmpty();
     }
 
@@ -214,7 +217,9 @@ public class AcmgTierer {
         String hgvspKey = "info_csq_hgvsp";
         if (variant.getInfo().containsKey(hgvspKey)) {
             String hgvsp = variant.getInfo().get(hgvspKey);
-            resultProtein = clinvar.findPathogenicsByHgvsPNonMatchAlt(hgvsp);
+            if (hgvsp != null) {
+                resultProtein = clinvar.findPathogenicsByHgvsPNonMatchAlt(hgvsp);
+            }
         }
 
         int foundResults = 0;
