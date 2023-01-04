@@ -24,12 +24,12 @@ public class ConfigurationService {
             return Files.readString(varPath);
         }
 
-        Path resourcesPath = new File("src/main/resources/" + filename).toPath();
+        Path resourcesPath = new File("src/main/resources/defaultconfiguration" + filename).toPath();
         if (Files.exists(resourcesPath)) {
             return Files.readString(resourcesPath);
         }
 
-        System.out.println("Could not locate file " + filename + " in var/ or src/main/resources! Make sure to add it.");
+        System.out.println("Could not locate file " + filename + " in var/ or src/main/resources/defaultconfiguration/! Make sure to add it.");
         return "";
     }
 
