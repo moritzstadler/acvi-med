@@ -484,7 +484,7 @@ function groupVariantsByVid(result) {
     }
     var score2 = 0.0;
     for (var i = 0; i < v2.acmgTiers.length; i++) {
-      score1 += order.indexOf(v2.acmgTiers[i]) * order.length * order.length;
+      score2 += order.indexOf(v2.acmgTiers[i]) * order.length * order.length;
     }
     return score1 - score2;
   });
