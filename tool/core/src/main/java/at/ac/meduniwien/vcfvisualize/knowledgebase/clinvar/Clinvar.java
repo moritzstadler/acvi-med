@@ -3,40 +3,152 @@ package at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 @Service
 public class Clinvar {
 
     private HashMap<String, List<GenomicPosition>> genomicPositionsByHpoTerm;
-    private HashMap<String, List<GenomicPosition>> genomicPositionsByChromAndPos; //chrom:pos
+    private HashMap<String, List<GenomicPosition>> genomicPositionsByChromAndPos; //chrom:pos (e. g. "1:1234")
     private HashMap<String, List<GenomicPosition>> genomicPositionsByChromAndPosAndAlt; //chrom:pos:alt
+    private HashMap<String, List<GenomicPosition>> genomicPositionsByHgvsp; //e. g. ENSP00000343864.2:p.Val663Ala
+    private HashMap<String, List<GenomicPosition>> genomicPositionsByHalfHgvsp; //e. g. ENSP00000343864.2:p.Val663
     private Set<String> likelyPathogenicAndPathogenicTerms; //contains all strings which indicate pathogenicity (e. g. fields like Pathogenic&_association&_protective)
-    private boolean apiLoaded;
+    private boolean dataLoaded;
 
     public Clinvar() {
         genomicPositionsByHpoTerm = new HashMap<>();
         likelyPathogenicAndPathogenicTerms = new HashSet<>();
         genomicPositionsByChromAndPos = new HashMap<>();
         genomicPositionsByChromAndPosAndAlt = new HashMap<>();
-        apiLoaded = false;
+        genomicPositionsByHgvsp = new HashMap<>();
+        genomicPositionsByHalfHgvsp = new HashMap<>();
+        dataLoaded = false;
     }
 
-    @SneakyThrows
-    public void loadDataFromAPI() {
-        System.out.println("loading Clinvar");
-        String url = "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz";
-        GZIPInputStream stream = new GZIPInputStream(new URL(url).openStream());
-        String clinvar = new String(stream.readAllBytes());
-        parseData(clinvar);
-    }
 
     private void initiate() {
-        if (!apiLoaded) {
-            loadDataFromAPI();
+        if (!dataLoaded) {
+            loadDataFromFile();
         }
+    }
+
+    /**
+     * Annotate the clinvar.vcf.gz file with the following commands
+     *
+     * sudo docker run --rm -it -v /data/vep:/opt/vep/.vep ensemblorg/ensembl-vep ./vep -i /opt/vep/.vep/clinvar.vcf --dir_cache /opt/vep/.vep --cache --offline --format vcf --warning_file /opt/vep/.vep/warnings --o /opt/vep/.vep/clinvar_annotated.vcf --force_overwrite --vcf -hgvsg --shift_hgvs 1 --domains --hgvs --fork 4
+     * bgzip -c clinvar_annotated.vcf > clinvar_annotated.vcf.gz
+     * tabix -p vcf clinvar_annotated.vcf.gz
+     * bcftools +split-vep.so -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/CLNSIG\t%INFO/CLNDISDB,\t%HGVSp\n' clinvar_annotated.vcf.gz > clinvar_annotated_reduced.vcf
+     * grep -E 'Likely_pathogenic|Pathogenic' clinvar_annotated_reduced.vcf > smartclinvar.vcf
+     */
+    @SneakyThrows
+    public void loadDataFromFile() {
+        Path varPath = new File("src/main/resources/smartclinvar.vcf").toPath();
+        if (Files.exists(varPath)) {
+            parseFileData(Files.readString(varPath));
+        } else {
+            System.err.println("Could not locate src/main/resources/smartclinvar.vcf!");
+        }
+    }
+
+    /**
+     * Parses clinvar data - the file must adhere to the following:
+     *  - Only contain lines where CLNSIG is Likely_pathogenic and Pathogenic
+     *  - Each line is of the format %CHROM\t%POS\t%REF\t%ALT\t%INFO/CLNSIG\t%INFO/CLNDISDB,\t%HGVSp\n
+     *  - No header is included
+     *
+     *  A sample line of this file is: "1	976215	A	G	Pathogenic	Human_Phenotype_Ontology:HP:0001932,Human_Phenotype_Ontology:HP:0008264,MedGen:C4021547|Human_Phenotype_Ontology:HP:0032647,MedGen:C5397664,	ENSP00000343864.2:p.Val663Ala,.,.,.,ENSP00000414022.3:p.Val777Ala,.,.,.,ENSP00000511592.1:p.Val777Ala"
+     *
+     * @param vcf a string containing the file contents
+     */
+    @SneakyThrows
+    private void parseFileData(String vcf) {
+        String[] lines = vcf.split("\n");
+        for (String line : lines) {
+            if (!line.startsWith("#")) {
+                //System.out.println(line);
+                String[] tabseperated = line.split("\t");
+
+                //make genomic position
+                String chrom = tabseperated[0];
+                long pos = Long.parseLong(tabseperated[1]);
+                String ref = tabseperated[2];
+                String alt = tabseperated[3];
+                String clnsig = tabseperated[4];
+                String clndisdb = tabseperated[5];
+                String hgvsp = tabseperated[6];
+
+                GenomicPosition genomicPosition = new GenomicPosition();
+                genomicPosition.setChrom(chrom);
+                genomicPosition.setPos(pos);
+                genomicPosition.setRef(ref);
+                genomicPosition.setAlt(alt);
+
+                likelyPathogenicAndPathogenicTerms.add(clnsig); //since the file was annotated like the imported vcf, the value is equal
+
+                //map chrom:position to this
+                String chromPosKey = genomicPosition.getChrom() + ":" + genomicPosition.getPos();
+                if (!genomicPositionsByChromAndPos.containsKey(chromPosKey)) {
+                    genomicPositionsByChromAndPos.put(chromPosKey, new LinkedList<>());
+                }
+                genomicPositionsByChromAndPos.get(chromPosKey).add(genomicPosition);
+
+                //map chrom:position:alt to this
+                String chromPosAltKey = genomicPosition.getChrom() + ":" + genomicPosition.getPos() + ":" + genomicPosition.getAlt();
+                if (!genomicPositionsByChromAndPosAndAlt.containsKey(chromPosAltKey)) {
+                    genomicPositionsByChromAndPosAndAlt.put(chromPosAltKey, new LinkedList<>());
+                }
+                genomicPositionsByChromAndPosAndAlt.get(chromPosAltKey).add(genomicPosition);
+
+                //map hpo terms to this
+                List<String> hpoTerms = getAllBetween(clndisdb + ",", "Human_Phenotype_Ontology:", ","); //since the file is formated like this: %CHROM\t%POS\t%REF\t%ALT\t%INFO/CLNSIG\t%INFO/CLNDISDB,\t%HGVSp\n there is always a trailing ',' after CLNDISDB
+                for (String hpoTerm : hpoTerms) {
+                    if (!genomicPositionsByHpoTerm.containsKey(hpoTerm)) {
+                        genomicPositionsByHpoTerm.put(hpoTerm, new LinkedList<>());
+                    }
+                    genomicPositionsByHpoTerm.get(hpoTerm).add(genomicPosition);
+                }
+
+                //map HGVSp ids to this
+                List<String> hgvsps = Arrays.stream(hgvsp.split(",")).filter(x -> !x.equals(".")).collect(Collectors.toList());
+                for (String rawHgvspId : hgvsps) {
+                    String hgvspId = rawHgvspId.replaceAll("%3D", "=");
+                    if (!genomicPositionsByHgvsp.containsKey(hgvspId)) {
+                        genomicPositionsByHgvsp.put(hgvspId, new LinkedList<>());
+                    }
+                    genomicPositionsByHgvsp.get(hgvspId).add(genomicPosition);
+
+                    String halfHgvspId = getHalfHgvsP(hgvspId);
+                    if (!genomicPositionsByHalfHgvsp.containsKey(halfHgvspId)) {
+                        genomicPositionsByHalfHgvsp.put(halfHgvspId, new LinkedList<>());
+                    }
+                    genomicPositionsByHalfHgvsp.get(halfHgvspId).add(genomicPosition);
+                }
+
+            }
+        }
+
+        int sum = 0;
+        for (String key : genomicPositionsByHpoTerm.keySet()) {
+            int size = genomicPositionsByHpoTerm.get(key).size();
+            sum += size;
+        }
+
+        System.out.println(genomicPositionsByHgvsp.size() + " Pathogenic or Likely_pathogenic protein changes imported");
+        System.out.println(sum + " genomic positions are associated with HPO terms");
+        System.out.println(lines.length + " Pathogenic or Likely_pathogenic variants imported");
+        System.out.println(genomicPositionsByHpoTerm.size() + " HPO terms are associated with genomic positions as Pathogenic or Likely_pathogenic");
+
+        dataLoaded = true;
     }
 
     /**
@@ -69,11 +181,26 @@ public class Clinvar {
         return genomicPositionsByHpoTerm.get(hpoTermId);
     }
 
-    private void parseData(String vcf) {
-        String[] lines = vcf.split("\n");
-        int cnt = 0;
+    @SneakyThrows
+    @Deprecated
+    public void loadDataFromAPI() {
+        System.out.println("loading Clinvar");
+        String url = "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz";
+        GZIPInputStream stream = new GZIPInputStream(new URL(url).openStream());
+        //TODO the stream does not load everything
+        parseAPIData(stream);
+    }
 
-        for (String line : lines) {
+    @SneakyThrows
+    @Deprecated
+    private void parseAPIData(GZIPInputStream gzipStream) {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(gzipStream));
+
+        int lines = 0;
+        int cnt = 0;
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            lines++;
             if (!line.startsWith("#")) {
                 //System.out.println(line);
                 String clnsig = getBetween(line, "CLNSIG=", ";");
@@ -96,6 +223,13 @@ public class Clinvar {
                         genomicPosition.setRef(tabseperated[3]);
                         genomicPosition.setAlt(tabseperated[4]);
 
+                        System.out.println(tabseperated[0] + " " + line);
+                        if (tabseperated[0].equals("9")) {
+                            if (tabseperated[1].startsWith("3")) {
+                                System.out.println("here");
+                            }
+                        }
+
                         //map chrom:position to this
                         String chromPosKey = genomicPosition.getChrom() + ":" + genomicPosition.getPos();
                         if (!genomicPositionsByChromAndPos.containsKey(chromPosKey)) {
@@ -112,7 +246,7 @@ public class Clinvar {
 
                         //map hpo terms to this
                         String clndisdb = getBetween(line, "CLNDISDB=", ";");
-                        List<String> hpoTerms = getAllBetween(clndisdb + ",", "Human_Phenotype_Ontology:", ",");
+                        List<String> hpoTerms = getAllBetween(clndisdb + ",", "Human_Phenotype_Ontology:", ","); //TODO what about the last one?
 
                         for (String hpoTerm : hpoTerms) {
                             if (!genomicPositionsByHpoTerm.containsKey(hpoTerm)) {
@@ -135,7 +269,7 @@ public class Clinvar {
         System.out.println(cnt + " Pathogenic or Likely_pathogenic variants found");
         System.out.println(genomicPositionsByHpoTerm.size() + " HPO terms are associated with genomic positions as Pathogenic or Likely_pathogenic");
 
-        apiLoaded = true;
+        dataLoaded = true;
     }
 
     public List<GenomicPosition> findPathogenics(String chrom, String pos) {
@@ -146,6 +280,27 @@ public class Clinvar {
     public List<GenomicPosition> findPathogenics(String chrom, String pos, String alt) {
         initiate();
         return genomicPositionsByChromAndPosAndAlt.get(chrom + ":" + pos + ":" + alt);
+    }
+
+    public List<GenomicPosition> findPathogenicsByHgvsP(String hgvsp) {
+        initiate();
+        return genomicPositionsByHgvsp.get(hgvsp);
+    }
+
+    /**
+     * Upon inputting ENSP00000343864.2:p.Val663Ala values for ENSP00000343864.2:p.Val663Arg, ENSP00000343864.2:p.Val663Met etc. are returned.
+     * Only the reference amino acid is relevant.
+     *
+     * @param hgvsp full hgvsp id
+     * @return list of genomic positions
+     */
+    public List<GenomicPosition> findPathogenicsByHgvsPNonMatchAlt(String hgvsp) {
+        initiate();
+        return genomicPositionsByHalfHgvsp.get(getHalfHgvsP(hgvsp));
+    }
+
+    private String getHalfHgvsP(String hgvspId) {
+        return hgvspId.replaceAll("[A-Za-z]+$", "");
     }
 
     private List<String> getAllBetween(String text, String from, String to) {

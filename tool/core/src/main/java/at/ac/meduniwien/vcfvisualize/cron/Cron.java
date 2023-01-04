@@ -35,7 +35,7 @@ public class Cron {
         new Thread(() -> {
             panelApp.loadDataFromAPI();
             hpo.loadDataFromAPI();
-            clinvar.loadDataFromAPI();
+            clinvar.loadDataFromFile();
         }).start();
     }
 
@@ -46,7 +46,7 @@ public class Cron {
         new Thread(() -> {
             panelApp.loadDataFromAPI();
             hpo.loadDataFromAPI();
-            clinvar.loadDataFromAPI();
+            clinvar.loadDataFromFile();
         }).start();
     }
 

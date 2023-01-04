@@ -89,11 +89,15 @@ public class PhenotypeAwareLoader {
 
         //TODO only take green panels!!!!
 
+        //TODO should be just tier all variants?
+        //TODO selecting by chrom:pos is too restrictive for isPM5
+
         PhenotypeAwareQueryResultDTO queryResultDTO = new PhenotypeAwareQueryResultDTO();
         queryResultDTO.setVariants(new LinkedList<>());
         for (Variant variant : variantsByHpoTerms) {
             PhenotypeAwareVariantDTO phenotypeAwareVariantDTO = new PhenotypeAwareVariantDTO(variant);
             phenotypeAwareVariantDTO.setAcmgTiers(acmgTierer.performAcmgTiering(variant, true, false, phenotypeAwareLoadRequestDTO.humansDTO).stream().map(Enum::toString).collect(Collectors.toList()));
+            phenotypeAwareVariantDTO.setHpoTermsLeadToDiscovery(List.of());
             queryResultDTO.getVariants().add(phenotypeAwareVariantDTO);
         }
 

@@ -364,6 +364,11 @@ public class SqlConnector {
         System.out.println(vidSql);
         executeStatement(vidSql);
 
+        String chromposIndexName = tableUniqueIndexName + Math.abs((tableName).hashCode()) + randomString(15);
+        String chromposSql = String.format("CREATE INDEX %s on %s (chrom, pos)", chromposIndexName, tableName);
+        System.out.println(chromposSql);
+        executeStatement(chromposSql);
+
         //create index for genotype
         for (String formatName : formatNames) {
             String col = "format_" + formatName + "_gt";

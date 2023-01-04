@@ -5,6 +5,7 @@ import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.GenomicPosition;
 import at.ac.meduniwien.vcfvisualize.model.Variant;
 import at.ac.meduniwien.vcfvisualize.rest.dto.HumanDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.HumansDTO;
+import com.sun.xml.bind.v2.TODO;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class AcmgTierer {
     @Autowired
     Clinvar clinvar;
 
-    private boolean foundThroughClinvar; //TODO is this used
-    private boolean foundThroughGreenPanelApp; //TODO is this used
+    private boolean foundThroughClinvar;
+    private boolean foundThroughGreenPanelApp;
     private HumansDTO humansDTO;
 
     /**
@@ -37,6 +38,7 @@ public class AcmgTierer {
         List<AcmgTier> tiers = new LinkedList<>();
 
         //TODO only take green panels!
+        //TODO check if the whole system can find stuff like Huntington's disease mutations?
 
         for (AcmgTier acmgTier : AcmgTier.values()) {
             //calls isPSV1(variant), isPS1(variant), isPS2(variant) ...
@@ -58,10 +60,8 @@ public class AcmgTierer {
      * @return true if the tier applies
      */
     public boolean isPSV1(Variant variant) {
-        //TODO is wrong, does not work
-        //TODO all would be psv1 right now
-        //TODO needs to be pathogenic or panel or hpo
-        List<GenomicPosition> result = clinvar.findPathogenics(variant.getChrom(), variant.getPos(), variant.getAlt());
+        //check if the chrom pos alt entry is known and Pathogenic or Likely_pathogenic as defined by ClinVar
+        List<GenomicPosition> result = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos(), variant.getAlt());
         return result != null && !result.isEmpty();
     }
 
@@ -74,81 +74,16 @@ public class AcmgTierer {
      * @return true if the tier applies
      */
     public boolean isPS1(Variant variant) {
-        //TODO test this thoroughly
-        //TODO check if the whole system can find stuff like Huntington's disease mutations?
+        //in the clinvar file '=' which can be a part of HGVSp is stored as %3D
+        //chrom can be 1, 2 ...  X and Y and MT
 
-        return false;
-        /*
-        String changeInCodons = variant.getInfo().get("info_csq_codons"); // aAg/aGg or aAA/aGG
-        if (changeInCodons == null) {
+        //check if the protein change (HGVSp) is known to ClinVar as Pathogenic or Likely_pathogenic. In that case the nucleotides might be different but the protein is still similar to a pathogenic or likely pathogenic protein
+        String hgvspKey = "info_csq_hgvsp";
+        if (!variant.getInfo().containsKey(hgvspKey)) {
             return false;
         }
-
-        String referenceTriplet = changeInCodons.split("/")[0]; //aAg
-        String actualTriplet = changeInCodons.split("/")[1]; //aGg
-
-        List<String> tripletsWithSimilarEffect = GeneticCode.triplesWithSimilarAminoAcid(actualTriplet.toUpperCase()); //CGU, CGC, CGA, CGG, AGA, AGG
-
-        int offset = -1 * positionOfFirstUppercaseLetter(referenceTriplet);
-        List<GenomicPosition>[] pathogenicMutations = (ArrayList<GenomicPosition>[]) new ArrayList[3];
-        for (int i = 0; i < 3; i++) {
-            pathogenicMutations[i] = clinvar.findPathogenics(variant.getChrom(), variant.getPos() + offset + i);
-        }
-
-        char wildcard = '_';
-        for (String similarTriplet : tripletsWithSimilarEffect) {
-            String difference = tripletDifference(referenceTriplet, similarTriplet, wildcard);
-            for (int i = 0; i < 3; i++) {
-                for (GenomicPosition pathogenic : pathogenicMutations[i]) {
-                    if (equalAltAndDifference(pathogenic.getAlt(), difference, i, wildcard)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-
-        /*
-        TODO this comment is no longer true
-        take possible triplets and find difference to reference genome
-
-        difference to reference AAG:
-        CGU, CGC, CGA, CGG, AGA, AGG, AAA (example)
-        CGU, CGC, CGA, CG_, _GA, _G_, __A (example)
-
-        determine positions of bases, in this case: -1, 0, +1
-        check the pathogenic Clinvar entries at these positions
-        This returns e. g.
-        (1)
-            -1: C
-            0: G
-            +1: C, A
-
-            now check for each difference if it matches
-            CGU: yes, yes, no -> no match
-            CGC: yes, yes, yes -> match
-            CGA: yes, yes, yes -> match
-            CG_: yes, yes, _ -> match
-            _GA: _, yes, yes -> match
-            _G_: _, yes, _ -> match
-
-        (2)
-            -1:
-            0:
-            +1: A
-
-            only ___A will match here
-         */
-
-
-        //TODO take these from clinvar vcf - ref alt does not need to be equal only crom and pos!!!
-
-        //TODO e. g. patient GAG = Leu then search for all which could also be Leu
-
-        //TODO check which amino acid it is and which other mutations would keep the same amino acid.
-        //TODO check "change in codons". check all other trios which would make the same amino acid
-        //TODO we now have a list of triplets. if any of these triplets is found in clinvar as pathogenic
+        String hgvsp = variant.getInfo().get(hgvspKey);
+        return !clinvar.findPathogenicsByHgvsP(hgvsp).isEmpty();
     }
 
     /**
@@ -180,7 +115,6 @@ public class AcmgTierer {
         for (HumanDTO humanDTO : humansDTO.getHumans()) {
             if (!humanDTO.getIsIndex()) {
                 //humanDTO is a parent, check if they are 0/0
-                //TODO check if genotype can be accessed like this
                 String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
                 boolean hasNoMutation = genotypeParent.equals("0/0") || genotypeParent.equals("0|0");
                 if (!hasNoMutation) {
@@ -189,7 +123,7 @@ public class AcmgTierer {
             }
         }
 
-        return true; //TODO implement
+        return true; //TODO implement paternity test
     }
 
     /**
@@ -200,8 +134,7 @@ public class AcmgTierer {
      * @return true if the tier applies
      */
     public boolean isPS3(Variant variant) {
-        //TODO schicken wie ich jetzt tiere
-        //TODO das passt noch nicht
+        //TODO this is not right, too loose
         //(iff gene is in a selected panel and green) OR (PS1 = true OR PVS1 = true)
         return foundThroughGreenPanelApp || (isPS1(variant) || isPSV1(variant)); //TODO evaluate if this is a performance problem
     }
@@ -230,7 +163,7 @@ public class AcmgTierer {
                 //check if value is larger than a threshold, if yes return false
                 if (StringUtils.isNumeric(value)) {
                     double doubleValue = Double.parseDouble(value);
-                    if (doubleValue > 0.001) { //TODO is this extremely low
+                    if (doubleValue > 0.001) { //TODO maybe adapt this threshold
                         return false;
                     }
                 }
@@ -274,8 +207,25 @@ public class AcmgTierer {
      * @return true if the tier applies
      */
     public boolean isPM5(Variant variant) {
-        List<GenomicPosition> result = clinvar.findPathogenics(variant.getChrom(), variant.getPos());
-        return result != null && !result.isEmpty();
+        List<GenomicPosition> resultNucleotide = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos());
+
+        List<GenomicPosition> resultProtein = null;
+        String hgvspKey = "info_csq_hgvsp";
+        if (variant.getInfo().containsKey(hgvspKey)) {
+            String hgvsp = variant.getInfo().get(hgvspKey);
+            resultProtein = clinvar.findPathogenicsByHgvsPNonMatchAlt(hgvsp);
+        }
+
+        int foundResults = 0;
+        if (resultNucleotide != null) {
+            foundResults += resultNucleotide.size();
+        }
+
+        if (resultProtein != null) {
+            foundResults += resultProtein.size();
+        }
+
+        return foundResults > 0;
     }
 
     /**
@@ -305,7 +255,6 @@ public class AcmgTierer {
 
         //check if everyone who is not affected is 0/0 and everyone who is affected is not 0/0
         for (HumanDTO humanDTO : humansDTO.getHumans()) {
-            //TODO check if genotype can be accessed like this
             String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
             boolean hasNoMutation = genotypeParent.equals("0/0") || genotypeParent.equals("0|0");
             boolean affectedButNoMutation = humanDTO.getIsAffected() && hasNoMutation;
@@ -330,10 +279,55 @@ public class AcmgTierer {
      * @return true if the variants confirms with the tier
      */
     public boolean isPP3(Variant variant) {
-        //TODO CADD Indel raw or CADD raw > 10 -> CADD+
-        //wenn nur cadd 1/1 oder 1/2 oder 2/3 oder 2/4
-        //TODO check GERP, Polyphen=deleterious,possiblydamaging, SIFT=deleterious,possiblydamaging, CADD (what thresholds), what if some values are not present
-        return false;
+        //TODO check thresholds
+        //TODO make sure these are not co-dependent
+        //TODO what about info_cadd_phred, info_caddind_phred", "info_caddind_raw
+
+        int numberOfScores = 0;
+        int numberOfPathogenicScores = 0;
+
+        //info_csq_gerp_rs > 4
+        String gerpKey = "info_csq_gerp_rs";
+        if (variant.getInfo().containsKey(gerpKey)) {
+            numberOfScores++;
+            if (StringUtils.isNumeric(variant.getInfo().get(gerpKey))) {
+                if (Double.parseDouble(variant.getInfo().get(gerpKey)) >= 4.0) {
+                    numberOfPathogenicScores++;
+                }
+            }
+        }
+
+        //info_cadd_raw > 10
+        String caddKey = "info_cadd_raw";
+        if (variant.getInfo().containsKey(caddKey)) {
+            numberOfScores++;
+            if (StringUtils.isNumeric(variant.getInfo().get(caddKey))) {
+                if (Double.parseDouble(variant.getInfo().get(caddKey)) >= 10.0) {
+                    numberOfPathogenicScores++;
+                }
+            }
+        }
+
+        //info_csq_polyphen tolower contains 'damaging'
+        String polyphenKey = "info_csq_polyphen";
+        if (variant.getInfo().containsKey(polyphenKey)) {
+            numberOfScores++;
+            if (variant.getInfo().get(polyphenKey).toLowerCase().contains("damaging")) {
+                numberOfPathogenicScores++;
+            }
+        }
+
+        //OK info_csq_sift = deleterious
+        String siftKey = "info_csq_sift";
+        if (variant.getInfo().containsKey(siftKey)) {
+            numberOfScores++;
+            if (variant.getInfo().get(siftKey).toLowerCase().contains("deleterious")) {
+                numberOfPathogenicScores++;
+            }
+        }
+
+        //if there is at least a score and the majority of scores are pathogenic
+        return numberOfScores > 0 && 2 * numberOfPathogenicScores >= numberOfScores;
     }
 
     public boolean isPP4(Variant variant) {
@@ -392,7 +386,6 @@ public class AcmgTierer {
      */
     public boolean isBS4(Variant variant) {
         //needs trio or at least a multi person sample. True if a healthy parent has the same mutation
-
         //get rid of non multi person sample
         if (humansDTO == null || humansDTO.getHumans().size() <= 1) {
             return false;
@@ -400,7 +393,6 @@ public class AcmgTierer {
 
         //check if there is at least one person who is affected but has 0/0 or who is not affected but has not 0/0
         for (HumanDTO humanDTO : humansDTO.getHumans()) {
-            //TODO check if genotype can be accessed like this
             String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
             boolean hasNoMutation = genotypeParent.equals("0/0") || genotypeParent.equals("0|0");
             boolean affectedButNoMutation = humanDTO.getIsAffected() && hasNoMutation;
@@ -440,75 +432,5 @@ public class AcmgTierer {
     public boolean isBP7(Variant variant) {
         return false; //TODO similar amino acid and spliceAI non pathogenic(?) EnsemblImpact also GERP
     }
-
-    //helper methods
-
-    public int positionOfFirstUppercaseLetter(String text) {
-        for (int i = 0; i < text.length(); i++) {
-            if (Character.isUpperCase(text.charAt(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public String tripletDifference(String reference, String actual, char wildcard) {
-        String cleanReference = reference.toUpperCase();
-        String cleanActual = actual.toUpperCase();
-
-        assert cleanReference.length() == 3 && cleanActual.length() == 3;
-
-        String difference = "";
-        for (int i = 0; i < 3; i++) {
-            if (cleanReference.charAt(i) == cleanActual.charAt(i)) {
-                difference += wildcard;
-            } else {
-                difference += cleanActual.charAt(i);
-            }
-        }
-
-        return difference;
-    }
-
-    public boolean equalAltAndDifference(String alt, String difference, int start, char wildcard) {
-        alt = alt.toUpperCase();
-        difference = difference.toUpperCase();
-
-        assert difference.length() == 3;
-
-        for (int i = 0; i < start; i++) {
-            alt = wildcard + alt;
-        }
-
-        while (alt.length() < 3) {
-            alt += wildcard;
-        }
-
-        /*
-        alt: ACGGGGGGGGGGGGG
-        altnew: _ACGGGGGGGGGGGGG
-        difference: _AC
-        start: 1
-        True
-
-        alt: ACGGGGGGGGGGGGG
-        altnew: _ACGGGGGGGGGGGGG
-        difference: _A_
-        False
-
-        alt: A
-        altnew: _A_
-        difference: _A_
-        True
-
-        alt: AAA
-        altnew: AAA
-        difference: A_A
-        False
-         */
-
-        return alt.substring(0, 3).equals(difference);
-    }
-
 
 }
