@@ -83,6 +83,7 @@ public class AcmgTierer {
             return false;
         }
         String hgvsp = variant.getInfo().get(hgvspKey);
+        System.out.println(hgvsp + "=hgvspkey");
         return !clinvar.findPathogenicsByHgvsP(hgvsp).isEmpty();
     }
 
