@@ -161,12 +161,17 @@ public class AcmgTierer {
     public boolean isPM2(Variant variant) {
         List<String> alleleFrequencies = Arrays.asList("info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af", "info_csq_gnomadg_ac", "info_csq_gnomadg_af", "info_csq_gnomadg_controls_ac", "info_csq_gnomadg_controls_af", "info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe", "info_csq_gnomadg_af_afr", "info_csq_gnomadg_af_amr", "info_csq_gnomadg_af_asj", "info_csq_gnomadg_af_eas", "info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe", "info_csq_gnomadg_af_oth", "info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af","info_csq_gnomadg_ac","info_csq_gnomadg_af","info_csq_gnomadg_controls_ac","info_csq_gnomadg_controls_af","info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe","info_csq_gnomadg_af_afr","info_csq_gnomadg_af_amr","info_csq_gnomadg_af_asj","info_csq_gnomadg_af_eas","info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe","info_csq_gnomadg_af_oth", "info_csq_gnomad_af", "info_csq_gnomad_afr_af", "info_csq_gnomad_amr_af", "info_csq_gnomad_asj_af", "info_csq_gnomad_eas_af", "info_csq_gnomad_fin_af", "info_csq_gnomad_nfe_af", "info_csq_gnomad_oth_af", "info_csq_gnomad_sas_af");
 
+        System.out.println("here0 " + variant.getChrom());
         for (String key : alleleFrequencies) {
+            System.out.println("here1 " + key );
             if (variant.getInfo().containsKey(key) && variant.getInfo().get(key) != null) {
                 String value = variant.getInfo().get(key);
+                System.out.println("here2 " + value);
                 //check if value is larger than a threshold, if yes return false
                 if (StringUtils.isNumeric(value)) {
+                    System.out.println("here3 " + value);
                     double doubleValue = Double.parseDouble(value);
+                    System.out.println("here4 " + doubleValue);
                     if (doubleValue > 0.001) { //TODO maybe adapt this threshold
                         return false;
                     }

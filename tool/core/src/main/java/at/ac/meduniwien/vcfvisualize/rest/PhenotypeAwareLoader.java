@@ -110,9 +110,10 @@ public class PhenotypeAwareLoader {
         queryResultDTO.getVariants().sort((a, b) -> {
             int scoreA = a.getAcmgTiers().stream().mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
             int scoreB = b.getAcmgTiers().stream().mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
-            System.out.println("scores " + scoreA + " " + scoreB);
             return Integer.compare(scoreB, scoreA);
         });
+
+        queryResultDTO.getVariants().forEach(v -> System.out.println(v.getVariant().getChrom() + ":" + v.getVariant().getPos()));
 
         queryResultDTO.elapsedMilliseconds = System.currentTimeMillis() - startTime;
 
