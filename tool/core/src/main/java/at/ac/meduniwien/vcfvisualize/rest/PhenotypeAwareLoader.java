@@ -122,10 +122,12 @@ public class PhenotypeAwareLoader {
 
     private Expression buildExpressionByGenes(List<String> genes) {
         Expression geneExpression = new EnumExpression(symbolKey, genes);
-        Expression clinvarEnum = new EnumExpression("info_csq_clinvar_clnsig", new LinkedList<>(clinvar.getLikelyPathogenicAndPathogenicTerms()));
+        /*Expression clinvarEnum = new EnumExpression("info_csq_clinvar_clnsig", new LinkedList<>(clinvar.getLikelyPathogenicAndPathogenicTerms()));
         Expression clinEnum = new EnumExpression("info_csq_clin_sig", new LinkedList<>(clinvar.getLikelyPathogenicAndPathogenicTerms()));
-        Expression pathogenicityExpression = new IntermediateExpression(new ArrayList<>(Collections.singletonList("OR")), new ArrayList<>(Arrays.asList(clinEnum, clinvarEnum)));
-        return new IntermediateExpression(new ArrayList<>(Collections.singletonList("AND")), new ArrayList<>(Arrays.asList(geneExpression, pathogenicityExpression)));
+        Expression pathogenicityExpression = new IntermediateExpression(new ArrayList<>(Collections.singletonList("OR")), new ArrayList<>(Arrays.asList(clinEnum, clinvarEnum)));*/
+        Expression afExpression = new BasicExpression<Double>("info_af_raw", "<", 0.05);
+        Expression impactExpression = new EnumExpression("info_csq_impact", Arrays.asList("HIGH", "LOW", "MODERATE", "null"));
+        return new IntermediateExpression(new ArrayList<>(Arrays.asList("AND", "AND")), new ArrayList<>(Arrays.asList(geneExpression, afExpression, impactExpression)));
     }
 
     private Expression buildExpressionSelectingByExactGenomicPositions(List<GenomicPosition> genomicPositionsByHpo) {

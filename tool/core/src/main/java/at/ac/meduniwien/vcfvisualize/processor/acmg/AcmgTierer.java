@@ -5,13 +5,13 @@ import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.GenomicPosition;
 import at.ac.meduniwien.vcfvisualize.model.Variant;
 import at.ac.meduniwien.vcfvisualize.rest.dto.HumanDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.HumansDTO;
-import com.sun.xml.bind.v2.TODO;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class AcmgTierer {
