@@ -44,7 +44,7 @@ Before importing a VCF file make sure that the application is up and running. On
 
 After cloning the repository and navigating to the folder containing the Dockerfile ``/importer/Dockerfile``, you can use the following command to build the container. Depending on your local setup you might need to prepend `sudo`.
 
-<pre><code>docker build -t vcfimport .</code></pre>
+<pre><code>sudo docker build -t vcfimport .</code></pre>
 
 ## Annotating a VCF file
 
@@ -58,12 +58,14 @@ Once the container has been built successfully, you can start the import by exec
 - Replace <b>/absolute/path/to/your/file</b> with the absolute path to the folder your file is located in.
 - Replace <b>file.vcf</b> with the name of your VCF file you want to import. 
 
-<pre><code>docker run --rm -it --net="host" -v <b>/absolute/path/to/your/vcffolder</b>:/files vcfimport:latest /files/<b>file.vcf</b> jdbc:postgresql://localhost:10938/sample postgres password</code></pre>
+<pre><code>sudo docker run --rm -it --net="host" -v <b>/absolute/path/to/your/vcffolder</b>:/files vcfimport:latest ./import /files/<b>file.vcf</b> jdbc:postgresql://localhost:10938/sample postgres password</code></pre>
 
 <i>Note that if you decided to use a different PostgreSQL host, username or password that change needs to be reflected in the command:
-```docker run --rm -it --net="host" -v <folderpath>:/files vcfimport:latest /files/<filename> <postgreshost>/<database> <postgresusername> <postgrespassword>```</i>
+```sudo docker run --rm -it --net="host" -v <folderpath>:/files vcfimport:latest ./import /files/<filename> <postgreshost>/<database> <postgresusername> <postgrespassword>```</i>
 
 > We recommend starting your first import with one of the **annotated** sample files provided in this repository like ```demo_data/HG001_GIAB_annotated_downsampled.vcf```
+  
+After successfully importing the file you can click 'Synchronize Datasets' in the Admin page to immediately view the newly imported sample. Synchronization of datasets is also performed automatically each night.
 
 The importer should now import your file and will terminate upon completion. 
 This may take some time depending on the size of your VCF file. The file is traversed a total of two times.
