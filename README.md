@@ -58,10 +58,10 @@ Once the container has been built successfully, you can start the import by exec
 - Replace <b>/absolute/path/to/your/file</b> with the absolute path to the folder your file is located in.
 - Replace <b>file.vcf</b> with the name of your VCF file you want to import. 
 
-<pre><code>docker run --rm -it --net="host" -v <b>/absolute/path/to/your/vcffolder</b>:/files vcfimport:latest /files/<b>file.vcf</b> jdbc:postgresql://localhost:10938/sample postgres password</code></pre>
+<pre><code>sudo docker run --rm -it --net="host" -v <b>/absolute/path/to/your/vcffolder</b>:/files vcfimport:latest /files/<b>file.vcf</b> jdbc:postgresql://localhost:10938/sample postgres password</code></pre>
 
 <i>Note that if you decided to use a different PostgreSQL host, username or password that change needs to be reflected in the command:
-```docker run --rm -it --net="host" -v <folderpath>:/files vcfimport:latest /files/<filename> <postgreshost>/<database> <postgresusername> <postgrespassword>```</i>
+```sudo docker run --rm -it --net="host" -v <folderpath>:/files vcfimport:latest /files/<filename> <postgreshost>/<database> <postgresusername> <postgrespassword>```</i>
 
 > We recommend starting your first import with one of the **annotated** sample files provided in this repository like ```demo_data/HG001_GIAB_annotated_downsampled.vcf```
 
