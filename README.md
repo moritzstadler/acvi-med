@@ -5,6 +5,8 @@
 This tool is designed to allow clinicians and researchers to annotate and analyze VCF files.
 **TODO add video here once everything is finished**
 
+**TODO add installation video**
+
 ## Architecture
 
 ![system architecture](/misc/diagrams/architecture.png)
@@ -65,7 +67,7 @@ Once the container has been built successfully, you can start the import by exec
 
 > We recommend starting your first import with one of the **annotated** sample files provided in this repository like ```demo_data/HG001_GIAB_annotated_downsampled.vcf```
   
-After successfully importing the file you can click 'Synchronize Datasets' in the Admin page to immediately view the newly imported sample. Synchronization of datasets is also performed automatically each night.
+After successfully importing the file you can change to your browser, click 'Synchronize Datasets' in the Admin page to immediately view the newly imported sample. Synchronization of datasets is also performed automatically each night. You can now create a study for your sample and allow different users to access it.
 
 The importer should now import your file and will terminate upon completion. 
 This may take some time depending on the size of your VCF file. The file is traversed a total of two times.
@@ -82,7 +84,7 @@ Database indices are created after every variant has been inserted into the tabl
 ### Add a .cram or .bam file
 
 Lastly you can add a `.cram` or `.bam` file to allow researchers and clinicians to view the individual reads via [the Integrative Genomics Viewer IGV](https://igv.org/).
-Add these files to the `~/data/files/` directory (or your directory in case you changed the [docker-compose.yaml file](tool/docker-compose.yaml)). You can now link these files to your patient samples by entering the location `/bam/somebam.bam` alongside the sample in the GUI of your admin panel.
+Add these files to the `~/data/files/` directory (or your directory in case you changed the [docker-compose.yaml file](tool/docker-compose.yaml)). You can now link these files to your patient samples by entering the location `/bam/somebam.bam` alongside the sample in the GUI of your admin panel. Please note that the .bam and .bai file should have the same file name and be stored in the same location (e. g. `sample.bam` and `sample.bai`).
 
   
 **[Learn how customize the application like changing filterable items, names and descriptions.](CUSTOMIZE.md)**
