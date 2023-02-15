@@ -1,4 +1,5 @@
 **TODO: Add DOI and citation info and paper**
+**TODO: add sudo lsof -i :80**
 
 # Introduction
 
