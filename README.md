@@ -1,5 +1,8 @@
 **TODO: Add DOI and citation info and paper**
+
 **TODO: add sudo lsof -i :80**
+
+**TODO: troubleshooting for google cloud: Apache stop, url with https**
 
 # Introduction
 
