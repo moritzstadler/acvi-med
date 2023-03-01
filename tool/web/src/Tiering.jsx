@@ -40,11 +40,10 @@ export default function Tiering(props) {
     };
 
     const toggleTierView = (id) => {
-      setOpenExplanations([]); //added to close all other explanations
       if (openExplanations.includes(id)) {
         setOpenExplanations(openExplanations.filter(oe => oe != id));
       } else {
-        setOpenExplanations([...openExplanations, id]);
+        setOpenExplanations([id]);
       }
       console.log(openExplanations);
     };
@@ -505,7 +504,7 @@ function groupVariantsByVid(result) {
         "BS1", "BS2", "BS3", "BS4",
         "BP1", "BP2", "BP3", "BP4", "BP5", "BP6", "BP7"];
 
-    var acmgTiersSorted = acmgTiers.sort((n1, n2) => order.indexOf(n1.tier) - order.indexOf(n2.tier));
+    var acmgTiersSorted = acmgTiers.sort((n1, n2) => order.indexOf(n1) - order.indexOf(n2));
 
     var group = {
       chrom: groupedVariants[keys[i]][0].variant.chrom,
@@ -517,15 +516,18 @@ function groupVariantsByVid(result) {
   }
 
   var resultingVariantsSorted = resultingVariants.sort((v1, v2) => {
-    var score1 = 0.0;
+    var ranks1 = [];
     for (var i = 0; i < v1.acmgTiers.length; i++) {
-      score1 += (order.length - order.indexOf(v1.acmgTiers[i])) * order.length * order.length;
+      ranks1.push(order.indexOf(v1.acmgTiers[i]));
     }
-    var score2 = 0.0;
+    var ranks2 = [];
     for (var i = 0; i < v2.acmgTiers.length; i++) {
-      score2 += (order.length - order.indexOf(v2.acmgTiers[i])) * order.length * order.length;
+      ranks2.push(order.indexOf(v2.acmgTiers[i]));
     }
-    return score2 - score1;
+
+    var sub12 = ranks1.filter(n => !ranks2.includes(n));
+    var sub21 = ranks1.filter(n => !ranks2.includes(n));
+    return Math.min(...sub12) - Math.min(...sub21);
   });
 
   result.variants = resultingVariantsSorted;

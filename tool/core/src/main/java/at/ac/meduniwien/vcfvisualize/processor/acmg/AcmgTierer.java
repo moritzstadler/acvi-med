@@ -232,8 +232,8 @@ public class AcmgTierer {
         AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
         List<String> alleleFrequencies = Arrays.asList("info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_af_raw", "info_controls_af_popmax", "info_csq_af", "info_csq_gnomad_af", "info_csq_gnomad_afr_af", "info_csq_gnomad_amr_af", "info_csq_gnomad_asj_af", "info_csq_gnomad_eas_af", "info_csq_gnomad_fin_af", "info_csq_gnomad_nfe_af", "info_csq_gnomad_oth_af", "info_csq_gnomad_sas_af", "info_csq_gnomadg_ac", "info_csq_gnomadg_af", "info_csq_gnomadg_af_afr", "info_csq_gnomadg_af_amr", "info_csq_gnomadg_af_asj", "info_csq_gnomadg_af_eas", "info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe", "info_csq_gnomadg_af_oth", "info_csq_gnomadg_controls_ac", "info_csq_gnomadg_controls_af", "info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe");
 
-        String maxPop = "";
-        double maxPopValue = Double.MIN_VALUE;
+        String maxPop = "Not found in any populations";
+        double maxPopValue = 0.0;
 
         for (String key : alleleFrequencies) {
             if (variant.getInfo().containsKey(key) && variant.getInfo().get(key) != null) {
