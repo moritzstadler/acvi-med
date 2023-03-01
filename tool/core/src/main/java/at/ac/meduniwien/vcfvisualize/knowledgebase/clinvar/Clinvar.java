@@ -308,22 +308,38 @@ public class Clinvar {
 
     public int countPathogenicOrLikelyPathogenicMissenseVariants(String gene) {
         initiate();
-        return pathogenicLikelyPathogenicMissenseVariantsByGene.get(cleanGeneName(gene));
+        String cleanGeneName = cleanGeneName(gene);
+        if (pathogenicLikelyPathogenicMissenseVariantsByGene.containsKey(cleanGeneName)) {
+            return pathogenicLikelyPathogenicMissenseVariantsByGene.get(cleanGeneName);
+        }
+        return 0;
     }
 
     public int countBenignMissenseVariants(String gene) {
         initiate();
-        return benignMissenseVariantsByGene.get(cleanGeneName(gene));
+        String cleanGeneName = cleanGeneName(gene);
+        if (benignMissenseVariantsByGene.containsKey(cleanGeneName)) {
+            return benignMissenseVariantsByGene.get(cleanGeneName(gene));
+        }
+        return 0;
     }
 
     public int countPathogenicOrLikelyPathogenicNullVariants(String gene) {
         initiate();
-        return pathogenicLikelyPathogenicNullVariantsByGene.get(cleanGeneName(gene));
+        String cleanGeneName = cleanGeneName(gene);
+        if (pathogenicLikelyPathogenicNullVariantsByGene.containsKey(cleanGeneName)) {
+            return pathogenicLikelyPathogenicNullVariantsByGene.get(cleanGeneName(gene));
+        }
+        return 0;
     }
 
     public int countPathogenicOrLikelyPathogenicNonNullVariants(String gene) {
         initiate();
-        return pathogenicLikelyPathogenicNonNullVariantsByGene.get(cleanGeneName(gene));
+        String cleanGeneName = cleanGeneName(gene);
+        if (pathogenicLikelyPathogenicNonNullVariantsByGene.containsKey(cleanGeneName)) {
+            return pathogenicLikelyPathogenicNonNullVariantsByGene.get(cleanGeneName(gene));
+        }
+        return 0;
     }
 
     /**
