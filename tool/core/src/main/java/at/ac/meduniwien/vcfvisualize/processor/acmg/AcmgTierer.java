@@ -732,7 +732,7 @@ public class AcmgTierer {
             numberOfScores++;
             if (variant.getInfo().get(polyphenKey).toLowerCase().contains("benign")) {
                 numberOfBenignScores++;
-                acmgTieringResult.addExplanation("Polyphen", Double.parseDouble(variant.getInfo().get(polyphenKey)));
+                acmgTieringResult.addExplanation("Polyphen", variant.getInfo().get(polyphenKey));
             }
         }
 
@@ -742,7 +742,7 @@ public class AcmgTierer {
             numberOfScores++;
             if (variant.getInfo().get(siftKey).toLowerCase().contains("tolerated")) {
                 numberOfBenignScores++;
-                acmgTieringResult.addExplanation("SIFT", Double.parseDouble(variant.getInfo().get(siftKey)));
+                acmgTieringResult.addExplanation("SIFT", variant.getInfo().get(siftKey));
             }
         }
 
