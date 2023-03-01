@@ -309,8 +309,8 @@ export default function Tiering(props) {
                                           return (
                                             <div className={"tierExplanation " + (openExplanations.includes(i + "." + index + "." + tr.tier) ? "" : "hidden")}>
                                               <div className="tierTitle">{tr.tier}</div>
-                                              <b>{getTierExplanation(tr.tier).title}</b><br/>
-                                              <div className="info">{getTierExplanation(tr.tier).description}</div>
+                                              <b>{getTierExplanation(tr.tier)?.title}</b><br/>
+                                              <div className="info">{getTierExplanation(tr.tier)?.description}</div>
                                               <hr/>
                                               <div className="info">Causes for why {tr.tier} applies to this variant:</div>
                                               {Object.keys(tr.explanation).map(k => (

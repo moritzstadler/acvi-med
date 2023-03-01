@@ -35,6 +35,10 @@
 		"title": "PP1 - Supporting evidence of pathogenicity",
 		"description": "Co-segregation with disease in multiple affected family members in a gene known to cause the disease. This only works in multi patient samples and depends on your entries on the search page."
 	},
+	"PP2": {
+		"title": "PP2 - Supporting evidence of pathogenicity",
+		"description": "Missense variant in a gene with low rate of benign missense mutations and for which missense mutation is a common mechanism of a disease."
+	},
 	"PP3": {
 		"title": "PP3 - Supporting evidence of pathogenicity",
 		"description": "Multiple lines of computational evidence support a deleterious effect on\nthe gene or gene product (conservation, evolutionary, splicing impact, etc). This tier applies if the majority of the available score out of GERP, CADD, SIFT and Polyphen are pathogenic. Threshold for GERP is >= 4, Threshold for CADD is >= 25.3"
@@ -51,7 +55,12 @@
 		"title": "BS4 - Strong evidence of benign impact",
 		"description": "Lack of segregation in affected members of a family. This only works in multi patient samples and relies on your entries on the search page."
 	},
+	"BP1": {
+		"title": "BP1 - Supporting evidence of benign impact",
+		"description": "Missense variant in a gene for which primarily truncating variants are known to cause disease."
+	},
 	"BP4": {
-		"title": "BP4 - Multiple lines of computational evidence suggest no impact on gene or\ngene product (conservation, evolutionary, splicing impact, etc). This applies if at least one score out of GERP, CADD, SIFT, Polyphen can be calculated and all calculated scores predict this mutation to be benign (GERP <= -4.54, CADD <= 17.3)."
+		"title": "BP4 - Supporting evidence of benign impact",
+		"description": "Multiple lines of computational evidence suggest no impact on gene or gene product (conservation, evolutionary, splicing impact, etc). This applies if at least one score out of GERP, CADD, SIFT, Polyphen can be calculated and all calculated scores predict this mutation to be benign (GERP <= -4.54, CADD <= 17.3)."
 	}
 }
