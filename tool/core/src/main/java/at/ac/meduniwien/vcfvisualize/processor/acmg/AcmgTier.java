@@ -2,7 +2,7 @@ package at.ac.meduniwien.vcfvisualize.processor.acmg;
 
 public enum AcmgTier {
 
-    PSV1,
+    PVS1,
     PS1, PS2, PS3, PS4,
     PM1, PM2, PM3, PM4, PM5, PM6,
     PP1, PP2, PP3, PP4, PP5,

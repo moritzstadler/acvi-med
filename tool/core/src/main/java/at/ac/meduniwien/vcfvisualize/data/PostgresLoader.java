@@ -35,7 +35,7 @@ public class PostgresLoader {
         this.databaseUser = databaseUser;
         this.databasePassword = databasePassword;
 
-        initConnectionPool();
+        //initConnectionPool(); //TODO remove comment
     }
 
     private void initConnectionPool() {
@@ -311,5 +311,13 @@ public class PostgresLoader {
         returnConnection(connection);
 
         return count;
+    }
+
+    @SneakyThrows
+    public void deleteSample(String name) {
+        Connection connection = getConnection();
+        String sql = String.format("DROP TABLE IF EXISTS %s", name);
+        PreparedStatement dropTable = connection.prepareStatement(sql);
+        dropTable.executeQuery();
     }
 }

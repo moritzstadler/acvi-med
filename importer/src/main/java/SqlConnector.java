@@ -384,6 +384,12 @@ public class SqlConnector {
         System.out.println(impactSql);
         executeStatement(impactSql);
 
+        //create index for tiering
+        String impactIndexName = tableUniqueIndexName + "tiering" + Math.abs((tableName).hashCode()) + randomString(15);
+        String impactSql = String.format("create index %s on %s (info_csq_symbol, info_af_raw, info_csq_impact, pid);", impactIndexName, tableName);
+        System.out.println(impactSql);
+        executeStatement(impactSql);
+
         int count = 0;
         for (String col : colsToIndex) {
             String indexName = tableUniqueIndexName + count + Math.abs((tableName + col + count).hashCode()) + randomString(15);

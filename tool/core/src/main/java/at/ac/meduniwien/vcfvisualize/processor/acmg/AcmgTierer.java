@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AcmgTierer {
@@ -30,21 +31,22 @@ public class AcmgTierer {
      * @return a list of acmg tiers
      */
     @SneakyThrows
-    public List<AcmgTier> performAcmgTiering(Variant variant, boolean foundThroughClinvar, boolean foundThroughGreenPanelApp, HumansDTO humansDTO) {
+    public List<AcmgTieringResult> performAcmgTiering(Variant variant, boolean foundThroughClinvar, boolean foundThroughGreenPanelApp, HumansDTO humansDTO) {
         this.foundThroughClinvar = foundThroughClinvar;
         this.foundThroughGreenPanelApp = foundThroughGreenPanelApp;
         this.humansDTO = humansDTO;
 
-        List<AcmgTier> tiers = new LinkedList<>();
+        List<AcmgTieringResult> tiers = new LinkedList<>();
 
         //TODO only take green panels!
         //TODO check if the whole system can find stuff like Huntington's disease mutations?
 
         for (AcmgTier acmgTier : AcmgTier.values()) {
-            //calls isPSV1(variant), isPS1(variant), isPS2(variant) ...
-            boolean isTier = (boolean) this.getClass().getMethod("is" + acmgTier, Variant.class).invoke(this, variant);
-            if (isTier) {
-                tiers.add(acmgTier);
+            //calls isPVS1(variant), isPS1(variant), isPS2(variant) ...
+            AcmgTieringResult result = (AcmgTieringResult) this.getClass().getMethod("is" + acmgTier, Variant.class).invoke(this, variant);
+            result.setTier(acmgTier);
+            if (result.isTierApplies()) {
+                tiers.add(result);
             }
         }
 
@@ -59,10 +61,34 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the tier applies
      */
-    public boolean isPSV1(Variant variant) {
+    public AcmgTieringResult isPVS1(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
         //check if the chrom pos alt entry is known and Pathogenic or Likely_pathogenic as defined by ClinVar
-        List<GenomicPosition> result = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos(), variant.getAlt());
-        return result != null && !result.isEmpty();
+        List<GenomicPosition> clinvarResult = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos(), variant.getAlt());
+        boolean inClinvarAsPathogenicOrLikelyPathogenic = clinvarResult != null && !clinvarResult.isEmpty();
+
+        //this covers null variant, checking for frameshift, missense, etc. is not necessary (https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html#consequences)
+        boolean impactful = variant.getInfo().containsKey("info_csq_impact") && Arrays.asList("high", "moderate").contains(variant.getInfo().get("info_csq_impact").toLowerCase());
+        acmgTieringResult.addExplanation("Impact", variant.getInfo().get("info_csq_impact"));
+
+        boolean lossOfFunctionIsKnownMechanism = false;
+        if (variant.getInfo().containsKey("info_csq_symbol")) {
+            String gene = variant.getInfo().get("info_csq_symbol");
+
+            int numberOfPathogenicOrLikelyPathogenicNullVariants = clinvar.countPathogenicOrLikelyPathogenicNullVariants(gene);
+            acmgTieringResult.addExplanation("Number of pathogenic or likely pathogenic null variants", numberOfPathogenicOrLikelyPathogenicNullVariants);
+
+            boolean hasAtLeastOnePathogenicOrLikelyPathogenicNullVariant = numberOfPathogenicOrLikelyPathogenicNullVariants > 0;
+            lossOfFunctionIsKnownMechanism = hasAtLeastOnePathogenicOrLikelyPathogenicNullVariant;
+        }
+
+
+        //TODO check if impactful should contain missense or not (currently it does while the .txt does not)
+        //TODO check if this should be && inClinvarAsPathogenicOrLikelyPathogenic
+        //TODO test
+        boolean pvs1Applies = impactful && lossOfFunctionIsKnownMechanism;
+        return acmgTieringResult.setTierApplies(pvs1Applies);
     }
 
     /**
@@ -73,21 +99,26 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the tier applies
      */
-    public boolean isPS1(Variant variant) {
+    public AcmgTieringResult isPS1(Variant variant) {
         //in the clinvar file '=' which can be a part of HGVSp is stored as %3D
         //chrom can be 1, 2 ...  X and Y and MT
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
 
         //check if the protein change (HGVSp) is known to ClinVar as Pathogenic or Likely_pathogenic. In that case the nucleotides might be different but the protein is still similar to a pathogenic or likely pathogenic protein
         String hgvspKey = "info_csq_hgvsp";
         if (!variant.getInfo().containsKey(hgvspKey)) {
-            return false;
+            return new AcmgTieringResult(false);
         }
         String hgvsp = variant.getInfo().get(hgvspKey);
         if (hgvsp == null) {
-            return false;
+            return new AcmgTieringResult(false);
         }
 
-        return clinvar.findPathogenicsByHgvsP(hgvsp) != null && !clinvar.findPathogenicsByHgvsP(hgvsp).isEmpty();
+        List<GenomicPosition> result = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos(), variant.getAlt());
+        boolean identicalFoundInClinvar = result != null && !result.isEmpty();
+
+        boolean ps1Applies = (clinvar.findPathogenicsByHgvsP(hgvsp) != null && !clinvar.findPathogenicsByHgvsP(hgvsp).isEmpty()) || identicalFoundInClinvar;
+        return acmgTieringResult.setTierApplies(ps1Applies);
     }
 
     /**
@@ -97,37 +128,16 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the tier applies
      */
-    public boolean isPS2(Variant variant) {
-        //TODO confirmation of paternity and maternity by counting mendelian errors
+    public AcmgTieringResult isPS2(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
 
-        //get rid of non trios
-        if (humansDTO == null || humansDTO.getHumans().size() != 3) {
-            return false;
-        }
+        AcmgTieringResult pm6 = isPM6(variant);
+        boolean ps2Applies = pm6.isTierApplies() && humansDTO.isParentHoodConfirmed();
 
-        //get rid of trios where the parents are affected
-        for (HumanDTO humanDTO : humansDTO.getHumans()) {
-            boolean isHealthyNonIndexPerson = !humanDTO.getIsAffected() && !humanDTO.getIsIndex();
-            boolean isAffectedIndexPerson = humanDTO.getIsAffected() && humanDTO.getIsIndex();
-            if (!(isHealthyNonIndexPerson || isAffectedIndexPerson)) {
-                return false;
-            }
-        }
+        acmgTieringResult.setExplanation(pm6.getExplanation());
+        acmgTieringResult.addExplanation("Parenthood confirmed", "By researcher");
 
-        //check if parents are 0/0
-        List<HumanDTO> parents = new LinkedList<>();
-        for (HumanDTO humanDTO : humansDTO.getHumans()) {
-            if (!humanDTO.getIsIndex()) {
-                //humanDTO is a parent, check if they are 0/0
-                String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
-                boolean hasNoMutation = genotypeParent.equals("0/0") || genotypeParent.equals("0|0");
-                if (!hasNoMutation) {
-                    return false;
-                }
-            }
-        }
-
-        return true; //TODO implement paternity test
+        return acmgTieringResult.setTierApplies(ps2Applies);
     }
 
     /**
@@ -137,18 +147,68 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the tier applies
      */
-    public boolean isPS3(Variant variant) {
-        //TODO this is not right, too loose
-        //(iff gene is in a selected panel and green) OR (PS1 = true OR PVS1 = true)
-        return foundThroughGreenPanelApp || (isPS1(variant) || isPSV1(variant)); //TODO evaluate if this is a performance problem
+    public AcmgTieringResult isPS3(Variant variant) {
+        //not possible
+        return new AcmgTieringResult(false);
     }
 
-    public boolean isPS4(Variant variant) {
-        return false; //TODO will be difficult
+    public AcmgTieringResult isPS4(Variant variant) {
+        //not possible
+        return new AcmgTieringResult(false);
     }
 
-    public boolean isPM1(Variant variant) {
-        return false; //TODO needs annotation
+    /**
+     * Located in a mutational hot spot and/or critical and well-established
+     * functional domain (e.g. active site of an enzyme) without benign variation
+     *
+     * @param variant the variant to be checked
+     * @return true if the tier applies
+     */
+    public AcmgTieringResult isPM1(Variant variant) {
+        //TODO
+        // true wenn PFAM in variante in smartclinvar.vcf enthalten ist
+
+        //TODO this is possible
+
+        //TODO franklin:
+        // Non-truncating non-synonymous variant &&
+        // Exonic hotspot
+        // 5 pathogenic or likely pathogenic reported variants were found in a 15bp region surrounding this variant in exon 5 within the region 135800973-135800988 without any missense benign variant
+
+
+        //TODO final: (Non-truncating non-synonymous variant) && check all mutations for this (area=gene? or +-15bp) without any of them being non p/lp
+
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
+        boolean onlyPathogenicLikelyPathogenicInArea = true;
+        int area = 15;
+        int pos = -2 * area;
+
+        try {
+            pos = Integer.parseInt(variant.getPos());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = pos - area; i <= pos + area; i++) {
+            List<GenomicPosition> nonPathogenics = clinvar.findNonPathogenics(variant.getChrom(), i + "");
+            if (nonPathogenics != null && nonPathogenics.size() > 0) {
+                onlyPathogenicLikelyPathogenicInArea = false;
+                break;
+            }
+        }
+        acmgTieringResult.addExplanation("No benign variations in this area", variant.getChrom() + ":" + pos + " +-" + area + "bp");
+
+        boolean impactful = variant.getInfo().containsKey("info_csq_impact") && Arrays.asList("high", "moderate").contains(variant.getInfo().get("info_csq_impact").toLowerCase());
+        acmgTieringResult.addExplanation("Impact", variant.getInfo().get("info_csq_impact"));
+
+        boolean onGene = variant.getInfo().containsKey("info_csq_symbol");
+        if (onGene) {
+            acmgTieringResult.addExplanation("On gene", variant.getInfo().get("info_csq_symbol"));
+        }
+
+        boolean pm1Applies = onGene && impactful && onlyPathogenicLikelyPathogenicInArea;
+        return acmgTieringResult.setTierApplies(pm1Applies);
     }
 
     /**
@@ -158,8 +218,12 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the variant confirms with the tier
      */
-    public boolean isPM2(Variant variant) {
-        List<String> alleleFrequencies = Arrays.asList("info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af", "info_csq_gnomadg_ac", "info_csq_gnomadg_af", "info_csq_gnomadg_controls_ac", "info_csq_gnomadg_controls_af", "info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe", "info_csq_gnomadg_af_afr", "info_csq_gnomadg_af_amr", "info_csq_gnomadg_af_asj", "info_csq_gnomadg_af_eas", "info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe", "info_csq_gnomadg_af_oth", "info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af","info_csq_gnomadg_ac","info_csq_gnomadg_af","info_csq_gnomadg_controls_ac","info_csq_gnomadg_controls_af","info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe","info_csq_gnomadg_af_afr","info_csq_gnomadg_af_amr","info_csq_gnomadg_af_asj","info_csq_gnomadg_af_eas","info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe","info_csq_gnomadg_af_oth", "info_csq_gnomad_af", "info_csq_gnomad_afr_af", "info_csq_gnomad_amr_af", "info_csq_gnomad_asj_af", "info_csq_gnomad_eas_af", "info_csq_gnomad_fin_af", "info_csq_gnomad_nfe_af", "info_csq_gnomad_oth_af", "info_csq_gnomad_sas_af");
+    public AcmgTieringResult isPM2(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+        List<String> alleleFrequencies = Arrays.asList("info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_af_raw", "info_controls_af_popmax", "info_csq_af", "info_csq_gnomad_af", "info_csq_gnomad_afr_af", "info_csq_gnomad_amr_af", "info_csq_gnomad_asj_af", "info_csq_gnomad_eas_af", "info_csq_gnomad_fin_af", "info_csq_gnomad_nfe_af", "info_csq_gnomad_oth_af", "info_csq_gnomad_sas_af", "info_csq_gnomadg_ac", "info_csq_gnomadg_af", "info_csq_gnomadg_af_afr", "info_csq_gnomadg_af_amr", "info_csq_gnomadg_af_asj", "info_csq_gnomadg_af_eas", "info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe", "info_csq_gnomadg_af_oth", "info_csq_gnomadg_controls_ac", "info_csq_gnomadg_controls_af", "info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe");
+
+        String maxPop = "";
+        double maxPopValue = Double.MIN_VALUE;
 
         for (String key : alleleFrequencies) {
             if (variant.getInfo().containsKey(key) && variant.getInfo().get(key) != null) {
@@ -168,19 +232,28 @@ public class AcmgTierer {
                 try {
                     double doubleValue = Double.parseDouble(value);
                     if (doubleValue > 0.001) { //TODO maybe adapt this threshold
-                        return false;
+                        return new AcmgTieringResult(false);
                     }
+
+                    if (doubleValue > maxPopValue) {
+                        maxPopValue = doubleValue;
+                        maxPop = key;
+                    }
+
                 } catch (NumberFormatException e) {
                     //System.out.println("Cannot parse AF " + value);
                 }
             }
         }
 
-        return true;
+        acmgTieringResult.addExplanation("Population with highest frequency", maxPop);
+        acmgTieringResult.addExplanation("Highest allele frequency throughout populations", maxPopValue);
+        return acmgTieringResult.setTierApplies(true);
     }
 
-    public boolean isPM3(Variant variant) {
-        return false; //TODO impossible(?) check haplotype? could be possible for trios
+    public AcmgTieringResult isPM3(Variant variant) {
+        //not possible
+        return new AcmgTieringResult(false);
     }
 
     /**
@@ -190,18 +263,24 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the variant confirms with the tier
      */
-    public boolean isPM4(Variant variant) {
+    public AcmgTieringResult isPM4(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
         //info_csq_consequence
         String key = "info_csq_consequence";
         if (variant.getInfo().containsKey(key)) {
             String value = variant.getInfo().get(key);
             if (value.contains("inframe_insertion") || value.contains("inframe_deletion")) {
-                return true; //TODO has to be in a non-repeat region or stop-loss variants
+                acmgTieringResult.addExplanation("Variant type", value);
+                return acmgTieringResult.setTierApplies(true); //TODO has to be in a non-repeat regions
                 //TODO UCSC repeat tracks
+            } else if (value.contains("stop_lost")) {
+                acmgTieringResult.addExplanation("Variant type", value);
+                return acmgTieringResult.setTierApplies(true);
             }
         }
 
-        return false;
+        return acmgTieringResult.setTierApplies(false);
     }
 
     /**
@@ -212,7 +291,9 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the tier applies
      */
-    public boolean isPM5(Variant variant) {
+    public AcmgTieringResult isPM5(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
         List<GenomicPosition> resultNucleotide = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos());
 
         List<GenomicPosition> resultProtein = null;
@@ -227,13 +308,16 @@ public class AcmgTierer {
         int foundResults = 0;
         if (resultNucleotide != null) {
             foundResults += resultNucleotide.size();
+            acmgTieringResult.addExplanation("Exact pathogenic match found", resultNucleotide.stream().map(GenomicPosition::toString).collect(Collectors.joining(", ")));
         }
 
         if (resultProtein != null) {
             foundResults += resultProtein.size();
+            acmgTieringResult.addExplanation("Similar protein as produced by pathogenic variant found", resultProtein.stream().map(GenomicPosition::toString).collect(Collectors.joining(", ")));
         }
 
-        return foundResults > 0;
+        boolean pm5Applies = foundResults > 0;
+        return acmgTieringResult.setTierApplies(pm5Applies);
     }
 
     /**
@@ -242,8 +326,38 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the tier applies
      */
-    public boolean isPM6(Variant variant) {
-        return isPS2(variant);
+    public AcmgTieringResult isPM6(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
+        //get rid of non trios
+        if (humansDTO == null || humansDTO.getHumans().size() != 3) {
+            return new AcmgTieringResult(false);
+        }
+
+        //get rid of trios where the parents are affected
+        for (HumanDTO humanDTO : humansDTO.getHumans()) {
+            boolean isHealthyNonIndexPerson = !humanDTO.getIsAffected() && !humanDTO.getIsIndex();
+            boolean isAffectedIndexPerson = humanDTO.getIsAffected() && humanDTO.getIsIndex();
+            if (!(isHealthyNonIndexPerson || isAffectedIndexPerson)) {
+                return new AcmgTieringResult(false);
+            }
+        }
+
+        //check if parents are 0/0
+        List<HumanDTO> parents = new LinkedList<>();
+        for (HumanDTO humanDTO : humansDTO.getHumans()) {
+            if (!humanDTO.getIsIndex()) {
+                //humanDTO is a parent, check if they are 0/0
+                String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
+                boolean hasNoMutation = genotypeParent.equals("0/0") || genotypeParent.equals("0|0");
+                if (!hasNoMutation) {
+                    return new AcmgTieringResult(false);
+                }
+                acmgTieringResult.addExplanation("Parent is not affected", humanDTO.getPseudonym());
+            }
+        }
+
+        return acmgTieringResult.setTierApplies(true);
     }
 
     /**
@@ -253,12 +367,13 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the tier applies
      */
-    public boolean isPP1(Variant variant) {
+    public AcmgTieringResult isPP1(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
         //needs trio or at least a multi person sample. E. g. mother is sick and child -> if mother has mutation and child has mutation it is this tier
 
         //get rid of non multi person sample
         if (humansDTO == null || humansDTO.getHumans().size() <= 1) {
-            return false;
+            return new AcmgTieringResult(false);
         }
 
         HumanDTO indexPerson = null;
@@ -269,7 +384,7 @@ public class AcmgTierer {
         }
 
         if (indexPerson == null) {
-            return false;
+            return new AcmgTieringResult(false);
         }
         String genotypeIndexPerson = variant.getInfo().get("format_" + indexPerson.getPseudonym() + "_gt");
 
@@ -281,11 +396,12 @@ public class AcmgTierer {
                     String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
                     boolean hasMutation = !(genotypeParent.equals("0/0") || genotypeParent.equals("0|0"));
                     if ((hasMutation && !humanDTO.getIsAffected()) || (!hasMutation && humanDTO.getIsAffected())) {
-                        return false;
+                        return new AcmgTieringResult(false);
                     }
                 }
             }
-            return true;
+            acmgTieringResult.addExplanation("Co-segregation with disease", "Index patient is 0/1, everyone who is affected has 1/1 or 0/1");
+            return acmgTieringResult.setTierApplies(true);
         } else {
             //index person is 1/1 -> tier is only true if everyone who is affected has 1/1 and everyone who is not affected has 0/0 or 0/1
             for (HumanDTO humanDTO : humansDTO.getHumans()) {
@@ -293,16 +409,47 @@ public class AcmgTierer {
                     String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
                     boolean parent11 = !(genotypeParent.contains("0"));
                     if ((parent11 && !humanDTO.getIsAffected()) || (!parent11 && humanDTO.getIsAffected())) {
-                        return false;
+                        return new AcmgTieringResult(false);
                     }
                 }
             }
-            return true;
+            acmgTieringResult.addExplanation("Co-segregation with disease", "Index patient is 1/1, everyone not affected has 0/0 or 0/1");
+            return acmgTieringResult.setTierApplies(true);
         }
     }
 
-    public boolean isPP2(Variant variant) {
-        return false; //TODO = missense AND (found via panelapp or clinvar) AND allele frequency < 0.001
+    /**
+     * Missense variant in a gene with low rate of benign missense mutations and for which missense mutation is a common mechanism of a disease
+     *
+     * @param variant the variant to be checked
+     * @return true if the tier applies
+     */
+    public AcmgTieringResult isPP2(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+        //TODO test
+        //needs to be on a gene which has three times more path. or likely path. missense mutations than benign missense mutations and needs to be a missense mutation
+        if (variant.getInfo().containsKey("info_csq_symbol")) {
+            String gene = variant.getInfo().get("info_csq_symbol");
+            double factor = 3.0;
+            boolean mostlyPathogenicOrLikelyPathogenicMissenseMutations = clinvar.countPathogenicOrLikelyPathogenicMissenseVariants(gene) >= factor * clinvar.countBenignMissenseVariants(gene);
+
+            acmgTieringResult.addExplanation("Gene", gene);
+            acmgTieringResult.addExplanation("Pathogenic or likely pathogenic missense variants", clinvar.countPathogenicOrLikelyPathogenicMissenseVariants(gene));
+            acmgTieringResult.addExplanation("Benign missense variants", clinvar.countBenignMissenseVariants(gene));
+
+            boolean isMissense = false;
+            String key = "info_csq_consequence";
+            if (variant.getInfo().containsKey(key)) {
+                String value = variant.getInfo().get(key);
+                isMissense = value.equals("missense_variant");
+                acmgTieringResult.addExplanation("Consequence", value);
+            }
+
+            boolean pp2Applies = isMissense && mostlyPathogenicOrLikelyPathogenicMissenseMutations;
+            return acmgTieringResult.setTierApplies(pp2Applies);
+        }
+
+        return new AcmgTieringResult(false);
     }
 
     /**
@@ -312,10 +459,11 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the variants confirms with the tier
      */
-    public boolean isPP3(Variant variant) {
+    public AcmgTieringResult isPP3(Variant variant) {
         //TODO check thresholds
         //TODO make sure these are not co-dependent
         //TODO what about info_cadd_phred, info_caddind_phred", "info_caddind_raw
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
 
         int numberOfScores = 0;
         int numberOfPathogenicScores = 0;
@@ -327,6 +475,7 @@ public class AcmgTierer {
             try {
                 if (Double.parseDouble(variant.getInfo().get(gerpKey)) >= 4.0) {
                     numberOfPathogenicScores++;
+                    acmgTieringResult.addExplanation("GERP", Double.parseDouble(variant.getInfo().get(gerpKey)));
                 }
             } catch (Exception ex) {
                 //System.out.println("Cannot parse " + variant.getInfo().get(gerpKey));
@@ -334,12 +483,13 @@ public class AcmgTierer {
         }
 
         //info_cadd_raw > 10
-        String caddKey = "info_cadd_raw";
+        String caddKey = "info_cadd_phred";
         if (variant.getInfo().containsKey(caddKey) && variant.getInfo().get(caddKey) != null) {
             numberOfScores++;
             try {
-                if (Double.parseDouble(variant.getInfo().get(caddKey)) >= 10.0) {
+                if (Double.parseDouble(variant.getInfo().get(caddKey)) >= 25.3) {
                     numberOfPathogenicScores++;
+                    acmgTieringResult.addExplanation("CADD", Double.parseDouble(variant.getInfo().get(caddKey)));
                 }
             } catch (Exception ex) {
                 //System.out.println("Cannot parse " + variant.getInfo().get(caddKey));
@@ -352,6 +502,7 @@ public class AcmgTierer {
             numberOfScores++;
             if (variant.getInfo().get(polyphenKey).toLowerCase().contains("damaging")) {
                 numberOfPathogenicScores++;
+                acmgTieringResult.addExplanation("Polyphen", variant.getInfo().get(polyphenKey));
             }
         }
 
@@ -361,19 +512,24 @@ public class AcmgTierer {
             numberOfScores++;
             if (variant.getInfo().get(siftKey).toLowerCase().contains("deleterious")) {
                 numberOfPathogenicScores++;
+                acmgTieringResult.addExplanation("SIFT", variant.getInfo().get(siftKey));
             }
         }
 
         //if there is at least a score and the majority of scores are pathogenic
-        return numberOfScores > 0 && 2 * numberOfPathogenicScores >= numberOfScores;
+        boolean pp3Applies = numberOfScores > 0 && 2 * numberOfPathogenicScores >= numberOfScores;
+        return acmgTieringResult.setTierApplies(pp3Applies);
     }
 
-    public boolean isPP4(Variant variant) {
-        return false; //TODO either for all or for none, impossible
+    public AcmgTieringResult isPP4(Variant variant) {
+        return new AcmgTieringResult(false); //TODO either for all or for none, impossible
     }
 
-    public boolean isPP5(Variant variant) {
-        return false; //TODO impossible
+    public AcmgTieringResult isPP5(Variant variant) {
+        //TODO should this just check clinvar?
+        /*List<GenomicPosition> result = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos(), variant.getAlt());
+        return result != null && !result.isEmpty();*/
+        return new AcmgTieringResult(false);
     }
 
     /**
@@ -383,7 +539,9 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return ture if the variant is the tier
      */
-    public boolean isBA1(Variant variant) {
+    public AcmgTieringResult isBA1(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
         List<String> alleleFrequencies = Arrays.asList("info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af", "info_csq_gnomadg_ac", "info_csq_gnomadg_af", "info_csq_gnomadg_controls_ac", "info_csq_gnomadg_controls_af", "info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe", "info_csq_gnomadg_af_afr", "info_csq_gnomadg_af_amr", "info_csq_gnomadg_af_asj", "info_csq_gnomadg_af_eas", "info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe", "info_csq_gnomadg_af_oth", "info_csq_gnomad_af", "info_csq_gnomad_afr_af", "info_csq_gnomad_amr_af", "info_csq_gnomad_asj_af", "info_csq_gnomad_eas_af", "info_csq_gnomad_fin_af", "info_csq_gnomad_nfe_af", "info_csq_gnomad_oth_af", "info_csq_gnomad_sas_af");
 
         for (String key : alleleFrequencies) {
@@ -392,7 +550,9 @@ public class AcmgTierer {
                 try {
                     double doubleValue = Double.parseDouble(value);
                     if (doubleValue > 0.05) {
-                        return true;
+                        acmgTieringResult.addExplanation("Allele frequency exceeds 5% in population", key);
+                        acmgTieringResult.addExplanation("Allele frequency in population", doubleValue);
+                        return acmgTieringResult.setTierApplies(true);
                     }
                 } catch (Exception ex) {
                     //System.out.println("Cannot parse AF " + value);
@@ -400,22 +560,41 @@ public class AcmgTierer {
             }
         }
 
-        return false;
+        return new AcmgTieringResult(false);
     }
 
-    public boolean isBS1(Variant variant) {
-        //TODO needs some sort of input from the user how high common the expected disorder is
-        //TODO probably not
-        return false; //TODO implement
+    public AcmgTieringResult isBS1(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
+        List<String> alleleFrequencies = Arrays.asList("info_af_raw", "info_controls_af_popmax", "info_af_afr", "info_af_amr", "info_af_asj", "info_af_eas", "info_af_nfe", "info_af_oth", "info_csq_af", "info_csq_gnomadg_ac", "info_csq_gnomadg_af", "info_csq_gnomadg_controls_ac", "info_csq_gnomadg_controls_af", "info_csq_gnomadg_controls_nhomalt", "info_csq_gnomadg_nhomalt_nfe", "info_csq_gnomadg_af_afr", "info_csq_gnomadg_af_amr", "info_csq_gnomadg_af_asj", "info_csq_gnomadg_af_eas", "info_csq_gnomadg_af_fin", "info_csq_gnomadg_af_nfe", "info_csq_gnomadg_af_oth", "info_csq_gnomad_af", "info_csq_gnomad_afr_af", "info_csq_gnomad_amr_af", "info_csq_gnomad_asj_af", "info_csq_gnomad_eas_af", "info_csq_gnomad_fin_af", "info_csq_gnomad_nfe_af", "info_csq_gnomad_oth_af", "info_csq_gnomad_sas_af");
+
+        for (String key : alleleFrequencies) {
+            if (variant.getInfo().containsKey(key)) {
+                String value = variant.getInfo().get(key);
+                try {
+                    double doubleValue = Double.parseDouble(value);
+                    if (doubleValue > 0.015) {
+                        acmgTieringResult.addExplanation("Allele frequency exceeds 1.5% in population", key);
+                        acmgTieringResult.addExplanation("Allele frequency in population", doubleValue);
+                        return acmgTieringResult.setTierApplies(true);
+                    }
+                } catch (Exception ex) {
+                    //System.out.println("Cannot parse AF " + value);
+                }
+            }
+        }
+
+        return new AcmgTieringResult(false);
     }
 
-    public boolean isBS2(Variant variant) {
-        return false; //TODO gnomad tells us how many homozygote are
+    public AcmgTieringResult isBS2(Variant variant) {
+        return new AcmgTieringResult(false); //TODO gnomad tells us how many homozygote are
+        // true if >= people are homozygote in gnomad
         //TODO probably impossible
     }
 
-    public boolean isBS3(Variant variant) {
-        return false; //TODO will never appear
+    public AcmgTieringResult isBS3(Variant variant) {
+        return new AcmgTieringResult(false); //TODO will never appear
     }
 
     /**
@@ -424,11 +603,13 @@ public class AcmgTierer {
      * @param variant the variant to be checked
      * @return true if the tier applies
      */
-    public boolean isBS4(Variant variant) {
+    public AcmgTieringResult isBS4(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
         //needs trio or at least a multi person sample. True if a healthy parent has the same mutation
         //get rid of non multi person sample
         if (humansDTO == null || humansDTO.getHumans().size() <= 1) {
-            return false;
+            return new AcmgTieringResult(false);
         }
 
         HumanDTO indexPerson = null;
@@ -439,7 +620,7 @@ public class AcmgTierer {
         }
 
         if (indexPerson == null) {
-            return false;
+            return new AcmgTieringResult(false);
         }
         String genotypeIndexPerson = variant.getInfo().get("format_" + indexPerson.getPseudonym() + "_gt");
 
@@ -451,11 +632,12 @@ public class AcmgTierer {
                     String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
                     boolean hasMutation = !(genotypeParent.equals("0/0") || genotypeParent.equals("0|0"));
                     if ((hasMutation && !humanDTO.getIsAffected()) || (!hasMutation && humanDTO.getIsAffected())) {
-                        return true;
+                        acmgTieringResult.addExplanation("Lack of segregation for", humanDTO.getPseudonym());
+                        return acmgTieringResult.setTierApplies(true);
                     }
                 }
             }
-            return false;
+            return new AcmgTieringResult(false);
         } else {
             //index person is 1/1, if parents are 1/1 but not affected this tier is true
             for (HumanDTO humanDTO : humansDTO.getHumans()) {
@@ -463,40 +645,122 @@ public class AcmgTierer {
                     String genotypeParent = variant.getInfo().get("format_" + humanDTO.getPseudonym() + "_gt");
                     boolean parent11 = !genotypeParent.contains("0");
                     if ((parent11 && !humanDTO.getIsAffected()) || (!parent11 && humanDTO.getIsAffected())) {
-                        return true;
+                        acmgTieringResult.addExplanation("Lack of segregation for", humanDTO.getPseudonym());
+                        return acmgTieringResult.setTierApplies(true);
                     }
                 }
             }
-            return false;
+            return new AcmgTieringResult(false);
         }
     }
 
-    public boolean isBP1(Variant variant) {
-        return false; //TODO implement difficult
+    /**
+     * Missense variant in a gene for which loss of function is the known mechanism of disease
+     *
+     * @param variant the variant to be checked
+     * @return true if the tier applies
+     */
+    public AcmgTieringResult isBP1(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
+        boolean isMissense = false;
+        String key = "info_csq_consequence";
+        if (variant.getInfo().containsKey(key)) {
+            String value = variant.getInfo().get(key);
+            isMissense = value.equals("missense_variant");
+            acmgTieringResult.addExplanation("Variant type", value);
+        }
+
+        boolean nullVariantsIsOnlyKnownMechanismOfDisease = false;
+        if (variant.getInfo().containsKey("info_csq_symbol")) {
+            String gene = variant.getInfo().get("info_csq_symbol");
+            //only if there are no non null pathogenic variants in clinvar, then it's the only mechanism
+            nullVariantsIsOnlyKnownMechanismOfDisease = clinvar.countPathogenicOrLikelyPathogenicNonNullVariants(gene) == 0;
+            acmgTieringResult.addExplanation("Gene", gene);
+            acmgTieringResult.addExplanation("Pathogenic or likely pathogenic non null variants found for gene", "0");
+        }
+
+        boolean bp1Applies = isMissense && nullVariantsIsOnlyKnownMechanismOfDisease;
+        return acmgTieringResult.setTierApplies(bp1Applies);
     }
 
-    public boolean isBP2(Variant variant) {
-        return false; //TODO impossible(?) check haplotype? could be possible for trios
+    public AcmgTieringResult isBP2(Variant variant) {
+        return new AcmgTieringResult(false); //TODO impossible(?) check haplotype? could be possible for trios
     }
 
-    public boolean isBP3(Variant variant) {
-        return false; //TODO difficult maybe
+    public AcmgTieringResult isBP3(Variant variant) {
+        return new AcmgTieringResult(false); //TODO difficult maybe
     }
 
-    public boolean isBP4(Variant variant) {
-        return false; //TODO see PP3
+    public AcmgTieringResult isBP4(Variant variant) {
+        AcmgTieringResult acmgTieringResult = new AcmgTieringResult();
+
+        int numberOfScores = 0;
+        int numberOfBenignScores = 0;
+
+        //info_csq_gerp_rs > 4
+        String gerpKey = "info_csq_gerp_rs";
+        if (variant.getInfo().containsKey(gerpKey) && variant.getInfo().get(gerpKey) != null) {
+            numberOfScores++;
+            try {
+                if (Double.parseDouble(variant.getInfo().get(gerpKey)) <= -4.54) {
+                    numberOfBenignScores++;
+                    acmgTieringResult.addExplanation("GERP", Double.parseDouble(variant.getInfo().get(gerpKey)));
+                }
+            } catch (Exception ex) {
+                //System.out.println("Cannot parse " + variant.getInfo().get(gerpKey));
+            }
+        }
+
+        //info_cadd_raw > 10
+        String caddKey = "info_cadd_phred";
+        if (variant.getInfo().containsKey(caddKey) && variant.getInfo().get(caddKey) != null) {
+            numberOfScores++;
+            try {
+                if (Double.parseDouble(variant.getInfo().get(caddKey)) <= 17.3) {
+                    numberOfBenignScores++;
+                    acmgTieringResult.addExplanation("CADD", Double.parseDouble(variant.getInfo().get(caddKey)));
+                }
+            } catch (Exception ex) {
+                //System.out.println("Cannot parse " + variant.getInfo().get(caddKey));
+            }
+        }
+
+        //info_csq_polyphen tolower contains 'damaging'
+        String polyphenKey = "info_csq_polyphen";
+        if (variant.getInfo().containsKey(polyphenKey) && variant.getInfo().get(polyphenKey) != null) {
+            numberOfScores++;
+            if (variant.getInfo().get(polyphenKey).toLowerCase().contains("benign")) {
+                numberOfBenignScores++;
+                acmgTieringResult.addExplanation("Polyphen", Double.parseDouble(variant.getInfo().get(polyphenKey)));
+            }
+        }
+
+        //OK info_csq_sift = deleterious
+        String siftKey = "info_csq_sift";
+        if (variant.getInfo().containsKey(siftKey) && variant.getInfo().get(siftKey) != null) {
+            numberOfScores++;
+            if (variant.getInfo().get(siftKey).toLowerCase().contains("tolerated")) {
+                numberOfBenignScores++;
+                acmgTieringResult.addExplanation("SIFT", Double.parseDouble(variant.getInfo().get(siftKey)));
+            }
+        }
+
+        //if there is at least a score and all are benign
+        boolean bp4Applies = numberOfScores > 0 && numberOfBenignScores == numberOfScores;
+        return acmgTieringResult.setTierApplies(bp4Applies);
     }
 
-    public boolean isBP5(Variant variant) {
-        return false; //TODO necessary data not available yet
+    public AcmgTieringResult isBP5(Variant variant) {
+        return new AcmgTieringResult(false); //TODO necessary data not available yet
     }
 
-    public boolean isBP6(Variant variant) {
-        return false; //TODO impossible
+    public AcmgTieringResult isBP6(Variant variant) {
+        return new AcmgTieringResult(false); //TODO impossible
     }
 
-    public boolean isBP7(Variant variant) {
-        return false; //TODO similar amino acid and spliceAI non pathogenic(?) EnsemblImpact also GERP
+    public AcmgTieringResult isBP7(Variant variant) {
+        return new AcmgTieringResult(false); //TODO similar amino acid and spliceAI non pathogenic(?) EnsemblImpact also GERP
     }
 
 }

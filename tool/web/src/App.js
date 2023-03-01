@@ -2,6 +2,7 @@ import './App.css';
 
 import Activate from './Activate.jsx';
 import Admin from './Admin.jsx';
+import Note from './Note.jsx';
 import Authentication from './Authentication.jsx';
 import Home from './Home.jsx';
 import StatusBar from './StatusBar.jsx';
@@ -82,6 +83,7 @@ class App extends React.Component {
           <Route exact path="/sample/:name" component={(matchProps) => <VariantList refresh={this.refresh} token={this.state.token} matchProps={matchProps.match.params} />} />
           <Route exact path="/tiering/:name" component={(matchProps) => <Tiering refresh={this.refresh} token={this.state.token} matchProps={matchProps.match.params} />} />
           <Route exact path="/admin" component={() => <Admin token={this.state.token} />} />
+          <Route exact path="/note" component={() => <Note token={this.state.token} />} />
         </Router>
     } else {
       return "";

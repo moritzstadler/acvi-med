@@ -11,5 +11,9 @@ public class HumansDTO {
     @Setter
     List<HumanDTO> humans;
 
+    @Getter
+    @Setter
+    boolean parentHoodConfirmed;
+
 }
 

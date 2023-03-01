@@ -1,6 +1,5 @@
 package at.ac.meduniwien.vcfvisualize.cron;
 
-import at.ac.meduniwien.vcfvisualize.data.discreetcolumnvalues.ColumnValuesProvider;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.Clinvar;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.Hpo;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.PanelApp;
@@ -35,8 +34,9 @@ public class Cron {
         new Thread(() -> {
             panelApp.loadDataFromAPI();
             hpo.loadDataFromAPI();
-            clinvar.loadDataFromFile();
         }).start();
+
+        new Thread(() -> clinvar.initiate()).start();
     }
 
     @PostConstruct
@@ -46,8 +46,9 @@ public class Cron {
         new Thread(() -> {
             panelApp.loadDataFromAPI();
             hpo.loadDataFromAPI();
-            clinvar.loadDataFromFile();
         }).start();
+
+        new Thread(() -> clinvar.initiate()).start();
     }
 
 }

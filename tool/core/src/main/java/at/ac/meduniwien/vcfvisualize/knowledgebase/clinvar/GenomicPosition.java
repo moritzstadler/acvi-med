@@ -23,6 +23,22 @@ public class GenomicPosition {
     @Setter
     String alt;
 
+    public GenomicPosition(String chrom, long pos, String ref, String alt) {
+        this.chrom = chrom;
+        this.pos = pos;
+        this.ref = ref;
+        this.alt = alt;
+    }
+
+    public GenomicPosition() {
+
+    }
+
+    @Override
+    public String toString() {
+        return "chr" + chrom + "-" + pos + "-" + ref + "-" + alt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

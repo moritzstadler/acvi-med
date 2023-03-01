@@ -515,7 +515,7 @@ class VariantList extends React.Component {
                           <th>Predictions</th>
                           <th>Gene</th>
                           {
-                            this.state.meta?.map((item) => {
+                            this.state.meta && this.state.meta?.map((item) => {
                               if (item.id != null && item.id.startsWith("format_") && item.id.endsWith("_gt")) {
                                 return <th>{item.id.replace("format_", "").replace("_gt", "")}</th>
                               }

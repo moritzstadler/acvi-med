@@ -17,7 +17,7 @@
 .samplesBox {
 	margin: auto;
 	background: #fff;
-	width: 500px;
+	width: 650px;
 	padding: 30px;
 	border-radius: 5px;
 	margin-top: 50px;
@@ -39,4 +39,26 @@
 
 .studyBox .studies {
 	margin-left: 20px;
+}
+
+.sampleHomeBox {
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 5px;
+  margin-left: -8px;
+}
+
+a.buttonLink {
+  font-weight: bold;
+  color: #fff;
+  display: inline-block;
+  padding: 3px;
+  border-radius: 3px;
+  background: #3c5488;
+  text-decoration: none;
+}
+
+a.buttonLink:hover {
+  color: #fff;
+  background: #2d4068;
 }

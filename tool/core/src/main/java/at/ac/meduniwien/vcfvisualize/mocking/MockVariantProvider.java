@@ -1,10 +1,10 @@
 package at.ac.meduniwien.vcfvisualize.mocking;
 
-import at.ac.meduniwien.vcfvisualize.model.Filter;
-import at.ac.meduniwien.vcfvisualize.model.User;
-import at.ac.meduniwien.vcfvisualize.model.Variant;
+import at.ac.meduniwien.vcfvisualize.model.*;
+import at.ac.meduniwien.vcfvisualize.rest.dto.VariantDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,6 +54,46 @@ public class MockVariantProvider {
         variant2.setInfo(info2);
         variants.add(variant2);
 
+        for (int i = 0; i < 1000; i++) {
+            variants.add(variant2);
+        }
+
         return variants;
+    }
+
+    public long countVariantsToLimit(User user, String sample, Filter filter, long resultCountLimit) {
+        return 123;
+    }
+
+    public long estimateAllVariantsCount(String sample) {
+        return 123;
+    }
+
+    public Variant getVariant(User user, String sample, VariantIdentifier variantIdentifier) {
+        Variant variant1 = new Variant();
+        variant1.setPid(1025);
+        variant1.setVid(2049);
+        variant1.setChrom("chr4");
+        variant1.setPos("1048577");
+        variant1.setId("1");
+        variant1.setRef("TTGG");
+        variant1.setAlt("C");
+        variant1.setQual("Pass");
+        variant1.setFilter(".");
+        variant1.setFormat("format");
+        HashMap<String, String> info1 = new HashMap<>();
+        info1.put("info_af_raw", "0.00023");
+        info1.put("info_csq_consequence", "inframe_deletion");
+        info1.put("info_csq_hgvsc", "ENST00000657896.1:n.563TTGG>C");
+        variant1.setInfo(info1);
+        return variant1;
+    }
+
+    public List<Variant> getIsoforms(String sample, long vid) {
+        return new LinkedList<>();
+    }
+
+    public List<Column> getColumns(String sample) {
+        return new LinkedList<>();
     }
 }

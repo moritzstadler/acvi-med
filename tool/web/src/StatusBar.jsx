@@ -21,7 +21,7 @@ class StatusBar extends React.Component {
     }
 
     return <div className="statusBar">
-      <i className="glyphicon bi bi-lock-fill"></i> Logged in as <b>{this.props.token.user.email}</b> <a href={Config.appBaseUrl} >My Studies</a> {admin} <a href="#" onClick={(e) => this.props.logout()}>Logout</a>
+      <i className="glyphicon bi bi-lock-fill"></i> Logged in as <b>{this.props.token.user.email}</b> <a href={Config.appBaseUrl} >My Studies</a> <a href="/note" >My Notes</a> {admin} <a href="#" onClick={(e) => this.props.logout()}>Logout</a>
     </div>;
   } 
 

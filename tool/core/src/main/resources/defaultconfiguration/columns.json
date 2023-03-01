@@ -102,7 +102,7 @@
       "id":"info_csq_afr_af",
       "link":"",
       "sample":"0.01",
-      "description":"The frequency of the the allele in the given population.",
+      "description":"The frequency of the allele in the given population.",
       "displayable":true
     },
     {
@@ -110,7 +110,7 @@
       "id":"info_csq_amr_af",
       "link":"",
       "sample":"0.01",
-      "description":"The frequency of the the allele in the given population.",
+      "description":"The frequency of the allele in the given population.",
       "displayable":true
     },
     {
@@ -118,7 +118,7 @@
       "id":"info_csq_eas_af",
       "link":"",
       "sample":"0.01",
-      "description":"The frequency of the the allele in the given population.",
+      "description":"The frequency of the allele in the given population.",
       "displayable":true
     },
     {
@@ -138,7 +138,7 @@
     {
       "name":"GERP score conservation",
       "id":"info_csq_gerp_rs",
-      "description":"GERP (Genomic Evolutionary Rate Profiling) RS score, the larger the score, the more conserved the site. Scores range from -12.3 to 6.17. GERP identifies constrained elements in multiple alignments by quantifying substitution deficits. These deficits represent substitutions that would have occurred if the element were neutral DNA, but did not occur because the element has been under functional constraint. For example, a GERP score of 4 would mean there are 4 fewer substitutions at a particular site than what is expected based on the neutral rate of evolution across the phylogeny. GERP scores from 4–6 are assumed to have “large” deleterious effects",
+      "description":"GERP (Genomic Evolutionary Rate Profiling) RS score, the larger the score, the more conserved the site is. Scores range from -12.3 to 6.17. GERP identifies constrained elements in multiple alignments by quantifying substitution deficits. These deficits represent substitutions that would have occurred if the element were neutral DNA, but did not occur because the element has been under functional constraint. For example, a GERP score of 4 would mean there are 4 fewer substitutions at a particular site than what is expected based on the neutral rate of evolution across the phylogeny. GERP scores from 4–6 are assumed to have “large” deleterious effects",
       "link":"http://mendel.stanford.edu/sidowlab/downloads/gerp/index.html",
       "sample":"4",
       "samplecomparator": ">",
@@ -170,7 +170,7 @@
     {
       "name":"Feature type by genomic location",
       "id":"info_csq_feature_type",
-      "description":"Information about the genomic location of the feature can get the value: MotifFeature, RegulatoryFeature,Transcript",
+      "description":"Information about the genomic location of the feature can get the value: MotifFeature, RegulatoryFeature, Transcript",
       "displayable":true
     },
     {
@@ -183,7 +183,7 @@
       "name":"Ensemble Biotype",
       "id":"info_csq_biotype",
       "link":"https://m.ensembl.org/info/genome/genebuild/biotypes.html",
-      "description":"Gene or transcript classification according their function in a cell. Amongst others it can take values: promoter, rRNA, lncRNA, protein_coding etc. ",
+      "description":"Gene or transcript classification according to their function in a cell. Amongst others it can take values: promoter, rRNA, lncRNA, protein_coding etc. ",
       "displayable":true
     },
     {
@@ -247,7 +247,7 @@
     {
       "name":"DNA strand",
       "id":"info_csq_strand",
-      "description":"Variant is on positive of antisense strand of the DNA",
+      "description":"Is this variant on the positive strand of the DNA",
       "displayable":true
     },
     {
@@ -276,10 +276,10 @@
       "displayable":true
     },
     {
-      "name":"Cannonical transcipt",
+      "name":"Canonical transcipt",
       "id":"info_csq_canonical",
       "link":"https://www.ensembl.org/info/genome/genebuild/canonical.html",
-      "description":"We are running Ensembl VEP to annotate the variants. In this process we are picking the isoform that has the most severe consequence according to Ensemble. This not necessarily the canonical transcript",
+      "description":"We are running Ensembl VEP to annotate the variants. In this process we are picking the isoform that has the most severe consequence according to Ensemble. This is not necessarily the canonical transcript.  ",
       "displayable":true
     },
     {
@@ -354,7 +354,7 @@
     {
       "name":"SIFT",
       "id":"info_csq_sift",
-      "description":"The SIFT prediction and/or score, with both given as prediction(score); SIFT predicts whether an amino acid substitution affects protein function based on sequence homology and the physical properties of amino acids. SIFT can be applied to naturally occurring nonsynonymous polymorphisms and laboratory-induced missense mutations. If SIFTori is smaller than 0.05 (rankscore>0.39575) the corresponding nsSNV ispredicted as D(amaging); otherwise it is predicted as T(olerated)",
+      "description":"The SIFT prediction and/or score, with both given as prediction(score); SIFT predicts whether an amino acid substitution affects protein function based on sequence homology and the physical properties of amino acids. SIFT can be applied to naturally occurring nonsynonymous polymorphisms and laboratory-induced missense mutations. If SIFTori is smaller than 0.05 (rankscore>0.39575) the corresponding nsSNV is predicted as D(amaging); otherwise it is predicted as T(olerated)",
       "link":"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC168916/",
       "displayable":true
     },
@@ -807,7 +807,7 @@
     {
       "name":"Interpro Domain",
       "id":"info_csq_interpro_domain",
-      "description":"InterPro provides functional analysis of proteins by classifying them into families and predicting domains and important sites. A Domain or conserved site on which the variant locates. Domain annotations come from Interpro database. The number in the brackets following a specific domain is the count of times Interpro assigns the variant position to that domain, typically coming from different predicting databases.",
+      "description":"InterPro provides functional analysis of proteins by classifying them into families and predicting domains and important sites. (Domain or conserved site on which the variant is located). Domain annotations come from Interpro database. The number in the brackets following a specific domain is the count of times Interpro assigns the variant position to that domain, typically coming from different predicting databases.",
       "link":"https://www.ebi.ac.uk/interpro/search/text/",
       "displayable":true,
       "displaytype":"prettyampersand"
@@ -815,14 +815,14 @@
     {
       "name":"LRT score",
       "id":"info_csq_lrt_score",
-      "description":"A likelihood ratio test method that compares genomics data sets of 32 vertebrate species to perform a likelihood ratio test (LRT) tha can accurately identify a subset of deleterious mutations that disrupt highly conserved amino acids within protein-coding sequences, which are likely to be unconditionally deleterious. The original LRT two-sided p-value (LRTori), ranges from 0 to 1.",
+      "description":"A likelihood ratio test method that compares genomics data sets of 32 vertebrate species to perform a likelihood ratio test (LRT) that can accurately identify a subset of deleterious mutations that disrupt highly conserved amino acids within protein-coding sequences, which are likely to be unconditionally deleterious. The original LRT two-sided p-value (LRTori), ranges from 0 to 1.",
       "link":"https://pubmed.ncbi.nlm.nih.gov/19602639/",
       "displayable":true
     },
     {
       "name":"LRT prediction",
       "id":"info_csq_lrt_pred",
-      "description":"A likelihood ratio test method that compares genomics data sets of 32 vertebrate species to perform a likelihood ratio test (LRT) tha can accurately identify a subset of deleterious mutations that disrupt highly conserved amino acids within protein-coding sequences, which are likely to be unconditionally deleterious. LRT prediction, D(eleterious), N(eutral) or U(nknown), which is not solely determined by the score.",
+      "description":"A likelihood ratio test method that compares genomics data sets of 32 vertebrate species to perform a likelihood ratio test (LRT) that can accurately identify a subset of deleterious mutations that disrupt highly conserved amino acids within protein-coding sequences, which are likely to be unconditionally deleterious. LRT prediction, D(eleterious), N(eutral) or U(nknown), which is not solely determined by the score.",
       "link":"https://pubmed.ncbi.nlm.nih.gov/19602639/",
       "displayable":true
     },
@@ -882,14 +882,14 @@
     {
       "name":"MutationTaster score",
       "id":"info_csq_mutationtaster_score",
-      "description":"MutationTaster2021 runs a random forest model for pathogenicity prediciton based on Gene, Transcript, Position, Alteration type, ClinVar,ENCODE project,JASPAR,MaxEntScan, genotype counts from ExAC and gnomAD and ExAC pLI scores. With the aim of increasing prediction accuracy, they run Random Forest models tailored to different types of variants. When training these models, they focused on the balanced accuracy, i.e. the same prediction quality for benign and deleterious variants. This significantly improved the prediction results. P-value (MTori), ranges from 0 to 1.",
+      "description":"MutationTaster2021 runs a random forest model for pathogenicity prediciton based on Gene, Transcript, Position, Alteration type, ClinVar, ENCODE project,JASPAR,MaxEntScan, genotype counts from ExAC and gnomAD and ExAC pLI scores. With the aim of increasing prediction accuracy, they run Random Forest models tailored to different types of variants. When training these models, they focused on the balanced accuracy, i.e. the same prediction quality for benign and deleterious variants. This significantly improved the prediction results. P-value (MTori), ranges from 0 to 1.",
       "link":"https://academic.oup.com/nargab/article/2/2/lqaa014/5763100",
       "displayable":true
     },
     {
       "name":"MutationTaster prediciton",
       "id":"info_csq_mutationtaster_pred",
-      "description":"MutationTaster2021 runs a random forest model for pathogenicity prediciton based on Gene, Transcript, Position, Alteration type, ClinVar,ENCODE project,JASPAR,MaxEntScan, genotype counts from ExAC and gnomAD and ExAC pLI scores. With the aim of increasing prediction accuracy, they run Random Forest models tailored to different types of variants. When training these models, they focused on the balanced accuracy, i.e. the same prediction quality for benign and deleterious variants. This significantly improved the prediction results. utationTaster prediction, A (disease_causing_automatic), D (disease_causing), N (polymorphism) or P (polymorphism_automatic). The score cutoff between D and N is 0.5 for MTnew and 0.31733 for the rankscore.",
+      "description":"MutationTaster2021 runs a random forest model for pathogenicity prediciton based on Gene, Transcript, Position, Alteration type, ClinVar, ENCODE project,JASPAR,MaxEntScan, genotype counts from ExAC and gnomAD and ExAC pLI scores. With the aim of increasing prediction accuracy, they run Random Forest models tailored to different types of variants. When training these models, they focused on the balanced accuracy, i.e. the same prediction quality for benign and deleterious variants. This significantly improved the prediction results. MutationTaster prediction, A (disease_causing_automatic), D (disease_causing), N (polymorphism) or P (polymorphism_automatic). The score cutoff between D and N is 0.5 for MTnew and 0.31733 for the rankscore.",
       "link":"https://academic.oup.com/nargab/article/2/2/lqaa014/5763100",
       "displayable":true
     },
@@ -903,7 +903,7 @@
     {
       "name":"PolyPhen-2 HDIV score",
       "id":"info_csq_polyphen2_hdiv_score",
-      "description":"Polyphen2 HDIV score: Polyphen2 score based on HumDiv,(Polymorphism Phenotyping v2) is a software tool which predicts possible impact of amino acid substitutions on the structure and function of human proteins using straightforward physical and evolutionary comparative considerations. HumDiv-trained model should be used for evaluating rare alleles at loci potentially involved in complex phenotypes, dense mapping of regions identified by genome-wide association studies, and analysis of natural selection from sequence data, where even mildly deleterious alleles must be treated as damaging. The score ranges from 0 to 1. olyphen2 prediction based on HumDiv, D (probably damaging,HDIV score in [0.957,1] , P (possibly damaging, HDIV score in [0.454,0.956] and B (benign, HDIV score in [0,0.452]",
+      "description":"Polyphen2 HDIV score: Polyphen2 score based on HumDiv,(Polymorphism Phenotyping v2) is a software tool which predicts possible impact of amino acid substitutions on the structure and function of human proteins using straightforward physical and evolutionary comparative considerations. HumDiv-trained model should be used for evaluating rare alleles at loci potentially involved in complex phenotypes, dense mapping of regions identified by genome-wide association studies, and analysis of natural selection from sequence data, where even mildly deleterious alleles must be treated as damaging. The score ranges from 0 to 1. Polyphen2 prediction based on HumDiv, D (probably damaging,HDIV score in [0.957,1] , P (possibly damaging, HDIV score in [0.454,0.956] and B (benign, HDIV score in [0,0.452]",
       "link":"http://genetics.bwh.harvard.edu/pph2/dokuwiki/start",
       "displayable":true
     },
@@ -953,20 +953,20 @@
     {
       "name":"VEST score",
       "id":"info_csq_vest4_score",
-      "description":"VEST (Variant Effect Scoring Tool) s a machine learning method that predicts the functional significance of missense mutations based on the probability that they are pathogenic. The VEST classifier training set comprised ~ 45,000 disease mutations from the latest Human Gene Mutation Database release and another ~45,000 high frequency (allele frequency >1%) putatively neutral missense variants from the Exome Sequencing Project. Score ranges from 0 to 1. The larger the score the more likely the mutation may cause functional change.",
+      "description":"VEST (Variant Effect Scoring Tool) is a machine learning method that predicts the functional significance of missense mutations based on the probability that they are pathogenic. The VEST classifier training set comprised ~ 45,000 disease mutations from the latest Human Gene Mutation Database release and another ~45,000 high frequency (allele frequency >1%) putatively neutral missense variants from the Exome Sequencing Project. Score ranges from 0 to 1. The larger the score the more likely the mutation may cause functional change.",
       "link":"https://sift.bii.a-star.edu.sg/sift4g/AboutSIFT4G.html",
       "displayable":true
     },
     {
       "name":"altered amino acid",
       "id":"info_csq_aaalt",
-      "description":"alternative amino acid . is . if the variant is a splicing site SNP (2bp on each end of an intron)",
+      "description":"alternative amino acid. Is '.' if the variant is a splicing site SNP (2bp on each end of an intron)",
       "displayable":true
     },
     {
       "name":"reference amino acid",
       "id":"info_csq_aaref",
-      "description":"reference amino acid . is . if the variant is a splicing site SNP (2bp on each end of an intron)",
+      "description":"reference amino acid. Is '.' if the variant is a splicing site SNP (2bp on each end of an intron)",
       "displayable":true
     },
     {
@@ -978,7 +978,7 @@
     {
       "name":"ClinVar OMIM-id",
       "id":"info_csq_clinvar_omim_id",
-      "description":"OMIM(Online Mendelian Inheritance in Man) ID of the trait/disease the clinvar_trait referring to",
+      "description":"OMIM (Online Mendelian Inheritance in Man) ID of the trait/disease the clinvar_trait is referring to",
       "link":"https://www.omim.org/about",
       "displayable": true,
       "displaytype": "clinvaromims"
@@ -1185,7 +1185,7 @@
     {
       "name":"ClinVar terms",
       "id":"info_csq_clinvar_clndisdb",
-      "description":"ClinVar. Terms associated to variant. Those are HPO terms, SNOMED, OMIM, Orphanet, MedGen, Mondo, NCBI Mesh, EFO",
+      "description":"ClinVar. Terms associated to this variant. Those are HPO terms, SNOMED, OMIM, Orphanet, MedGen, Mondo, NCBI Mesh, EFO",
       "link":"https://www.ncbi.nlm.nih.gov/clinvar/docs/spreadsheet/#condition",
       "displayable":true,
       "displaytype":"prettyampersand"

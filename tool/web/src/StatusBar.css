@@ -2,10 +2,12 @@
 }
 
 .statusBar {
-	padding: 5px;
+	padding: 8px;
 	/*background: #7e6148;*/
 	background: #47645c;
 	color: #fff;
+	font-weight: bold;
+	/*add gradient*/
 	/*
 	#e64b35
 	#4dbbd5

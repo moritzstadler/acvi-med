@@ -275,3 +275,19 @@ div.listItem {
 	font-style: italic;
 }
 
+.noteAdder {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 3px;
+}
+
+.noteAdder input {
+    width: 695px;
+    margin-left: 10px;
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px;
+    outline: none;
+}

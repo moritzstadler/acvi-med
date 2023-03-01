@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Tiering.css';
 
 import Config from './config.js';
+import Tiers from './tiers.json';
 
 export default function Tiering(props) {
 
@@ -13,6 +14,7 @@ export default function Tiering(props) {
 
     const [indexPerson, setIndexPerson] = useState(null);
     const [affectedPatients, setAffectedPatients] = useState([]);
+    const [parenthoodConfirmed, setParenthoodConfirmed] = useState(false);
     const [resultVisibility, setResultVisibility] = useState([]);
 
     const [selected, setSelected] = useState([]);
@@ -20,6 +22,8 @@ export default function Tiering(props) {
     const [onResultPage, setOnResultPage] = useState(false);
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const [openExplanations, setOpenExplanations] = useState([]);
 
     const handleQueryChange = event => {
         setQuery(event.target.value);
@@ -34,6 +38,19 @@ export default function Tiering(props) {
         setAffectedPatients(newAffectedPatients);
       }
     };
+
+    const toggleTierView = (id) => {
+      if (openExplanations.includes(id)) {
+        setOpenExplanations(openExplanations.filter(oe => oe != id));
+      } else {
+        setOpenExplanations([...openExplanations, id]);
+      }
+      console.log(openExplanations);
+    };
+
+    const getTierExplanation = (tier) => {
+      return Tiers[tier];
+    }
 
     const handleSelectResult = (item) => {
       if (!selected.includes(item)) {
@@ -61,7 +78,7 @@ export default function Tiering(props) {
               humans.push({pseudonym: format, isIndex: indexPerson === format, isAffected: affectedPatients.includes(format)});
             }
 
-            const variants = await fetchVariants(props.token.tokenString, props.matchProps.name, selected, humans);
+            const variants = await fetchVariants(props.token.tokenString, props.matchProps.name, selected, humans, parenthoodConfirmed);
             setLoading(false);
             const variantsGroupedByVid = groupVariantsByVid(variants);
             setResults(variantsGroupedByVid);
@@ -225,6 +242,8 @@ export default function Tiering(props) {
                             {getFormats(searchData.meta).map(item => (
                               <div><input checked={affectedPatients.includes(item) ? "checked": ""} onChange={(e) => {toggleAffectedPatient(e.target.value)}} value={item} style={{verticalAlign: "middle"}} type="checkbox" /><label>{item}</label></div>
                             ))}
+                            <br/>
+                            Was both the maternity and paternity confirmed: <input onChange={(e) => {setParenthoodConfirmed(e.target.value)}} value={parenthoodConfirmed} type="checkbox" />
                           </div>
                           : null
                         }
@@ -249,7 +268,6 @@ export default function Tiering(props) {
                     </div>
                 </div>
                 <br/><br/>
-                Add explanation for tiers. SeverePaed in z (select all or no parents as affected). sm_llawd severpaed <br/>
             </div>
         )
     } else {
@@ -257,9 +275,11 @@ export default function Tiering(props) {
             <div className="Tiering">
                 <div className="tieringBackground">
                     <div className="tieringBox">
+                        <h1>{props.matchProps.name}</h1>
                         <button className="tert" onClick={(e) => setOnResultPage(false)}><i className="bi bi-arrow-left"> Back to search</i></button><br/><br/>
                         <h1>Possible causative variants</h1>
                         <b>{results.variants.length}</b> variants found in <b>{Number(results.elapsedMilliseconds / 1000).toFixed(2)} seconds</b><br/><br/>
+                        <div className="info"><i class="bi bi-info-circle-fill"></i> Click on the name of a tier in order to view its definition.</div>
                         {results.variants.map((item, i) => (
                             <div className="tieringResult">
                                 <div onClick={(e) => toggleResultVisibility(i)} className="resultName">
@@ -267,11 +287,11 @@ export default function Tiering(props) {
                                 </div>
                                 <div className={"resultTiers " + (resultVisibility[i] === true ? "hidden" : "")}>
                                     {item.acmgTiers.map(tier => (
-                                        <div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div>
+                                        <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox"><div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div></div>
                                     ))}
                                 </div>
                                 <div  className={"isoforms " + (resultVisibility[i] === true ? "" : "hidden")}>
-                                  {item.isoforms.map(isoform => (
+                                  {item.isoforms.map((isoform, index) => (
                                     <div className="isoform">
                                       <div className="resultName">
 
@@ -281,10 +301,24 @@ export default function Tiering(props) {
                                           </a>
                                       </div>
                                       <div className="resultTiers">
-                                        {isoform.acmgTiers.map(tier => (
-                                            <div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div>
+                                        {isoform.acmgTieringResults.map(tr => (
+                                            <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox"><div className={"tier " + tr.tier.replace(/[0-9]/g, "")}>{tr.tier}</div></div>
                                         ))}
                                       </div>
+                                      {isoform.acmgTieringResults.map(tr => {
+                                          return (
+                                            <div className={"tierExplanation " + (openExplanations.includes(i + "." + index + "." + tr.tier) ? "" : "hidden")}>
+                                              <div className="tierTitle">{tr.tier}</div>
+                                              <b>{getTierExplanation(tr.tier).title}</b><br/>
+                                              <div className="info">{getTierExplanation(tr.tier).description}</div>
+                                              <hr/>
+                                              <div className="info">Causes for why {tr.tier} applies to this variant:</div>
+                                              {Object.keys(tr.explanation).map(k => (
+                                                <div className="tierCheckMark"><i class="bi bi-check-lg"></i> {k}: <b>{tr.explanation[k]}</b></div>
+                                              ))}
+                                            </div>
+                                          )
+                                      })}
                                     </div>
                                   ))}
                                 </div>
@@ -352,7 +386,7 @@ function fetchHpoTerms(props) {
       );
 }
 
-function fetchVariants(token, sample, selected, humans) {
+function fetchVariants(token, sample, selected, humans, parenthoodConfirmed) {
 
     var genes = [];
     var hpoTerms = [];
@@ -376,7 +410,8 @@ function fetchVariants(token, sample, selected, humans) {
                 genes: genes,
                 hpoTerms: hpoTerms,
                 humansDTO: {
-                  humans
+                  humans: humans,
+                  parentHoodConfirmed: parenthoodConfirmed
                 }
             }
         )
@@ -450,23 +485,26 @@ function groupVariantsByVid(result) {
 
   var resultingVariants = [];
   var keys = Object.keys(groupedVariants);
+
+  console.log(keys);
+
   for (var i = 0; i < keys.length; i++) {
     var acmgTiers = [];
     for (var j = 0; j < groupedVariants[keys[i]].length; j++) {
-      for (var k = 0; k < groupedVariants[keys[i]][j].acmgTiers.length; k++) {
-        if (!(acmgTiers.includes(groupedVariants[keys[i]][j].acmgTiers[k]))) {
-          acmgTiers.push(groupedVariants[keys[i]][j].acmgTiers[k]);
+      for (var k = 0; k < groupedVariants[keys[i]][j].acmgTieringResults.length; k++) {
+        if (!(acmgTiers.includes(groupedVariants[keys[i]][j].acmgTieringResults[k].tier))) {
+          acmgTiers.push(groupedVariants[keys[i]][j].acmgTieringResults[k].tier);
         }
       }
     }
 
-    var order = ["PSV1", "PS1", "PS2", "PS3", "PS4",
+    var order = ["PVS1", "PS1", "PS2", "PS3", "PS4",
         "PM1", "PM2", "PM3", "PM4", "PM5", "PM6",
         "PP1", "PP2", "PP3", "PP4", "PP5", "BA1",
         "BS1", "BS2", "BS3", "BS4",
         "BP1", "BP2", "BP3", "BP4", "BP5", "BP6", "BP7"];
 
-    var acmgTiersSorted = acmgTiers.sort((n1, n2) => order.indexOf(n1) - order.indexOf(n2));
+    var acmgTiersSorted = acmgTiers.sort((n1, n2) => order.indexOf(n1.tier) - order.indexOf(n2.tier));
 
     var group = {
       chrom: groupedVariants[keys[i]][0].variant.chrom,

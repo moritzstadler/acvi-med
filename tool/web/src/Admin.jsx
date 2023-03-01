@@ -220,6 +220,20 @@ class Admin extends React.Component {
       .then(response => {this.fetchUsers()});       
   }
 
+  deleteSample(name, e) {
+    let value = e.target.value;
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tokenString: this.props.token.tokenString })
+    };
+
+    this.getSampleByName(name).type = value;
+
+    fetch(Config.apiBaseUrl + '/sample/delete/' + name, requestOptions)
+      .then(response => {this.fetchSamples()});
+  }
+
   changeIgvPath(name, e) {    
     let value = e.target.value;
     console.log(this.getSampleByName(name));
@@ -253,7 +267,10 @@ class Admin extends React.Component {
                     </select>
                   </td>
                   <td>
-                    <input defaultValue={item.igvPath} onChange={(e) => this.changeIgvPath(item.name, e)} placeholder=".cram or .bam path"/>
+                    <input className={"igvPath"} defaultValue={item.igvPath} onChange={(e) => this.changeIgvPath(item.name, e)} placeholder=".cram or .bam path"/>
+                  </td>
+                  <td>
+                    <button className="small" onClick={(e) => {if (window.confirm('Are you sure you want to delete ' + item.name + '?')) this.deleteSample(item.name, e)} }>Delete</button>
                   </td>
                 </tr>
             })

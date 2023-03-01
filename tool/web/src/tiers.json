@@ -1,0 +1,57 @@
+{
+	"PVS1": {
+		"title": "PVS1 - Very strong evidence of pathogenicity",
+		"description": ""
+	},
+	"PS1": {
+		"title": "PS1 - Strong evidence of pathogenicity",
+		"description": "Same amino acid change as a previously established pathogenic variant regardless of nucleotide change\nExample:\tVal->Leu caused by either G>C or G>T in the same codon.\n\nThis panel applies if and only if the HGVSp or the exact mutation is known to ClinVar and marked as pathogenic of likely pathogenic."
+	},
+	"PS2": {
+		"title": "PS2 - Strong evidence of pathogenicity",
+		"description": "De novo (both maternity and paternity confirmed) in a patient with the disease and no family history. This only works in trios and depends on your entries on the search page."
+	},
+	"PM1": {
+		"title": "PM1 - Moderate evidence of pathogenicity",
+		"description": "Located in a mutational hot spot and/or critical and well-established\nfunctional domain (e.g. active site of an enzyme) without benign variation."
+	},
+	"PM2": {
+		"title": "PM2 - Moderate evidence of pathogenicity",
+		"description": "Absent from controls (or at extremely low frequency if recessive) in Exome Sequencing Project, 1000 Genomes or ExAC. Threshold: 0.1%. If the values of all of the following fields is less or equal to 0.001, this tier applies: \"info_af_afr\", \"info_af_amr\", \"info_af_asj\", \"info_af_eas\", \"info_af_nfe\", \"info_af_oth\", \"info_af_raw\", \"info_controls_af_popmax\", \"info_csq_af\", \"info_csq_gnomad_af\", \"info_csq_gnomad_afr_af\", \"info_csq_gnomad_amr_af\", \"info_csq_gnomad_asj_af\", \"info_csq_gnomad_eas_af\", \"info_csq_gnomad_fin_af\", \"info_csq_gnomad_nfe_af\", \"info_csq_gnomad_oth_af\", \"info_csq_gnomad_sas_af\", \"info_csq_gnomadg_ac\", \"info_csq_gnomadg_af\", \"info_csq_gnomadg_af_afr\", \"info_csq_gnomadg_af_amr\", \"info_csq_gnomadg_af_asj\", \"info_csq_gnomadg_af_eas\", \"info_csq_gnomadg_af_fin\", \"info_csq_gnomadg_af_nfe\", \"info_csq_gnomadg_af_oth\", \"info_csq_gnomadg_controls_ac\", \"info_csq_gnomadg_controls_af\", \"info_csq_gnomadg_controls_nhomalt\", \"info_csq_gnomadg_nhomalt_nfe\""
+	},
+	"PM4": {
+		"title": "PM4 - Moderate evidence of pathogenicity",
+		"description": "Protein length changes due to in-frame deletions/insertions or stop-loss variants."
+	},
+	"PM5": {
+		"title": "PM5 - Moderate evidence of pathogenicity",
+		"description": "Novel missense change at an amino acid residue where a different missense change determined to be pathogenic has been seen before. Example: Arg156His is pathogenic; Arg156Cys is observed. Pathogenic and likely pathogenic values are taken from ClinVar."
+	},
+	"PM6": {
+		"title": "PM6 - Moderate evidence of pathogenicity",
+		"description": "Assumed de novo, but without confirmation of paternity and maternity. This only works in trios and depends on your entries on the search page."
+	},
+	"PP1": {
+		"title": "PP1 - Supporting evidence of pathogenicity",
+		"description": "Co-segregation with disease in multiple affected family members in a gene known to cause the disease. This only works in multi patient samples and depends on your entries on the search page."
+	},
+	"PP3": {
+		"title": "PP3 - Supporting evidence of pathogenicity",
+		"description": "Multiple lines of computational evidence support a deleterious effect on\nthe gene or gene product (conservation, evolutionary, splicing impact, etc). This tier applies if the majority of the available score out of GERP, CADD, SIFT and Polyphen are pathogenic. Threshold for GERP is >= 4, Threshold for CADD is >= 25.3"
+	},
+	"BA1": {
+		"title": "BA1 - Stand-Alone evidence of benign impact",
+		"description": "Allele frequency is above 5% in Exome Sequencing Project, 1000 Genomes, or ExAC. "
+	},
+	"BS1": {
+		"title": "BS1 - Strong evidence of benign impact",
+		"description": "Allele frequency is above 1.5% in Exome Sequencing Project, 1000 Genomes, or ExAC. "
+	},
+	"BS4": {
+		"title": "BS4 - Strong evidence of benign impact",
+		"description": "Lack of segregation in affected members of a family. This only works in multi patient samples and relies on your entries on the search page."
+	},
+	"BP4": {
+		"title": "BP4 - Multiple lines of computational evidence suggest no impact on gene or\ngene product (conservation, evolutionary, splicing impact, etc). This applies if at least one score out of GERP, CADD, SIFT, Polyphen can be calculated and all calculated scores predict this mutation to be benign (GERP <= -4.54, CADD <= 17.3)."
+	}
+}

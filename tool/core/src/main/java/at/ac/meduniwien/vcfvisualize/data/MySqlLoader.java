@@ -1,5 +1,6 @@
 package at.ac.meduniwien.vcfvisualize.data;
 
+import at.ac.meduniwien.vcfvisualize.model.Note;
 import at.ac.meduniwien.vcfvisualize.model.Sample;
 import at.ac.meduniwien.vcfvisualize.model.Study;
 import at.ac.meduniwien.vcfvisualize.model.User;
@@ -11,6 +12,11 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +31,7 @@ public class MySqlLoader {
         dataSource.setPassword(password);
         dataSource.setServerName(host);
 
-        String databaseName = "vcfvisualizetest";
+        String databaseName = "vcfvisualizetest"; //TODO rename
         boolean datbaseExists = databaseExists(databaseName);
         if (datbaseExists) {
             System.out.println("MySql database found");
@@ -545,6 +551,112 @@ public class MySqlLoader {
         return result;
     }
 
+    @SneakyThrows
+    public void createNote(Note note) {
+        Connection connection = dataSource.getConnection();
+
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO note VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
+        statement.setLong(1, note.getSampleId());
+        statement.setString(2, note.getSampleName());
+        statement.setLong(3, note.getResearcherId());
+        statement.setString(4, note.getResearcherName());
+        statement.setLong(5, note.getVariantId());
+        statement.setString(6, note.getVariantPosition());
+        statement.setString(7, note.getNote());
+        statement.setTimestamp(8, Timestamp.from(note.getTime().toInstant(ZoneOffset.UTC)));
+        statement.execute();
+
+        statement.close();
+        connection.close();
+    }
+
+    @SneakyThrows
+    public List<Note> getNotesForVariant(String sampleName, long variantId) {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM note WHERE sample_name = ? AND variant_id = ?");
+        statement.setString(1, sampleName);
+        statement.setLong(2, variantId);
+        ResultSet resultSet = statement.executeQuery();
+
+        List<Note> notes = new LinkedList<>();
+        while (resultSet.next()) {
+            notes.add(convertResultSetToNote(resultSet));
+        }
+
+        resultSet.close();
+        statement.close();
+        connection.close();
+
+        return notes;
+    }
+
+
+    @SneakyThrows
+    public List<Note> getNotesBySampleName(String sampleName) {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM note WHERE sample_name = ?");
+        statement.setString(1, sampleName);
+        ResultSet resultSet = statement.executeQuery();
+
+        List<Note> notes = new LinkedList<>();
+        while (resultSet.next()) {
+            notes.add(convertResultSetToNote(resultSet));
+        }
+
+        resultSet.close();
+        statement.close();
+        connection.close();
+
+        return notes;
+    }
+
+    @SneakyThrows
+    private Note convertResultSetToNote(ResultSet resultSet) {
+        return new Note(
+                resultSet.getLong("id"),
+                resultSet.getLong("sample_id"),
+                resultSet.getString("sample_name"),
+                resultSet.getLong("researcher_id"),
+                resultSet.getString("researcher_name"),
+                resultSet.getLong("variant_id"),
+                resultSet.getString("variant_position"),
+                resultSet.getString("note"),
+                LocalDateTime.ofInstant(resultSet.getTimestamp("time").toInstant(), ZoneId.of("UTC"))
+        );
+    }
+
+    /**
+     * deletes the note
+     * @param noteId the id of the note to be deleted
+     */
+    @SneakyThrows
+    public void deleteNote(long noteId) {
+        Connection connection = dataSource.getConnection();
+
+        PreparedStatement statementDeleteStudySample = connection.prepareStatement("DELETE FROM note WHERE id = ?");
+        statementDeleteStudySample.setLong(1, noteId);
+        statementDeleteStudySample.execute();
+
+        connection.close();
+    }
+
+    /**
+     * deletes the note if it was created by a certain person
+     * @param noteId the id of the note to be deleted
+     * @param researcherId the id of the researcher to be deleted
+     */
+    @SneakyThrows
+    public void deleteNote(long noteId, long researcherId) {
+        Connection connection = dataSource.getConnection();
+
+        PreparedStatement statementDeleteStudySample = connection.prepareStatement("DELETE FROM note WHERE id = ? AND researcher_id = ?");
+        statementDeleteStudySample.setLong(1, noteId);
+        statementDeleteStudySample.setLong(2, researcherId);
+        statementDeleteStudySample.execute();
+
+        connection.close();
+    }
+
     private void createDatabase(String name) {
         System.out.println("Creating MySQL datbase");
         executeUpdate("CREATE DATABASE " + name);
@@ -558,6 +670,7 @@ public class MySqlLoader {
         executeStatement("create table study_sample(id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, study_id BIGINT UNSIGNED, sample_id BIGINT UNSIGNED, FOREIGN KEY (study_id)REFERENCES study (id)ON UPDATE RESTRICT ON DELETE CASCADE, FOREIGN KEY (sample_id)REFERENCES sample (id)ON UPDATE RESTRICT ON DELETE CASCADE);");
         executeStatement("create table researcher_study(id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, researcher_id BIGINT UNSIGNED, study_id BIGINT UNSIGNED, FOREIGN KEY (researcher_id)REFERENCES researcher (id)ON UPDATE RESTRICT ON DELETE CASCADE, FOREIGN KEY (study_id)REFERENCES study (id)ON UPDATE RESTRICT ON DELETE CASCADE);");
         executeStatement("create table samplemeta(id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, tablename VARCHAR(1023), columnname VARCHAR(1023), metaname VARCHAR(1023), value VARCHAR(8181));");
+        executeStatement("create table note(id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, sample_id BIGINT UNSIGNED, sample_name VARCHAR(4095), researcher_id BIGINT UNSIGNED, researcher_name VARCHAR(4095), variant_id BIGINT UNSIGNED, variant_position TEXT, note TEXT, time DATETIME);");
         executeStatement("insert into researcher values (null, 'changeme', '1f6e093f4ccaf5064c5377c6e137de63479c60654032f82cf5add75d73488922', 'changeme', 1, '', 1);");
         /*executeStatement("SHOW VARIABLES LIKE 'validate_password%';");
         executeStatement("SET GLOBAL validate_password.mixed_case_count = 0;");

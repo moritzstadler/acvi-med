@@ -1,7 +1,6 @@
 package at.ac.meduniwien.vcfvisualize.rest;
 
 import at.ac.meduniwien.vcfvisualize.data.VariantProvider;
-import at.ac.meduniwien.vcfvisualize.mocking.MockVariantProvider;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.Clinvar;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.GenomicPosition;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.Hpo;
@@ -15,6 +14,7 @@ import at.ac.meduniwien.vcfvisualize.model.expression.Expression;
 import at.ac.meduniwien.vcfvisualize.model.expression.IntermediateExpression;
 import at.ac.meduniwien.vcfvisualize.processor.acmg.AcmgTier;
 import at.ac.meduniwien.vcfvisualize.processor.acmg.AcmgTierer;
+import at.ac.meduniwien.vcfvisualize.processor.acmg.AcmgTieringResult;
 import at.ac.meduniwien.vcfvisualize.rest.dto.PhenotypeAwareLoadRequestDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.PhenotypeAwareQueryResultDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.PhenotypeAwareVariantDTO;
@@ -28,15 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 public class PhenotypeAwareLoader {
 
     String symbolKey = "info_csq_symbol";
+    static final List<String> DEFAULT_INFO_FIELDS = Arrays.asList("info_csq_canonical", "info_csq_hgvsc", "info_csq_hgvsg");
 
     @Autowired
-    VariantProvider variantProvider;
+    VariantProvider variantProvider; //TODO replace with VariantProvider
 
     @Autowired
     PanelApp panelApp;
@@ -89,31 +89,31 @@ public class PhenotypeAwareLoader {
 
         //TODO only take green panels!!!!
 
-        //TODO should be just tier all variants?
-        //TODO selecting by chrom:pos is too restrictive for isPM5
+        //TODO should we just tier all variants?
+        Set<String> infoFieldsToKeep = new HashSet<>(DEFAULT_INFO_FIELDS);
 
         PhenotypeAwareQueryResultDTO queryResultDTO = new PhenotypeAwareQueryResultDTO();
         queryResultDTO.setVariants(new LinkedList<>());
         for (Variant variant : variantsByHpoTerms) {
-            PhenotypeAwareVariantDTO phenotypeAwareVariantDTO = new PhenotypeAwareVariantDTO(variant);
-            phenotypeAwareVariantDTO.setAcmgTiers(acmgTierer.performAcmgTiering(variant, true, false, phenotypeAwareLoadRequestDTO.humansDTO).stream().map(Enum::toString).collect(Collectors.toList()));
+            PhenotypeAwareVariantDTO phenotypeAwareVariantDTO = new PhenotypeAwareVariantDTO();
+            phenotypeAwareVariantDTO.setVariant(variant.convertToReducedDTO(infoFieldsToKeep));
+            phenotypeAwareVariantDTO.setAcmgTieringResults(acmgTierer.performAcmgTiering(variant, true, false, phenotypeAwareLoadRequestDTO.humansDTO));
             phenotypeAwareVariantDTO.setHpoTermsLeadToDiscovery(List.of());
             queryResultDTO.getVariants().add(phenotypeAwareVariantDTO);
         }
 
         for (Variant variant : variantsByGenes) {
-            PhenotypeAwareVariantDTO phenotypeAwareVariantDTO = new PhenotypeAwareVariantDTO(variant);
-            phenotypeAwareVariantDTO.setAcmgTiers(acmgTierer.performAcmgTiering(variant, false, true, phenotypeAwareLoadRequestDTO.humansDTO).stream().map(Enum::toString).collect(Collectors.toList()));
+            PhenotypeAwareVariantDTO phenotypeAwareVariantDTO = new PhenotypeAwareVariantDTO();
+            phenotypeAwareVariantDTO.setVariant(variant.convertToReducedDTO(infoFieldsToKeep));
+            phenotypeAwareVariantDTO.setAcmgTieringResults(acmgTierer.performAcmgTiering(variant, false, true, phenotypeAwareLoadRequestDTO.humansDTO));
             queryResultDTO.getVariants().add(phenotypeAwareVariantDTO);
         }
 
         queryResultDTO.getVariants().sort((a, b) -> {
-            int scoreA = a.getAcmgTiers().stream().mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
-            int scoreB = b.getAcmgTiers().stream().mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
+            int scoreA = a.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).map(Enum::toString).mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
+            int scoreB = b.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).map(Enum::toString).mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
             return Integer.compare(scoreB, scoreA);
         });
-
-        queryResultDTO.getVariants().forEach(v -> System.out.println(v.getVariant().getChrom() + ":" + v.getVariant().getPos()));
 
         queryResultDTO.elapsedMilliseconds = System.currentTimeMillis() - startTime;
 

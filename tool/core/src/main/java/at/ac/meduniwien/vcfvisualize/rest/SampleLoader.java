@@ -8,10 +8,7 @@ import at.ac.meduniwien.vcfvisualize.security.AuthenticationService;
 import at.ac.meduniwien.vcfvisualize.study.StudyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -36,6 +33,18 @@ public class SampleLoader {
         }
 
         studyService.synchronizeSamples();
+    }
+
+    @CrossOrigin
+    @PostMapping("/sample/delete/{name}")
+    public void deleteSample(@RequestBody AuthenticationDTO authenticationDTO, @PathVariable(value="name") String name) {
+        User user = authenticationService.getUserForToken(authenticationDTO.tokenString);
+
+        if (user == null || !user.isAdmin()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "no admin rights");
+        }
+
+        studyService.deleteSample(name);
     }
 
     @CrossOrigin

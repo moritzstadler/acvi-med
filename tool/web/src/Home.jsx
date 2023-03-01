@@ -55,6 +55,7 @@ class Home extends React.Component {
       <div className="samplesBackground">
         <div className="samplesBox">
           <h1>Your Studies</h1>
+          <div className="info"><i class="bi bi-info-circle-fill"></i> These are your studies. Click on a study to view its patient samples. If you are not seeing your studies, talk to your administrator.</div>
           <hr/>
           {
             this.state.studies.map((item, i) => {
@@ -63,7 +64,7 @@ class Home extends React.Component {
                   <div className={"studies " + (this.state.visible[i] ? "" : "hidden")} >
                     {
                       item.samples.map((sample, j) => {
-                        return <div><a href={"/sample/" + sample.name}>{sample.name}</a></div>
+                        return <div className="sampleHomeBox"><div style={{display: "inline-block", width: "35%"}}><b>{sample.name}</b></div><div style={{display: "inline-block", width: "65%", "text-align": "right"}}><a className="buttonLink" href={"/sample/" + sample.name}>Open Variant-Explorer</a> <a className="buttonLink" href={"/tiering/" + sample.name}>Open Quick-Tiering</a></div></div>
                       })
                     }
                   </div>

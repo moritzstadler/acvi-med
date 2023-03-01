@@ -50,6 +50,10 @@ public class StudyService {
         columnValuesProvider.loadColumnValues();
     }
 
+    public void deleteSample(String name) {
+        postgresLoader.deleteSample(name);
+    }
+
     public List<Sample> getAllSamples() {
         return mySqlLoader.getAllSamples();
     }

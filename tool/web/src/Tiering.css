@@ -57,7 +57,6 @@
 }
 
 .isoform:hover {
-    background: #f5f5f5;
 }
 
 .searchResults {
@@ -107,16 +106,24 @@
     text-align: right;
 }
 
+.tierBox {
+    display: inline;
+}
+
 .tier {
     background: #000;
     color: #fff;
     font-weight: bold;
     border-radius: 3px;
-    padding: 3px;
+    padding: 5px;
     font-size: 9pt;
     display: inline;
     margin: 2px;
-    cursor: default;
+    cursor: pointer;
+}
+
+.tier:hover {
+  opacity: 0.8;
 }
 
 .PSV {
@@ -132,7 +139,7 @@
 }
 
 .PP {
-    background: #dbdb45;
+    background: #e6c95b;
 }
 
 .BA {
@@ -196,4 +203,35 @@
   margin-left: 15px;
   padding-top: 5px;
   padding-bottom: 5px;
+}
+
+.thin {
+  width: 800px !important;
+  margin-left: calc(50% - 400px) !important;
+}
+
+.article {
+  padding: 50px;
+}
+
+.hidden {
+  display: nine;
+}
+
+.tierExplanation {
+    padding: 20px;
+    background: #f5f5f5;
+    margin-top: 10px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.tierTitle {
+  font-size: 14pt;
+}
+
+.tierCheckMark {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 20px;
 }

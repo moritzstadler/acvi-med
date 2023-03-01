@@ -41,6 +41,10 @@ class PanelSelector extends React.Component {
     //alert(query);
     let result = [];
 
+    if (this.props.panelIndex.panelIndex == undefined) {
+      return;
+    }
+
     //find matching panels
     for (var i = 0; i < this.props.panelIndex.panelIndex.length; i++) {
       let currentPanel = this.props.panelIndex.panelIndex[i];

@@ -14,7 +14,7 @@ class View extends React.Component {
 
   constructor() {
     super();
-    this.state = { variant: null, meta: null, view: null, error: null, panelVisibility: [] };
+    this.state = { variant: null, meta: null, view: null, error: null, panelVisibility: [], notes: [] };
     this.renderedFields = []; 
     this.igvRef = React.createRef();
   }
@@ -23,6 +23,7 @@ class View extends React.Component {
     this.fetchMeta();
     this.fetchView();
     this.fetchVariant();
+    this.fetchNotes();
   }  
 
   componentDidUpdate() {
@@ -42,14 +43,14 @@ class View extends React.Component {
       .then(
         response => {
           if (response.status == 404) {
-            this.setState(prevState => ({variant: prevState.variant, meta: prevState.meta, view: prevState.view, error: "Variant not found!"}))
+            this.setState(prevState => ({variant: prevState.variant, meta: prevState.meta, view: prevState.view, error: "Variant not found!", notes: prevState.notes}))
           }
           return response.json()
         }
       )
       .then(
         data => {
-          this.setState(prevState => ({variant: data, meta: prevState.meta, error: prevState.error, panelVisibility: prevState.panelVisibility}))
+          this.setState(prevState => ({variant: data, meta: prevState.meta, error: prevState.error, panelVisibility: prevState.panelVisibility, notes: prevState.notes}))
         }
       );
   }
@@ -67,7 +68,7 @@ class View extends React.Component {
       .then(response => response.json())
       .then(
         data => {
-          this.setState(prevState => ({variant: prevState.variant, meta: data, view: prevState.view, error: prevState.error, panelVisibility: prevState.panelVisibility}))
+          this.setState(prevState => ({variant: prevState.variant, meta: data, view: prevState.view, error: prevState.error, panelVisibility: prevState.panelVisibility, notes: prevState.notes}))
         }
       );
   }
@@ -85,7 +86,24 @@ class View extends React.Component {
       .then(response => response.json())
       .then(
         data => {
-          this.setState(prevState => ({variant: prevState.variant, meta: prevState.meta, view: data, error: prevState.error, panelVisibility: prevState.panelVisibility}))
+          this.setState(prevState => ({variant: prevState.variant, meta: prevState.meta, view: data, error: prevState.error, panelVisibility: prevState.panelVisibility, notes: prevState.notes}))
+        }
+      );
+  }
+
+  fetchNotes() {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tokenString: this.props.token.tokenString })
+    };
+
+    fetch(Config.apiBaseUrl + '/note/get/' + this.props.matchProps.name + '/' + this.props.matchProps.pid, requestOptions)
+      .then(response => response.json())
+      .then(
+        data => {
+          console.log(data);
+          this.setState(prevState => ({variant: prevState.variant, meta: prevState.meta, view: prevState.view, error: prevState.error, panelVisibility: prevState.panelVisibility, notes: data}))
         }
       );
   }
@@ -209,6 +227,49 @@ class View extends React.Component {
       return hash == currentHash;      
     }
     return false;
+  }
+
+  changeNote(e) {
+    this.setState(prevState => ({ note: e.target.value }));
+  }
+
+  addNote(e) {
+    let newNote = {
+                    id: 0,
+                    sampleId: 0,
+                    sampleName: this.props.matchProps.name,
+                    researcherId: this.props.token.user.id,
+                    researcherName: this.props.token.user.email,
+                    variantId: this.props.matchProps.pid,
+                    variantPosition: this.state.variant.chrom + "-" + this.state.variant.pos + "-" + this.state.variant.ref + "-" + this.state.variant.alt,
+                    note: this.state.note,
+                    time: ""
+                  };
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tokenString: this.props.token.tokenString,
+          note: newNote
+        })
+    };
+
+    fetch(Config.apiBaseUrl + '/note/create', requestOptions)
+
+    this.setState(prevState => ({ note: "", notes: [...this.state.notes, newNote]}));
+  }
+
+  deleteNote(id) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tokenString: this.props.token.tokenString })
+    };
+
+    fetch(Config.apiBaseUrl + '/note/delete/' + id, requestOptions);
+
+    this.setState(prevState => ({ notes: this.state.notes.filter(n => n.id != id) }))
   }
 
   renderTableOfContents() {
@@ -417,6 +478,30 @@ class View extends React.Component {
     this.renderedFields = [];
 
     return <div className="center overflowhidden">
+        {this.state.notes && this.state.notes.map(n => {
+            return(
+              <div className="singleNote">
+                <div className="noteHeader">
+                  <div className="inlineLeft">
+                    <i style={{color: "orange"}} class="bi bi-star-fill"></i> <b><a href={"/view/" + n.sampleName + "/" + n.variantId}>{n.variantPosition}</a></b> | <a href={"/sample/" + n.sampleName}>{n.sampleName}</a>
+                  </div>
+                  <div className="inlineRight">
+                    {new Date(n.time).toLocaleDateString()} {new Date(n.time).toLocaleTimeString()} | <i onClick={(e) => this.deleteNote(n.id)} style={{cursor: "pointer"}} class="bi bi-trash"></i>
+                  </div>
+                </div>
+                <div className="noteBody">
+                  <b>{n.researcherName}</b>:
+                  <div className="noteText">
+                    <i>"{n.note}"</i>
+                  </div>
+                </div>
+              </div>
+            );
+        })}
+        <div className="noteAdder">
+          <i style={{color: "orange", "font-size": "19px"}} class="bi bi-star"></i>
+          <input onChange={(e) => this.changeNote(e)} value={this.state.note} placeholder="Add a note to this variant to find it later..." /> <button onClick={(e) => this.addNote(e)} className="sec">Save</button>
+        </div>
         <div className="halfinlineblockleft">
           <table className="top">
             <tr><td className="key">Sample</td><td className="value">{this.props.matchProps.name}</td></tr>
@@ -535,7 +620,7 @@ class View extends React.Component {
     } else {
       newPanelVisibility[i] = true;
     }
-    this.setState(prevState => ({variant: prevState.variant, meta: prevState.meta, error: prevState.error, panelVisibility: newPanelVisibility}))
+    this.setState(prevState => ({variant: prevState.variant, meta: prevState.meta, error: prevState.error, panelVisibility: newPanelVisibility, notes: prevState.notes}))
   }
 
   renderGeneData(indexedGeneDTOs) {
@@ -545,6 +630,7 @@ class View extends React.Component {
 
     return <div className="externalBoxData">
               <img className="externalLogo" src="https://upload.wikimedia.org/wikipedia/en/f/f2/Genomics_England_logo.svg"/>
+              <div className="info"></div>
               <div className="fullGeneNameDetail">
                 {indexedGeneDTOs[0].symbol} - {indexedGeneDTOs[0].name}
               </div>

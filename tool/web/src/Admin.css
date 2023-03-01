@@ -28,3 +28,7 @@ button.small {
 	height: 100px;
 	overflow-y: scroll;
 }
+
+.igvPath {
+  width: 90%;
+}
