@@ -516,18 +516,15 @@ function groupVariantsByVid(result) {
   }
 
   var resultingVariantsSorted = resultingVariants.sort((v1, v2) => {
-    var ranks1 = [];
+    var score1 = 0.0;
     for (var i = 0; i < v1.acmgTiers.length; i++) {
-      ranks1.push(order.indexOf(v1.acmgTiers[i]));
+      score1 += (order.length - order.indexOf(v1.acmgTiers[i])) * order.length * order.length;
     }
-    var ranks2 = [];
+    var score2 = 0.0;
     for (var i = 0; i < v2.acmgTiers.length; i++) {
-      ranks2.push(order.indexOf(v2.acmgTiers[i]));
+      score2 += (order.length - order.indexOf(v2.acmgTiers[i])) * order.length * order.length;
     }
-
-    var sub12 = ranks1.filter(n => !ranks2.includes(n));
-    var sub21 = ranks1.filter(n => !ranks2.includes(n));
-    return Math.min(...sub12) - Math.min(...sub21);
+    return score2 - score1;
   });
 
   result.variants = resultingVariantsSorted;
