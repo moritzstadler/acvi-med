@@ -40,6 +40,7 @@ export default function Tiering(props) {
     };
 
     const toggleTierView = (id) => {
+      setOpenExplanations([]); //added to close all other explanations
       if (openExplanations.includes(id)) {
         setOpenExplanations(openExplanations.filter(oe => oe != id));
       } else {

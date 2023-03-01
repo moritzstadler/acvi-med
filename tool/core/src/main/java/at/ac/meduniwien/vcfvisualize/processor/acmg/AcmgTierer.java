@@ -77,7 +77,8 @@ public class AcmgTierer {
             String gene = variant.getInfo().get("info_csq_symbol");
 
             int numberOfPathogenicOrLikelyPathogenicNullVariants = clinvar.countPathogenicOrLikelyPathogenicNullVariants(gene);
-            acmgTieringResult.addExplanation("Number of pathogenic or likely pathogenic null variants", numberOfPathogenicOrLikelyPathogenicNullVariants);
+            acmgTieringResult.addExplanation("Gene", gene);
+            acmgTieringResult.addExplanation("Number of pathogenic or likely pathogenic null variants on gene", numberOfPathogenicOrLikelyPathogenicNullVariants);
 
             boolean hasAtLeastOnePathogenicOrLikelyPathogenicNullVariant = numberOfPathogenicOrLikelyPathogenicNullVariants > 0;
             lossOfFunctionIsKnownMechanism = hasAtLeastOnePathogenicOrLikelyPathogenicNullVariant;
@@ -116,8 +117,17 @@ public class AcmgTierer {
 
         List<GenomicPosition> result = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos(), variant.getAlt());
         boolean identicalFoundInClinvar = result != null && !result.isEmpty();
+        if (identicalFoundInClinvar) {
+            acmgTieringResult.addExplanation("Exact matches found for pathogenic variants", result.stream().map(GenomicPosition::toString).collect(Collectors.joining(", ")));
+        }
 
-        boolean ps1Applies = (clinvar.findPathogenicsByHgvsP(hgvsp) != null && !clinvar.findPathogenicsByHgvsP(hgvsp).isEmpty()) || identicalFoundInClinvar;
+        List<GenomicPosition> hgvspResult = clinvar.findPathogenicsByHgvsP(hgvsp);
+        boolean matchingHgvspFound = hgvspResult != null && !hgvspResult.isEmpty();
+        if (matchingHgvspFound) {
+            acmgTieringResult.addExplanation("Pathogenic variants found with the same amino acid change", hgvspResult.stream().map(GenomicPosition::toString).collect(Collectors.joining(", ")));
+        }
+
+        boolean ps1Applies = matchingHgvspFound || identicalFoundInClinvar;
         return acmgTieringResult.setTierApplies(ps1Applies);
     }
 
@@ -197,7 +207,7 @@ public class AcmgTierer {
                 break;
             }
         }
-        acmgTieringResult.addExplanation("No benign variations in this area", variant.getChrom() + ":" + pos + " +-" + area + "bp");
+        acmgTieringResult.addExplanation("No benign variations in this area", variant.getChrom() + ":" + pos + " +/-" + area + "bp");
 
         boolean impactful = variant.getInfo().containsKey("info_csq_impact") && Arrays.asList("high", "moderate").contains(variant.getInfo().get("info_csq_impact").toLowerCase());
         acmgTieringResult.addExplanation("Impact", variant.getInfo().get("info_csq_impact"));

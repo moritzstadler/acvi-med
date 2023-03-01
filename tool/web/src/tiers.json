@@ -1,7 +1,7 @@
 {
 	"PVS1": {
 		"title": "PVS1 - Very strong evidence of pathogenicity",
-		"description": ""
+		"description": "Null variant (nonsense, frameshift, canonical +/−1 or 2 splice sites, initiation codon, single or multi-exon deletion) in a gene where loss of function (LOF) is a known mechanism of disease"
 	},
 	"PS1": {
 		"title": "PS1 - Strong evidence of pathogenicity",
