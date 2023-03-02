@@ -307,15 +307,20 @@ export default function Tiering(props) {
                                       </div>
                                       {isoform.acmgTieringResults.map(tr => {
                                           return (
-                                            <div className={"tierExplanation " + (openExplanations.includes(i + "." + index + "." + tr.tier) ? "" : "hidden")}>
-                                              <div className="tierTitle">{tr.tier}</div>
-                                              <b>{getTierExplanation(tr.tier)?.title}</b><br/>
-                                              <div className="info">{getTierExplanation(tr.tier)?.description}</div>
-                                              <hr/>
-                                              <div className="info">Causes for why {tr.tier} applies to this variant:</div>
-                                              {Object.keys(tr.explanation).map(k => (
-                                                <div className="tierCheckMark"><i class="bi bi-check-lg"></i> {k}: <b>{tr.explanation[k]}</b></div>
-                                              ))}
+                                            <div>
+                                              {openExplanations.includes(i + "." + index + "." + tr.tier) ?
+                                                <div className={"tierExplanation"}>
+                                                  <div className="tierTitle">{tr.tier}</div>
+                                                  <b>{getTierExplanation(tr.tier)?.title}</b><br/>
+                                                  <div className="info">{getTierExplanation(tr.tier)?.description}</div>
+                                                  <hr/>
+                                                  <div className="info">Causes for why {tr.tier} applies to this variant:</div>
+                                                  {Object.keys(tr.explanation).map(k => (
+                                                    <div className="tierCheckMark"><i class="bi bi-check-lg"></i> {k}: <b>{tr.explanation[k]}</b></div>
+                                                  ))}
+                                                </div>
+                                                : ""
+                                              }
                                             </div>
                                           )
                                       })}
@@ -516,7 +521,9 @@ function groupVariantsByVid(result) {
   }
 
   var resultingVariantsSorted = resultingVariants.sort((v1, v2) => {
-    var score1 = 0.0;
+    return Math.min(...a.filter(x => !b.includes(x))) - Math.min(...b.filter(x => !a.includes(x)));
+
+    /*var score1 = 0.0;
     for (var i = 0; i < v1.acmgTiers.length; i++) {
       score1 += (order.length - order.indexOf(v1.acmgTiers[i])) * order.length * order.length;
     }
@@ -524,7 +531,7 @@ function groupVariantsByVid(result) {
     for (var i = 0; i < v2.acmgTiers.length; i++) {
       score2 += (order.length - order.indexOf(v2.acmgTiers[i])) * order.length * order.length;
     }
-    return score2 - score1;
+    return score2 - score1;*/
   });
 
   result.variants = resultingVariantsSorted;
