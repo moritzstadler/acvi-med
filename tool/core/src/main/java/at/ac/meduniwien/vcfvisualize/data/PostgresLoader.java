@@ -318,6 +318,6 @@ public class PostgresLoader {
         Connection connection = getConnection();
         String sql = String.format("DROP TABLE IF EXISTS %s", name);
         PreparedStatement dropTable = connection.prepareStatement(sql);
-        dropTable.executeQuery();
+        dropTable.executeUpdate();
     }
 }

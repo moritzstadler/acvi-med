@@ -60,7 +60,7 @@ public class KnowledgebaseLoader {
     }
 
     @CrossOrigin
-    @PostMapping("/knowledgebase/panelapp/getpanelindex")
+    @PostMapping("/knowledgebase/panelapp/getgreenpanelindex")
     public GenePanelIndexDTO getPanels(@RequestBody AuthenticationDTO authenticationDTO) {
         //evaluate whether this is necessary given it it public information
         User user = authenticationService.getUserForToken(authenticationDTO.tokenString);
@@ -69,16 +69,16 @@ public class KnowledgebaseLoader {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "not logged in");
         }
 
-        return getPanelIndexDTO();
+        return getGreenPanelIndexDTO();
     }
 
-    private GenePanelIndexDTO getPanelIndexDTO() {
+    private GenePanelIndexDTO getGreenPanelIndexDTO() {
         GenePanelIndexDTO genePanelIndexDTO = new GenePanelIndexDTO();
         genePanelIndexDTO.panelIndex = new ArrayList<>();
 
         List<Panel> panels = panelApp.getPanels();
         for (Panel panel : panels) {
-            genePanelIndexDTO.panelIndex.add(new IndexedPanelDTO(panel));
+            genePanelIndexDTO.panelIndex.add(new IndexedPanelDTO(panel, "3")); //confidence_level = 3 means green panels
         }
 
         return genePanelIndexDTO;

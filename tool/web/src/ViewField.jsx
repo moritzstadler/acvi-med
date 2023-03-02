@@ -290,7 +290,7 @@ class ViewField extends React.Component {
           <a target="_blank" href={"https://www.lrg-sequence.org/search/?query=" + value.split(".")[0]}>{value}</a>
         </span>
       </span>;   
-  }   
+  }
 
 }
 

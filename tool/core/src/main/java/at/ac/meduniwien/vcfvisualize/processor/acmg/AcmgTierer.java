@@ -38,7 +38,6 @@ public class AcmgTierer {
 
         List<AcmgTieringResult> tiers = new LinkedList<>();
 
-        //TODO only take green panels!
         //TODO check if the whole system can find stuff like Huntington's disease mutations?
 
         for (AcmgTier acmgTier : AcmgTier.values()) {
@@ -318,7 +317,7 @@ public class AcmgTierer {
         int foundResults = 0;
         if (resultNucleotide != null) {
             foundResults += resultNucleotide.size();
-            acmgTieringResult.addExplanation("Exact pathogenic match found", resultNucleotide.stream().map(GenomicPosition::toString).collect(Collectors.joining(", ")));
+            acmgTieringResult.addExplanation("Pathogenic variant on same chromosome and position found", resultNucleotide.stream().map(GenomicPosition::toString).collect(Collectors.joining(", ")));
         }
 
         if (resultProtein != null) {

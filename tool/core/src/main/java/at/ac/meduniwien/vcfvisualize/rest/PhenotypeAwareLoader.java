@@ -87,8 +87,6 @@ public class PhenotypeAwareLoader {
             variantsByGenes = variantProvider.getVariants(user, sample, filterGenes, false);
         }
 
-        //TODO only take green panels!!!!
-
         //TODO should we just tier all variants?
         Set<String> infoFieldsToKeep = new HashSet<>(DEFAULT_INFO_FIELDS);
 

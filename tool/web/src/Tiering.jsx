@@ -215,6 +215,14 @@ export default function Tiering(props) {
                 <div className="tieringBackground">
                     <div className="tieringBox">
                         <LargeLoader/>
+                        <div className="info">
+                          This may take up to a couple of minutes depending on the size of your sample and the complexity of your query.<br/>
+                          <ul>
+                            <li>The variants are selected by gene or HPO-Term according to your query</li>
+                            <li>Each resulting variant is tiered according to the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544753/" target="_blank">ACMG-Guidelines</a></li>
+                            <li>Tiered variants are sorted by pathogenicity - highest to lowest</li>
+                          </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -362,7 +370,7 @@ function fetchPanels(props) {
         body: JSON.stringify({ tokenString: props.token.tokenString })
     };
 
-    return fetch(Config.apiBaseUrl + '/knowledgebase/panelapp/getpanelindex', requestOptions)
+    return fetch(Config.apiBaseUrl + '/knowledgebase/panelapp/getgreenpanelindex', requestOptions)
       .then(
         response => {
           return response.json()

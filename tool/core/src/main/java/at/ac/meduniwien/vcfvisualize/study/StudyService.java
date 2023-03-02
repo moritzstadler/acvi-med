@@ -51,6 +51,7 @@ public class StudyService {
     }
 
     public void deleteSample(String name) {
+        mySqlLoader.deleteSample(mySqlLoader.getSampleByName(name).getId());
         postgresLoader.deleteSample(name);
     }
 
