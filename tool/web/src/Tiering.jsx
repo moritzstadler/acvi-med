@@ -290,42 +290,47 @@ export default function Tiering(props) {
                                         <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox"><div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div></div>
                                     ))}
                                 </div>
-                                <div  className={"isoforms " + (resultVisibility[i] === true ? "" : "hidden")}>
-                                  {item.isoforms.map((isoform, index) => (
-                                    <div className="isoform">
-                                      <div className="resultName">
+                                <div  className={"isoforms"}>
+                                  {resultVisibility[i] ?
+                                    <div>
+                                      {item.isoforms.map((isoform, index) => (
+                                        <div className="isoform">
+                                          <div className="resultName">
 
-                                          <a target="_blank" href={Config.appBaseUrl + "/view/" + props.matchProps.name + "/" + isoform.variant.pid}>
-                                            {isoform.variant.info["info_csq_hgvsc"] !== null ? isoform.variant.info["info_csq_hgvsc"] : isoform.variant.info["info_csq_hgvsg"]}
-                                            {isoform.variant.info["info_csq_canonical"] && <span className="smallInlineBox" style={{background: "#00a087"}}>Canonical</span>}
-                                          </a>
-                                      </div>
-                                      <div className="resultTiers">
-                                        {isoform.acmgTieringResults.map(tr => (
-                                            <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox"><div className={"tier " + tr.tier.replace(/[0-9]/g, "")}>{tr.tier}</div></div>
-                                        ))}
-                                      </div>
-                                      {isoform.acmgTieringResults.map(tr => {
-                                          return (
-                                            <div>
-                                              {openExplanations.includes(i + "." + index + "." + tr.tier) ?
-                                                <div className={"tierExplanation"}>
-                                                  <div className="tierTitle">{tr.tier}</div>
-                                                  <b>{getTierExplanation(tr.tier)?.title}</b><br/>
-                                                  <div className="info">{getTierExplanation(tr.tier)?.description}</div>
-                                                  <hr/>
-                                                  <div className="info">Causes for why {tr.tier} applies to this variant:</div>
-                                                  {Object.keys(tr.explanation).map(k => (
-                                                    <div className="tierCheckMark"><i class="bi bi-check-lg"></i> {k}: <b>{tr.explanation[k]}</b></div>
-                                                  ))}
+                                              <a target="_blank" href={Config.appBaseUrl + "/view/" + props.matchProps.name + "/" + isoform.variant.pid}>
+                                                {isoform.variant.info["info_csq_hgvsc"] !== null ? isoform.variant.info["info_csq_hgvsc"] : isoform.variant.info["info_csq_hgvsg"]}
+                                                {isoform.variant.info["info_csq_canonical"] && <span className="smallInlineBox" style={{background: "#00a087"}}>Canonical</span>}
+                                              </a>
+                                          </div>
+                                          <div className="resultTiers">
+                                            {isoform.acmgTieringResults.map(tr => (
+                                                <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox"><div className={"tier " + tr.tier.replace(/[0-9]/g, "")}>{tr.tier}</div></div>
+                                            ))}
+                                          </div>
+                                          {isoform.acmgTieringResults.map(tr => {
+                                              return (
+                                                <div>
+                                                  {openExplanations.includes(i + "." + index + "." + tr.tier) ?
+                                                    <div className={"tierExplanation"}>
+                                                      <div className="tierTitle">{tr.tier}</div>
+                                                      <b>{getTierExplanation(tr.tier)?.title}</b><br/>
+                                                      <div className="info">{getTierExplanation(tr.tier)?.description}</div>
+                                                      <hr/>
+                                                      <div className="info">Causes for why {tr.tier} applies to this variant:</div>
+                                                      {Object.keys(tr.explanation).map(k => (
+                                                        <div className="tierCheckMark"><i class="bi bi-check-lg"></i> {k}: <b>{tr.explanation[k]}</b></div>
+                                                      ))}
+                                                    </div>
+                                                    : ""
+                                                  }
                                                 </div>
-                                                : ""
-                                              }
-                                            </div>
-                                          )
-                                      })}
+                                              )
+                                          })}
+                                        </div>
+                                      ))}
                                     </div>
-                                  ))}
+                                    : ""
+                                  }
                                 </div>
                                 {results.variants.length == 0 ? <span className="info">No matching variants found. Try modifying your phenotypes!</span> : ""}
                             </div>
@@ -521,19 +526,9 @@ function groupVariantsByVid(result) {
   }
 
   var resultingVariantsSorted = resultingVariants.sort((v1, v2) => {
-    var a = v1.acmgTiers.map(x => order.indexOf(x.tier));
-    var b = v2.acmgTiers.map(x => order.indexOf(x.tier));
+    var a = v1.acmgTiers.map(x => order.indexOf(x));
+    var b = v2.acmgTiers.map(x => order.indexOf(x));
     return Math.min(...a.filter(x => !b.includes(x))) - Math.min(...b.filter(x => !a.includes(x)));
-
-    /*var score1 = 0.0;
-    for (var i = 0; i < v1.acmgTiers.length; i++) {
-      score1 += (order.length - order.indexOf(v1.acmgTiers[i])) * order.length * order.length;
-    }
-    var score2 = 0.0;
-    for (var i = 0; i < v2.acmgTiers.length; i++) {
-      score2 += (order.length - order.indexOf(v2.acmgTiers[i])) * order.length * order.length;
-    }
-    return score2 - score1;*/
   });
 
   result.variants = resultingVariantsSorted;
