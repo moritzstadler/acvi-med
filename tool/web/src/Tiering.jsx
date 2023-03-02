@@ -521,8 +521,8 @@ function groupVariantsByVid(result) {
   }
 
   var resultingVariantsSorted = resultingVariants.sort((v1, v2) => {
-    var a = v1.acmgTieringResults.map(x => order.indexOf(x.tier));
-    var b = v2.acmgTieringResults.map(x => order.indexOf(x.tier));
+    var a = v1.acmgTiers.map(x => order.indexOf(x.tier));
+    var b = v2.acmgTiers.map(x => order.indexOf(x.tier));
     return Math.min(...a.filter(x => !b.includes(x))) - Math.min(...b.filter(x => !a.includes(x)));
 
     /*var score1 = 0.0;
