@@ -4,6 +4,8 @@
 
 **TODO: troubleshooting for google cloud: Apache stop, url with https**
 
+**TODO: add commits for installation of docker**
+
 # Introduction
 
 This tool is designed to allow clinicians and researchers to annotate and analyze VCF files.
@@ -40,7 +42,7 @@ First navigate to the `/vcfimport/tool` folder. Starting the web application and
 
 <pre><code>sudo docker-compose up -d --build</code></pre>
 
-You should be able to view the web application in your browser by accessing `localhost` or the domain of the server you set the project up on. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
+You should be able to view the web application in your browser by typing `http://localhost` or the domain of the server you set the project up on in your browser's address bar. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
 
 # Annotation and Import
 
