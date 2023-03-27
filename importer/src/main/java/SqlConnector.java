@@ -385,10 +385,10 @@ public class SqlConnector {
         executeStatement(impactSql);
 
         //create index for tiering
-        String impactIndexName = tableUniqueIndexName + "tiering" + Math.abs((tableName).hashCode()) + randomString(15);
-        String impactSql = String.format("create index %s on %s (info_csq_symbol, info_af_raw, info_csq_impact, pid);", impactIndexName, tableName);
-        System.out.println(impactSql);
-        executeStatement(impactSql);
+        String tieringIndexName = tableUniqueIndexName + "tiering" + Math.abs((tableName).hashCode()) + randomString(15);
+        String tieringSql = String.format("create index %s on %s (info_csq_symbol, info_af_raw, info_csq_impact, pid);", tieringIndexName, tableName);
+        System.out.println(tieringSql);
+        executeStatement(tieringSql);
 
         int count = 0;
         for (String col : colsToIndex) {
