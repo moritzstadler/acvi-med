@@ -22,7 +22,7 @@ Depending on your local setup you might need to change the access rights to the 
 <pre><code>chmod -R a+rwx $HOME/vep_data</code></pre>
 
 Then install all vep plugins in your container by running the following command.
-<pre><code>docker run -t -i -v $HOME/vep_data:/opt/vep/.vep vcfimport INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all</code></pre>
+<pre><code>docker run -t -i -v $HOME/vep_data:/data vcfimport INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all</code></pre>
 
 *Check out the official documentation of vep for further information https://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker*
 
@@ -99,14 +99,14 @@ cd $HOME/vep_data/libs/phenotypes</code></pre>
 Finally everything is set up to start annotating your VCF file.
 Move the file you want to annotate to your ``$HOME/vep_data`` folder and run the following command. Replace ``yourvcffile.vcf`` with the actual name your the VCF file you want to annotate,
 
-<pre><code>sudo docker run --rm -it -v $HOME/vep_data:/opt/vep/.vep vcfimport ./vep -i /opt/vep/.vep/yourvcffile.vcf --dir_cache /opt/vep/.vep --everything --cache --offline --format vcf --warning_file /opt/vep/.vep/warnings --verbose \
---plugin CADD,"/opt/vep/.vep/libs/cadd/whole_genome_SNVs.tsv.gz","/opt/vep/.vep/libs/cadd/gnomad.genomes.r3.0.indel.tsv.gz" \
---plugin Phenotypes,file="/opt/vep/.vep/libs/phenotypes/Phenotypes.pm_homo_sapiens_102_GRCh38.gvf.gz",include_types=Gene \
---plugin Mastermind,"/opt/vep/.vep/libs/mastermind/mastermind_cited_variants_reference-2021.08.03-grch38.vcf.gz" \
---plugin dbNSFP,/opt/vep/.vep/libs/dbnsfp/dbNSFP4.3a_grch38.gz,aaref,aaalt,codonpos,SIFT4G_score,Polyphen2_HDIV_score,Polyphen2_HDIV_pred,LRT_score,LRT_pred,MutationTaster_score,MutationTaster_pred,MutationTaster_AAE,FATHMM_score,FATHMM_pred,MetaSVM_score,MetaSVM_pred,MetaLR_score,MetaLR_pred,Reliability_index,M-CAP_score,M-CAP_pred,PrimateAI_score,PrimateAI_pred,Aloft_Fraction_transcripts_affected,DANN_score,VEST4_score,REVEL_score,MVP_score,Aloft_prob_Recessive,Aloft_prob_Dominant,Aloft_pred,GERP++_RS,clinvar_OMIM_id,Interpro_domain \
---plugin gnomADc,/opt/vep/.vep/libs/gnomad/gnomad.ch.genomesv3.tabbed.tsv.gz \
---custom "/opt/vep/.vep/libs/clinvar/clinvar.vcf.gz",ClinVar,vcf,exact,0,ALLELEID,CLNSIG,CLNREVSTAT,CLNDN,CLNDISDB,CLNDNINCL,CLNDISDBINCL,CLNHGVS,CLNSIGCONF,CLNSIGINCL,CLNVC,CLNVCSO,CLNVI,DBVARID,GENEINFO,MC,ORIGIN,RS,SSR \
- --o /opt/vep/.vep/output.vcf \
+<pre><code>sudo docker run --rm -it -v $HOME/vep_data:/data vcfimport ./vep -i /data/yourvcffile.vcf --dir_cache /data --everything --cache --offline --format vcf --warning_file /data/warnings --verbose \
+--plugin CADD,"/data/libs/cadd/whole_genome_SNVs.tsv.gz","/data/libs/cadd/gnomad.genomes.r3.0.indel.tsv.gz" \
+--plugin Phenotypes,file="/data/libs/phenotypes/Phenotypes.pm_homo_sapiens_102_GRCh38.gvf.gz",include_types=Gene \
+--plugin Mastermind,"/data/libs/mastermind/mastermind_cited_variants_reference-2021.08.03-grch38.vcf.gz" \
+--plugin dbNSFP,/data/libs/dbnsfp/dbNSFP4.3a_grch38.gz,aaref,aaalt,codonpos,SIFT4G_score,Polyphen2_HDIV_score,Polyphen2_HDIV_pred,LRT_score,LRT_pred,MutationTaster_score,MutationTaster_pred,MutationTaster_AAE,FATHMM_score,FATHMM_pred,MetaSVM_score,MetaSVM_pred,MetaLR_score,MetaLR_pred,Reliability_index,M-CAP_score,M-CAP_pred,PrimateAI_score,PrimateAI_pred,Aloft_Fraction_transcripts_affected,DANN_score,VEST4_score,REVEL_score,MVP_score,Aloft_prob_Recessive,Aloft_prob_Dominant,Aloft_pred,GERP++_RS,clinvar_OMIM_id,Interpro_domain \
+--plugin gnomADc,/data/libs/gnomad/gnomad.ch.genomesv3.tabbed.tsv.gz \
+--custom "/data/libs/clinvar/clinvar.vcf.gz",ClinVar,vcf,exact,0,ALLELEID,CLNSIG,CLNREVSTAT,CLNDN,CLNDISDB,CLNDNINCL,CLNDISDBINCL,CLNHGVS,CLNSIGCONF,CLNSIGINCL,CLNVC,CLNVCSO,CLNVI,DBVARID,GENEINFO,MC,ORIGIN,RS,SSR \
+ --o /data/output.vcf \
  --force_overwrite \
 --vcf \
 -hgvsg --shift_hgvs 1 --max_af --terms SO --regulatory --check_existing \
