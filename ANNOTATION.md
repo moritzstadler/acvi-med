@@ -5,10 +5,15 @@ This file contains the instructions for annotating a VCF file which is necessary
 - docker
 - wget
 
-## Building the Docker container
+## Pulling the Ensembl VEP Docker container
 After cloning the repository and navigating to the importer folder containing the Dockerfile (``cd importer``), you can use the following command to build the container if you haven't done so already. Depending on your local setup you might need to prepend `sudo`.
 
-<pre><code>docker build -t acviimporter .</code></pre>
+<pre><code>
+sudo docker pull ensemblorg/ensembl-vep
+sudo mkdir $HOME/vep_data
+sudo chmod 777 $HOME/vep_data
+sudo docker run -t -i -v $HOME/vep_data:/data ensemblorg/ensembl-vep INSTALL.pl -a cf -s homo_sapiens -y GRCh38
+</code></pre>
 
 ## Installing plugins
 
@@ -99,7 +104,7 @@ cd $HOME/vep_data/libs/phenotypes</code></pre>
 Finally everything is set up to start annotating your VCF file.
 Move the file you want to annotate to your ``$HOME/vep_data`` folder and run the following command. Replace ``yourvcffile.vcf`` with the actual name your the VCF file you want to annotate,
 
-<pre><code>sudo docker run --rm -it -v $HOME/vep_data:/data vcfimport ./vep -i /data/yourvcffile.vcf --dir_cache /data --everything --cache --offline --format vcf --warning_file /data/warnings --verbose \
+<pre><code>sudo docker run --rm -it -v $HOME/vep_data:/data ensemblorg/ensembl-vep ./vep -i /data/yourvcffile.vcf --dir_cache /data --everything --cache --offline --format vcf --warning_file /data/warnings --verbose \
 --plugin CADD,"/data/libs/cadd/whole_genome_SNVs.tsv.gz","/data/libs/cadd/gnomad.genomes.r3.0.indel.tsv.gz" \
 --plugin Phenotypes,file="/data/libs/phenotypes/Phenotypes.pm_homo_sapiens_102_GRCh38.gvf.gz",include_types=Gene \
 --plugin Mastermind,"/data/libs/mastermind/mastermind_cited_variants_reference-2021.08.03-grch38.vcf.gz" \
