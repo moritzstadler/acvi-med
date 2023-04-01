@@ -5,5 +5,5 @@ COPY import /usr/src/app
 COPY application.properties /usr/src/app/src/main/resources
 WORKDIR /usr/src/app
 RUN chmod +x import
-RUN mv install
+RUN mvn install
 EXPOSE 5432
