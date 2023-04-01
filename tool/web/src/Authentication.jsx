@@ -1,6 +1,6 @@
 import './Authentication.css';
 import React from 'react';  
-import logo from './logo.svg';
+import logo from './logo.png';
 
 class Authentication extends React.Component {
 
