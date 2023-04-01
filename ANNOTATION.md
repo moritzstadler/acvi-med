@@ -8,9 +8,7 @@ This file contains the instructions for annotating a VCF file which is necessary
 ## Pulling the Ensembl VEP Docker container
 After cloning the repository and navigating to the importer folder containing the Dockerfile (``cd importer``), you can use the following command to build the container if you haven't done so already. Depending on your local setup you might need to prepend `sudo`.
 
-<pre><code>
-sudo docker pull ensemblorg/ensembl-vep
-</code></pre>
+<pre><code>sudo docker pull ensemblorg/ensembl-vep</code></pre>
 
 ## Installing plugins
 
