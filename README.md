@@ -47,7 +47,7 @@ choosing an appropriate location for storing its files. You might want to adapt 
 
 First navigate to the `/vcfimport/tool` folder. Starting the web application and the server backend alongside the database can be done with the following command. Depending on your local setup it might not be necessary to prepend `sudo`.
 
-<pre><code>sudo docker-compose up -d --build</code></pre>
+<pre><code>sudo docker compose up -d --build</code></pre>
 
 You should be able to view the web application in your browser by typing `http://localhost` or the domain of the server you set the project up on in your browser's address bar. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
 
