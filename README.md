@@ -7,11 +7,7 @@
 <hr/>
 
 
-**TODO: Add DOI and citation info and paper**
-
-**TODO: add sudo lsof -i :80**
-
-**TODO: troubleshooting for google cloud: Apache stop, url with https**
+**TODO: Add DOI, citation info and paper**
 
 **TODO: add commits explaining installation of docker**
 
@@ -37,6 +33,8 @@ The following programs are required for starting the system:
 - <a href="https://docs.docker.com/compose/install/" target="_blank">Docker-Compose</a>
 - Free ports on `80` and `10938`
 
+>For checking out what process runs on the respective ports you may use ``sudo lsof -i :80`` 
+
 # The Tool - ACVI-MED
 
 ## Necessary Configurations
@@ -52,6 +50,8 @@ First navigate to the `/vcfimport/tool` folder. Starting the web application and
 <pre><code>sudo docker-compose up -d --build</code></pre>
 
 You should be able to view the web application in your browser by typing `http://localhost` or the domain of the server you set the project up on in your browser's address bar. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
+
+> If you were able to run the docker compose command successfully but cannot reach the service, check if your browser automatically changed http to https. You can only connect via https after adding a certificate! 
 
 # Annotation and Import
 
