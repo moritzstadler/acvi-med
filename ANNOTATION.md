@@ -6,9 +6,9 @@ This file contains the instructions for annotating a VCF file which is necessary
 - wget
 
 ## Building the Docker container
-After cloning the repository and navigating to the folder containing the Dockerfile (``cd /importer``), you can use the following command to build the container if you haven't done so already. Depending on your local setup you might need to prepend `sudo`.
+After cloning the repository and navigating to the importer folder containing the Dockerfile (``cd importer``), you can use the following command to build the container if you haven't done so already. Depending on your local setup you might need to prepend `sudo`.
 
-<pre><code>docker build -t vcfimport .</code></pre>
+<pre><code>docker build -t acviimporter .</code></pre>
 
 ## Installing plugins
 
