@@ -1,10 +1,12 @@
+<img width="300px" src="/tool/web/src/logo.png"/>
+
 **TODO: Add DOI and citation info and paper**
 
 **TODO: add sudo lsof -i :80**
 
 **TODO: troubleshooting for google cloud: Apache stop, url with https**
 
-**TODO: add commits for installation of docker**
+**TODO: add commits explaining installation of docker**
 
 # Introduction
 
@@ -28,7 +30,7 @@ The following programs are required for starting the system:
 - <a href="https://docs.docker.com/compose/install/" target="_blank">Docker-Compose</a>
 - Free ports on `80` and `10938`
 
-# Tool **(TODO add name)**
+# The Tool - ACVI-MED
 
 ## Necessary Configurations
 
@@ -94,12 +96,3 @@ Add these files to the `~/data/files/` directory (or your directory in case you 
 
   
 **[Learn how customize the application like changing filterable items, names and descriptions.](CUSTOMIZE.md)**
-
-  
-**TODO add fav and notes to variants**
-  
-**TODO add ACMG**
-  
-**TODO change logo**
-  
-**TODO docu for jsons (view.json...)**
