@@ -10,9 +10,6 @@ After cloning the repository and navigating to the importer folder containing th
 
 <pre><code>
 sudo docker pull ensemblorg/ensembl-vep
-sudo mkdir $HOME/vep_data
-sudo chmod 777 $HOME/vep_data
-sudo docker run -t -i -v $HOME/vep_data:/data ensemblorg/ensembl-vep INSTALL.pl -a cf -s homo_sapiens -y GRCh38
 </code></pre>
 
 ## Installing plugins
@@ -27,7 +24,7 @@ Depending on your local setup you might need to change the access rights to the 
 <pre><code>chmod -R a+rwx $HOME/vep_data</code></pre>
 
 Then install all vep plugins in your container by running the following command.
-<pre><code>docker run -t -i -v $HOME/vep_data:/data vcfimport INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all</code></pre>
+<pre><code>docker run -t -i -v $HOME/vep_data:/data ensemblorg/ensembl-vep INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all</code></pre>
 
 *Check out the official documentation of vep for further information https://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker*
 
