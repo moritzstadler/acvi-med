@@ -1,4 +1,11 @@
-<img width="300px" src="/tool/web/src/logo.png"/>
+<p align="center">
+<img width="300px" src="/tool/web/src/logo.png"/
+</p>
+<p align="center">
+<b>ACVI-MED: Accelerated Clinical Variant Interpretation</b>
+</p>
+<hr/>
+
 
 **TODO: Add DOI and citation info and paper**
 
