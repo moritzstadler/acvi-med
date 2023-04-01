@@ -19,9 +19,11 @@
 }
 
 .loginLogo {
-	width: 200px;
+	width: 180px;
 	margin: auto;
 	margin-left: 120px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 input.large {
