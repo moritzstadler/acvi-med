@@ -24,6 +24,8 @@ Depending on your local setup you might need to change the access rights to the 
 Then install all vep plugins in your container by running the following command.
 <pre><code>sudo docker run -t -i -v $HOME/vep_data:/data ensemblorg/ensembl-vep INSTALL.pl -a cfp -s homo_sapiens -y GRCh38 -g all</code></pre>
 
+> This might take a couple of minutes
+
 *Check out the official documentation of vep for further information https://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker*
 
 ## Adding libraries
