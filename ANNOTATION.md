@@ -4,6 +4,7 @@ This file contains the instructions for annotating a VCF file which is necessary
 **Required installations**
 - docker
 - wget
+- unzip
 
 ## Pulling the Ensembl VEP Docker container
 After cloning the repository and navigating to the importer folder containing the Dockerfile (``cd importer``), you can use the following command to build the container if you haven't done so already. Depending on your local setup you might need to prepend `sudo`.
@@ -64,6 +65,9 @@ wget https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz.tbi</cod
 Create a directory for dbNSFP and navigate to it.
 <pre><code>mkdir $HOME/vep_data/libs/dbnsfp
 cd $HOME/vep_data/libs/dbnsfp</code></pre>
+
+Install tabix
+<pre><code>apt-get install tabix</code></pre>
 
 Run the following commands one by one to fetch and format the dbNSFP data. Note that some commands may take a long time to run. In that case you might want to use the ``nohup``command. Check out http://database.liulab.science/dbNSFP#version for the latest version.
 <pre><code>wget https://usf.box.com/shared/static/9r6iamhldji4c3vodwebh3947vgrvsng
