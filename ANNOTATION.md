@@ -66,7 +66,7 @@ Create a directory for dbNSFP and navigate to it.
 cd $HOME/vep_data/libs/dbnsfp</code></pre>
 
 Run the following commands one by one to fetch and format the dbNSFP data. Note that some commands may take a long time to run. In that case you might want to use the ``nohup``command.
-<pre><code>wget https://dbnsfp.s3.amazonaws.com/dbNSFP4.3a.zip
+<pre><code>wget https://usf.box.com/shared/static/9r6iamhldji4c3vodwebh3947vgrvsng
 unzip dbNSFP4.3a.zip
 zcat dbNSFP4.3a_variant.chr1.gz | head -n1 > h
 mkdir tmp
