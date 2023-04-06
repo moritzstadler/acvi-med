@@ -36,9 +36,16 @@ Start by creating a directory for the data needed by the plugins in your ``vep_d
 ### CADD
 
 Create a directory for CADD
-<pre><code>mkdir $HOME/vep_data/libs/cadd</code></pre>
+<pre><code>mkdir $HOME/vep_data/libs/cadd
+cd $HOME/vep_data/libs/cadd
+</code></pre>
 
-**TODO - figshare**
+Copy the files vida wget from https://cadd.gs.washington.edu/download
+<pre><code>wget https://krishna.gs.washington.edu/download/CADD/v1.6/GRCh38/whole_genome_SNVs.tsv.gz.tbi
+wget https://krishna.gs.washington.edu/download/CADD/v1.6/GRCh38/whole_genome_SNVs.tsv.gz
+wget https://krishna.gs.washington.edu/download/CADD/v1.6/GRCh38/gnomad.genomes.r3.0.indel.tsv.gz.tbi
+wget https://krishna.gs.washington.edu/download/CADD/v1.6/GRCh38/gnomad.genomes.r3.0.indel.tsv.gz
+</code></pre>
 
 ### ClinVar
 
