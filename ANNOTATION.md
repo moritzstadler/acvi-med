@@ -84,7 +84,7 @@ Create a directory for Mastermind and navigate to it.
 <pre><code>mkdir $HOME/vep_data/libs/mastermind</code>
 cd $HOME/vep_data/libs/mastermind</pre>
 
-**TODO - figshare**
+Download both mastermind files from https://doi.org/10.6084/m9.figshare.22494535.v1 and move them to this directory.
 
 ### Phenotypes
 
@@ -92,7 +92,7 @@ Create a directory for Phenotypes and navigate to it.
 <pre><code>mkdir $HOME/vep_data/libs/phenotypes
 cd $HOME/vep_data/libs/phenotypes</code></pre>
 
-**TODO - figshare**
+Download both phenotype files from https://doi.org/10.6084/m9.figshare.22494535.v1 and move them to this directory.
 
 ## Annotate your file
 
