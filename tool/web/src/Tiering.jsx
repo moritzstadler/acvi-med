@@ -156,7 +156,7 @@ export default function Tiering(props) {
 
         for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
             var hpoTerm = searchData.hpoTerms.hpoTerms[i];
-            if (hpoTerm.name.toLowerCase().startsWith(queryClean)) {
+            if (hpoTerm?.name?.toLowerCase().startsWith(queryClean)) {
                 if (!found.has(hpoTerm)) {
                     resultStartsWith.push({type: 'hpoTerm', value: hpoTerm});
                     found.add(hpoTerm);
@@ -166,7 +166,7 @@ export default function Tiering(props) {
 
         for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
             var hpoTerm = searchData.hpoTerms.hpoTerms[i];
-            if (hpoTerm.name.toLowerCase().includes(queryClean)) {
+            if (hpoTerm?.name?.toLowerCase().includes(queryClean)) {
                 if (!found.has(hpoTerm)) {
                     resultIncludes.push({type: 'hpoTerm', value: hpoTerm});
                     found.add(hpoTerm);
@@ -176,8 +176,8 @@ export default function Tiering(props) {
 
         for (var i = 0; i < searchData.hpoTerms.hpoTerms.length; i++) {
             var hpoTerm = searchData.hpoTerms.hpoTerms[i];
-            for (var j = 0; j < hpoTerm.synonyms.length; j++) {
-                if (hpoTerm.synonyms[j].includes(queryClean)) {
+            for (var j = 0; j < hpoTerm?.synonyms?.length; j++) {
+                if (hpoTerm?.synonyms[j]?.includes(queryClean)) {
                     if (!found.has(hpoTerm)) {
                         resultSynonym.push({type: 'hpoTerm', value: hpoTerm});
                         found.add(hpoTerm);
