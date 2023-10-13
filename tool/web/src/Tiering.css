@@ -4,7 +4,7 @@
 .tieringBox {
 	margin: auto;
 	background: #fff;
-	width: 800px;
+	width: 1000px;
 	padding: 30px;
 	border-radius: 5px;
 	margin-top: 50px;
@@ -234,4 +234,49 @@
   margin-top: 5px;
   margin-bottom: 5px;
   margin-left: 20px;
+}
+
+.classificationBox {
+  display: inline;
+  border-left: 1px solid #ddd;
+  margin-left: 10px;
+}
+
+.classification {
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 9pt;
+    display: inline;
+    margin: 2px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.classification:hover {
+  opacity: 0.8;
+}
+
+.pathogenic {
+  background: darkred;
+}
+
+.likely_pathogenic {
+  background: red;
+}
+
+.likely_benign {
+  background: green;
+}
+
+.benign {
+  background: darkgreen;
+}
+
+.uncertain_significance {
+  background: #999;
 }

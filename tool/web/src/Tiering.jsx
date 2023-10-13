@@ -214,7 +214,7 @@ export default function Tiering(props) {
             <div className="Tiering">
                 <div className="tieringBackground">
                     <div className="tieringBox">
-                        <LargeLoader/>
+                        <LargeLoader/><br/><br/>
                         <div className="info">
                           This may take up to a couple of minutes depending on the size of your sample and the complexity of your query.<br/>
                           <ul>
@@ -297,6 +297,7 @@ export default function Tiering(props) {
                                     {item.acmgTiers.map(tier => (
                                         <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox"><div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div></div>
                                     ))}
+                                    <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox"><div className={"classification " + item.acmgClassification?.toLowerCase()}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
                                 </div>
                                 <div  className={"isoforms"}>
                                   {resultVisibility[i] ?
@@ -314,7 +315,19 @@ export default function Tiering(props) {
                                             {isoform.acmgTieringResults.map(tr => (
                                                 <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox"><div className={"tier " + tr.tier.replace(/[0-9]/g, "")}>{tr.tier}</div></div>
                                             ))}
+                                            <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox"><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
                                           </div>
+                                          {openExplanations.includes(i + "." + index + ".classification") ?
+                                            <div className={"tierExplanation"}>
+                                              <div className="tierTitle">ACMG classification: {isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div>
+                                              <hr/>
+                                              <div className="info">Causes why this variant was classified as {isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}:</div>
+                                              {Object.keys(isoform.acmgClassificationResult.explanation).sort((a, b) => {return a.localeCompare(b)}).map(k => (
+                                                <div className="tierCheckMark"><i class="bi bi-check-lg"></i> {k}: <b>{isoform.acmgClassificationResult.explanation[k]}</b></div>
+                                              ))}
+                                            </div>
+                                            : ""
+                                          }
                                           {isoform.acmgTieringResults.map(tr => {
                                               return (
                                                 <div>
@@ -524,19 +537,35 @@ function groupVariantsByVid(result) {
 
     var acmgTiersSorted = acmgTiers.sort((n1, n2) => order.indexOf(n1) - order.indexOf(n2));
 
+
+    var orderClassification = ["PATHOGENIC", "LIKELY_PATHOGENIC", "UNCERTAIN_SIGNIFICANCE", "LIKELY_BENIGN", "BENIGN"];
+    var acmgClassificationIndex = orderClassification.length - 1;
+    for (var j = 0; j < groupedVariants[keys[i]].length; j++) {
+      var currentVariant = groupedVariants[keys[i]][j];
+      var currentClassificationIndex = orderClassification.indexOf(currentVariant.acmgClassificationResult.acmgClassification);
+      if (currentClassificationIndex < acmgClassificationIndex) {
+        acmgClassificationIndex = currentClassificationIndex;
+      }
+    }
+
     var group = {
       chrom: groupedVariants[keys[i]][0].variant.chrom,
       pos: groupedVariants[keys[i]][0].variant.pos,
       isoforms: groupedVariants[keys[i]],
-      acmgTiers: acmgTiersSorted
+      acmgTiers: acmgTiersSorted,
+      acmgClassification: orderClassification[acmgClassificationIndex]
     };
     resultingVariants.push(group);
   }
 
   var resultingVariantsSorted = resultingVariants.sort((v1, v2) => {
-    var a = v1.acmgTiers.map(x => order.indexOf(x));
-    var b = v2.acmgTiers.map(x => order.indexOf(x));
-    return Math.min(...a.filter(x => !b.includes(x))) - Math.min(...b.filter(x => !a.includes(x)));
+    var classificationComparator = orderClassification.indexOf(v1.acmgClassification) - orderClassification.indexOf(v2.acmgClassification);
+    if (classificationComparator == 0) {
+      var a = v1.acmgTiers.map(x => order.indexOf(x));
+      var b = v2.acmgTiers.map(x => order.indexOf(x));
+      return Math.min(...a.filter(x => !b.includes(x)), order.length) - Math.min(...b.filter(x => !a.includes(x)), order.length);
+    }
+    return classificationComparator;
   });
 
   result.variants = resultingVariantsSorted;
