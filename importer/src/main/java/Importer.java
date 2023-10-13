@@ -323,7 +323,7 @@ public class Importer {
 
                             csqInputs[position] = singleAmpersandValue;
                         } else {
-                            System.out.println("Too many isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + csqInputs[positionOfHgvsc] + " (" + inputToMatch + ")");
+                            //System.out.println("Too many isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt() + " - " + csqInputs[positionOfHgvsc] + " (" + inputToMatch + ")");
                             csqInputs[position] = "";
                             affectedByTooManyIsoforms = true;
                         }
@@ -367,7 +367,7 @@ public class Importer {
             }
         }
         if (rightVariantCount < maxApersandSize) {
-            System.out.println("Too few isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt());
+            //System.out.println("Too few isoforms at " + variant.getChrom() + ":" + variant.getPos() + ":" + variant.getRef() + ":" + variant.getAlt());
             tooFewIsoformsCount++;
         }
 

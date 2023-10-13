@@ -1,7 +1,7 @@
 import './Activate.css';
 import './Authentication.css';
 import React from 'react';  
-import logo from './logo.svg';
+import logo from './logo.png';
 
 import Config from './config.js';
 

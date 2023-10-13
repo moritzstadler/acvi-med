@@ -1160,7 +1160,7 @@ class Filter extends React.Component {
 					return {basic: true, name: "info_csq_symbol", comparator: "IN", values: filter.value };
   			} else {
   				var symbolsInPanel = [];
-  				for (var i = 0; i < this.props.panelIndex.panelIndex.length; i++) {
+  				for (var i = 0; i < this.props.panelIndex?.panelIndex?.length; i++) {
   					var currentPanel = this.props.panelIndex.panelIndex[i];
   					if (currentPanel.name.replaceAll(/[^a-zA-Z0-9\s]/g, "").replaceAll("  ", " ").replaceAll(" ", "_").toUpperCase() == filter.value[0]) {
   						symbolsInPanel = currentPanel.geneSymbols;

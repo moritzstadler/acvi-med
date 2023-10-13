@@ -1,8 +1,15 @@
-**TODO: Add DOI and citation info and paper**
+<p align="center">
+<img width="300px" src="/tool/web/src/logo.png"/
+</p>
+<p align="center">
+<b>ACVI-MED: Accelerated Clinical Variant Interpretation</b>
+</p>
+<hr/>
 
-**TODO: add sudo lsof -i :80**
 
-**TODO: troubleshooting for google cloud: Apache stop, url with https**
+**TODO: Add DOI, citation info and paper**
+
+**TODO: add commits explaining installation of docker**
 
 # Introduction
 
@@ -26,11 +33,13 @@ The following programs are required for starting the system:
 - <a href="https://docs.docker.com/compose/install/" target="_blank">Docker-Compose</a>
 - Free ports on `80` and `10938`
 
-# Tool **(TODO add name)**
+>For checking out what process runs on the respective ports you may use ``sudo lsof -i :80`` 
+
+# The Tool - ACVI-MED
 
 ## Necessary Configurations
 
-Before deploying the system make sure to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.
+You can run the installation out of the box without the need to make any changes to the [docker-compose.yaml file](tool/docker-compose.yaml). (If you plan on importing a large number of files, it might make sense to to adapt the [docker-compose.yaml file](tool/docker-compose.yaml) to your needs.)
 Given that the PostgreSQL database can grow to a considerable size, consuming large ammounts of disk space it is worth
 choosing an appropriate location for storing its files. You might want to adapt the accordingly commented lines in [docker-compose.yaml file](tool/docker-compose.yaml).
 
@@ -38,9 +47,11 @@ choosing an appropriate location for storing its files. You might want to adapt 
 
 First navigate to the `/vcfimport/tool` folder. Starting the web application and the server backend alongside the database can be done with the following command. Depending on your local setup it might not be necessary to prepend `sudo`.
 
-<pre><code>sudo docker-compose up -d --build</code></pre>
+<pre><code>sudo docker compose up -d --build</code></pre>
 
-You should be able to view the web application in your browser by accessing `localhost` or the domain of the server you set the project up on. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
+You should be able to view the web application in your browser by typing `http://localhost` or the domain of the server you set the project up on in your browser's address bar. The initial credentials are `changeme` `changeme`. After logging in you should first create a new admin user for yourself by entering your email, checking 'Admin' and clicking 'Create'. After that open the activation link and select a secure password for yourself. Make sure to only delete the `changeme` account after you have successfully created another admin user.
+
+> If you were able to run the docker compose command successfully but cannot reach the service, check if your browser automatically changed http to https. You can only connect via https after adding a certificate! 
 
 # Annotation and Import
 
@@ -50,7 +61,7 @@ Before importing a VCF file make sure that the application is up and running. On
 
 After cloning the repository and navigating to the folder containing the Dockerfile ``/importer/Dockerfile``, you can use the following command to build the container. Depending on your local setup you might need to prepend `sudo`.
 
-<pre><code>sudo docker build -t vcfimport .</code></pre>
+<pre><code>sudo docker build -t acviimporter .</code></pre>
 
 ## Annotating a VCF file
 
@@ -64,7 +75,7 @@ Once the container has been built successfully, you can start the import by exec
 - Replace <b>/absolute/path/to/your/file</b> with the absolute path to the folder your file is located in.
 - Replace <b>file.vcf</b> with the name of your VCF file you want to import. 
 
-<pre><code>sudo docker run --rm -it --net="host" -v <b>/absolute/path/to/your/vcffolder</b>:/files vcfimport:latest ./import /files/<b>file.vcf</b> jdbc:postgresql://localhost:10938/sample postgres password</code></pre>
+<pre><code>sudo docker run --rm -it --net="host" -v <b>/absolute/path/to/your/vcffolder</b>:/files acviimporter:latest ./import /files/<b>file.vcf</b> jdbc:postgresql://localhost:10938/sample postgres password</code></pre>
 
 <i>Note that if you decided to use a different PostgreSQL host, username or password that change needs to be reflected in the command:
 ```sudo docker run --rm -it --net="host" -v <folderpath>:/files vcfimport:latest ./import /files/<filename> <postgreshost>/<database> <postgresusername> <postgrespassword>```</i>
@@ -92,12 +103,3 @@ Add these files to the `~/data/files/` directory (or your directory in case you 
 
   
 **[Learn how customize the application like changing filterable items, names and descriptions.](CUSTOMIZE.md)**
-
-  
-**TODO add fav and notes to variants**
-  
-**TODO add ACMG**
-  
-**TODO change logo**
-  
-**TODO docu for jsons (view.json...)**
