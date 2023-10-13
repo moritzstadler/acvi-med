@@ -259,7 +259,7 @@ export default function Tiering(props) {
                             <div className="tieringSelected">{item.value.name} <i onClick={(e) => handleRemove(item)} className="pointer bi bi-x"></i></div>
                         ))}
                         {searchDataLoaded ?
-                            <input value={query} onChange={handleQueryChange} placeholder="Phenotype" className="tieringInput" />
+                            <input value={query} onChange={handleQueryChange} placeholder="Enter the phenotype..." className="tieringInput" />
                             : <Loader/>
                         }
                         <div className="searchResults">
