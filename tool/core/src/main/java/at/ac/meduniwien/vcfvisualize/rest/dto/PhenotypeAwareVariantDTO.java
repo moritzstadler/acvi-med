@@ -1,6 +1,8 @@
 package at.ac.meduniwien.vcfvisualize.rest.dto;
 
 import at.ac.meduniwien.vcfvisualize.model.Variant;
+import at.ac.meduniwien.vcfvisualize.processor.acmg.AcmgClassification;
+import at.ac.meduniwien.vcfvisualize.processor.acmg.AcmgClassificationResult;
 import at.ac.meduniwien.vcfvisualize.processor.acmg.AcmgTieringResult;
 import at.ac.meduniwien.vcfvisualize.rest.dto.genepanelsearch.IndexedGeneDTO;
 import lombok.Getter;
@@ -29,6 +31,10 @@ public class PhenotypeAwareVariantDTO {
     @Getter
     @Setter
     List<String> genesLeadToDiscovery;
+
+    @Getter
+    @Setter
+    AcmgClassificationResult acmgClassificationResult;
 
     public PhenotypeAwareVariantDTO(Variant variant) {
         this.variant = variant.convertToDTO();

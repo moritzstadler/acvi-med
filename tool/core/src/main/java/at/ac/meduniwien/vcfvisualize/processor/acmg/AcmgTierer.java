@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +51,137 @@ public class AcmgTierer {
         }
 
         return tiers;
+    }
+
+    /**
+     * Classifies the variant based on table 5 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544753/
+     *
+     * @param tiers the tiers leading to the classification
+     * @return the ACMG classification of the variant
+     */
+    public AcmgClassificationResult performAcmgClassification(List<AcmgTier> tiers) {
+        //make a set to avoid mistakenly doubly added tiers leading to wrong interpretations
+        HashSet<AcmgTier> acmgTiers = new HashSet<>(tiers);
+
+        int pathogenicVeryStrongCount = 0;
+        int pathogenicStrongCount = 0;
+        int pathogenicModerateCount = 0;
+        int pathogenicSupportingCount = 0;
+        int benignStandAloneCount = 0;
+        int benignStrongCount = 0;
+        int benignSupportingCount = 0;
+
+        for (AcmgTier tier : acmgTiers) {
+           if (tier.equals(AcmgTier.PVS1)) {
+               pathogenicVeryStrongCount++;
+           } else if (tier.equals(AcmgTier.PS1) || tier.equals(AcmgTier.PS2) || tier.equals(AcmgTier.PS3) || tier.equals(AcmgTier.PS4)) {
+               pathogenicStrongCount++;
+           } else if (tier.equals(AcmgTier.PM1) || tier.equals(AcmgTier.PM2) || tier.equals(AcmgTier.PM3) || tier.equals(AcmgTier.PM4) || tier.equals(AcmgTier.PM5) || tier.equals(AcmgTier.PM6)) {
+               pathogenicModerateCount++;
+           } else if (tier.equals(AcmgTier.PP1) || tier.equals(AcmgTier.PP2) || tier.equals(AcmgTier.PP3) || tier.equals(AcmgTier.PP4) || tier.equals(AcmgTier.PP5)) {
+               pathogenicSupportingCount++;
+           } else if (tier.equals(AcmgTier.BA1)) {
+               benignStandAloneCount++;
+           } else if (tier.equals(AcmgTier.BS1) || tier.equals(AcmgTier.BS2) || tier.equals(AcmgTier.BS3) || tier.equals(AcmgTier.BS4)) {
+               benignStrongCount++;
+           } else if (tier.equals(AcmgTier.BP1) || tier.equals(AcmgTier.BP2) || tier.equals(AcmgTier.BP3) || tier.equals(AcmgTier.BP4) || tier.equals(AcmgTier.BP5) || tier.equals(AcmgTier.BP6) || tier.equals(AcmgTier.BP7)) {
+               benignSupportingCount++;
+           }
+        }
+
+        AcmgClassificationResult acmgClassificationResult = new AcmgClassificationResult();
+
+        boolean pathogenic = false;
+        if (pathogenicVeryStrongCount >= 1 && pathogenicStrongCount >= 1) {
+            pathogenic = true;
+            acmgClassificationResult.addExplanation("Pathogenic", "1 Very Strong (PVS1) and ≥1 Strong (PS1–PS4)");
+        } else if (pathogenicVeryStrongCount >= 1 && pathogenicModerateCount >= 2) {
+            pathogenic = true;
+            acmgClassificationResult.addExplanation("Pathogenic", "1 Very Strong (PVS1) and ≥2 Moderate (PM1–PM6)");
+        } else if (pathogenicVeryStrongCount >= 1 && pathogenicModerateCount >= 1 && pathogenicSupportingCount >= 1) {
+            pathogenic = true;
+            acmgClassificationResult.addExplanation("Pathogenic", "1 Very Strong (PVS1) and 1 Moderate (PM1–PM6) and 1 Supporting (PP1–PP5)");
+        } else if (pathogenicVeryStrongCount >= 1 && pathogenicSupportingCount >= 2) {
+            pathogenic = true;
+            acmgClassificationResult.addExplanation("Pathogenic", "1 Very Strong (PVS1) and ≥2 Supporting (PP1–PP5)");
+        } else if (pathogenicStrongCount >= 2) {
+            pathogenic = true;
+            acmgClassificationResult.addExplanation("Pathogenic", "≥2 Strong (PS1–PS4)");
+        } else if (pathogenicStrongCount >= 1 && pathogenicModerateCount >= 3) {
+            pathogenic = true;
+            acmgClassificationResult.addExplanation("Pathogenic", "1 Strong (PS1–PS4) and ≥3 Moderate (PM1–PM6)");
+        } else if (pathogenicStrongCount >= 1 && pathogenicModerateCount >= 2 && pathogenicSupportingCount >= 2) {
+            pathogenic = true;
+            acmgClassificationResult.addExplanation("Pathogenic", "1 Strong (PS1–PS4) and 2 Moderate (PM1–PM6) AND ≥2 Supporting (PP1–PP5)");
+        } else if (pathogenicStrongCount >= 1 && pathogenicModerateCount >= 1 && pathogenicSupportingCount >= 4) {
+            pathogenic = true;
+            acmgClassificationResult.addExplanation("Pathogenic", "1 Strong (PS1–PS4) and 1 Moderate (PM1–PM6) AND ≥4 Supporting (PP1–PP5)");
+        }
+
+        boolean likelyPathogenic = false;
+        if (pathogenicVeryStrongCount >= 1 && pathogenicModerateCount >= 1) {
+            likelyPathogenic = true;
+            acmgClassificationResult.addExplanation("Likely Pathogenic", "1 Very Strong (PVS1) AND 1 Moderate (PM1–PM6)");
+        } else if (pathogenicStrongCount >= 1 && pathogenicModerateCount >= 1) {
+            likelyPathogenic = true;
+            acmgClassificationResult.addExplanation("Likely Pathogenic", "1 Strong (PS1–PS4) AND 1–2 Moderate (PM1–PM6)");
+        } else if (pathogenicStrongCount >= 1 && pathogenicSupportingCount >= 2) {
+            likelyPathogenic = true;
+            acmgClassificationResult.addExplanation("Likely Pathogenic", "1 Strong (PS1–PS4) AND ≥2 Supporting (PP1–PP5)");
+        } else if (pathogenicModerateCount >= 3) {
+            likelyPathogenic = true;
+            acmgClassificationResult.addExplanation("Likely Pathogenic", "≥3 Moderate (PM1–PM6)");
+        } else if (pathogenicModerateCount >= 2 && pathogenicSupportingCount >= 2) {
+            likelyPathogenic = true;
+            acmgClassificationResult.addExplanation("Likely Pathogenic", "2 Moderate (PM1–PM6) AND ≥2 Supporting (PP1–PP5)");
+        } else if (pathogenicModerateCount >= 1 && pathogenicSupportingCount >= 4) {
+            likelyPathogenic = true;
+            acmgClassificationResult.addExplanation("Likely Pathogenic", "1 Moderate (PM1–PM6) AND ≥4 Supporting (PP1–PP5)");
+        }
+
+        boolean benign = false;
+        if (benignStandAloneCount >= 1) {
+            benign = true;
+            acmgClassificationResult.addExplanation("Benign", "1 Stand-Alone (BA1)");
+        } else if (benignStrongCount >= 2) {
+            benign = true;
+            acmgClassificationResult.addExplanation("Benign", "≥2 Strong (BS1–BS4)");
+        }
+
+        boolean likelyBenign = false;
+        if (benignStrongCount >= 1 && benignSupportingCount >= 1) {
+            likelyBenign = true;
+            acmgClassificationResult.addExplanation("Likely Benign", "1 Strong (BS1–BS4) and 1 Supporting (BP1–BP7)");
+        } else if (benignSupportingCount >= 2) {
+            likelyBenign = true;
+            acmgClassificationResult.addExplanation("Likely Benign", "≥2 Supporting (BP1–BP7)");
+        }
+
+        //combine results for final verdict
+        boolean anyPathogenic = pathogenic || likelyPathogenic;
+        boolean anyBenign = benign || likelyBenign;
+
+        if (anyPathogenic && anyBenign) {
+            acmgClassificationResult.setAcmgClassification(AcmgClassification.UNCERTAINSIGNIFICANCE);
+            acmgClassificationResult.addExplanation("Uncertain significance", "Both pathogenic and benign interpretations");
+        } else if (anyPathogenic)  {
+            if (pathogenic) {
+                acmgClassificationResult.setAcmgClassification(AcmgClassification.PATHOGENIC);
+            } else {
+                acmgClassificationResult.setAcmgClassification(AcmgClassification.LIKELYPATHOGENIC);
+            }
+        } else if (anyBenign) {
+            if (benign) {
+                acmgClassificationResult.setAcmgClassification(AcmgClassification.BENIGN);
+            } else {
+                acmgClassificationResult.setAcmgClassification(AcmgClassification.LIKELYBENIGN);
+            }
+        } else {
+            acmgClassificationResult.addExplanation("Uncertain significance", "Neither pathogenic nor benign interpretations");
+            acmgClassificationResult.setAcmgClassification(AcmgClassification.UNCERTAINSIGNIFICANCE);
+        }
+
+        return acmgClassificationResult;
     }
 
     /**

@@ -5,6 +5,7 @@ import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.Clinvar;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.GenomicPosition;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.Hpo;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.PanelApp;
+import at.ac.meduniwien.vcfvisualize.mocking.MockVariantProvider;
 import at.ac.meduniwien.vcfvisualize.model.Filter;
 import at.ac.meduniwien.vcfvisualize.model.User;
 import at.ac.meduniwien.vcfvisualize.model.Variant;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class PhenotypeAwareLoader {
@@ -107,10 +109,17 @@ public class PhenotypeAwareLoader {
             queryResultDTO.getVariants().add(phenotypeAwareVariantDTO);
         }
 
+        //add classifications for tiers
+        queryResultDTO.getVariants().forEach(v -> v.setAcmgClassificationResult(acmgTierer.performAcmgClassification(v.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).collect(Collectors.toList()))));
+
         queryResultDTO.getVariants().sort((a, b) -> {
-            int scoreA = a.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).map(Enum::toString).mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
-            int scoreB = b.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).map(Enum::toString).mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
-            return Integer.compare(scoreB, scoreA);
+            int classificationComparison = Integer.compare(b.getAcmgClassificationResult().getAcmgClassification().ordinal(), a.getAcmgClassificationResult().getAcmgClassification().ordinal());
+            if (classificationComparison == 0) {
+                int scoreA = a.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).map(Enum::toString).mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
+                int scoreB = b.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).map(Enum::toString).mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
+                return Integer.compare(scoreB, scoreA);
+            }
+            return classificationComparison;
         });
 
         queryResultDTO.elapsedMilliseconds = System.currentTimeMillis() - startTime;
