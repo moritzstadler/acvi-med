@@ -113,7 +113,7 @@ public class PhenotypeAwareLoader {
         queryResultDTO.getVariants().forEach(v -> v.setAcmgClassificationResult(acmgTierer.performAcmgClassification(v.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).collect(Collectors.toList()))));
 
         queryResultDTO.getVariants().sort((a, b) -> {
-            int classificationComparison = Integer.compare(b.getAcmgClassificationResult().getAcmgClassification().ordinal(), a.getAcmgClassificationResult().getAcmgClassification().ordinal());
+            int classificationComparison = Integer.compare(a.getAcmgClassificationResult().getAcmgClassification().ordinal(), b.getAcmgClassificationResult().getAcmgClassification().ordinal());
             if (classificationComparison == 0) {
                 int scoreA = a.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).map(Enum::toString).mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();
                 int scoreB = b.getAcmgTieringResults().stream().map(AcmgTieringResult::getTier).map(Enum::toString).mapToInt(t -> AcmgTier.valueOf(t).ordinal() * AcmgTier.values().length * AcmgTier.values().length).sum();

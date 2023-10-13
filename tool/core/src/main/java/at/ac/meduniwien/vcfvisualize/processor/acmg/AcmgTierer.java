@@ -162,23 +162,23 @@ public class AcmgTierer {
         boolean anyBenign = benign || likelyBenign;
 
         if (anyPathogenic && anyBenign) {
-            acmgClassificationResult.setAcmgClassification(AcmgClassification.UNCERTAINSIGNIFICANCE);
+            acmgClassificationResult.setAcmgClassification(AcmgClassification.UNCERTAIN_SIGNIFICANCE);
             acmgClassificationResult.addExplanation("Uncertain significance", "Both pathogenic and benign interpretations");
         } else if (anyPathogenic)  {
             if (pathogenic) {
                 acmgClassificationResult.setAcmgClassification(AcmgClassification.PATHOGENIC);
             } else {
-                acmgClassificationResult.setAcmgClassification(AcmgClassification.LIKELYPATHOGENIC);
+                acmgClassificationResult.setAcmgClassification(AcmgClassification.LIKELY_PATHOGENIC);
             }
         } else if (anyBenign) {
             if (benign) {
                 acmgClassificationResult.setAcmgClassification(AcmgClassification.BENIGN);
             } else {
-                acmgClassificationResult.setAcmgClassification(AcmgClassification.LIKELYBENIGN);
+                acmgClassificationResult.setAcmgClassification(AcmgClassification.LIKELY_BENIGN);
             }
         } else {
             acmgClassificationResult.addExplanation("Uncertain significance", "Neither pathogenic nor benign interpretations");
-            acmgClassificationResult.setAcmgClassification(AcmgClassification.UNCERTAINSIGNIFICANCE);
+            acmgClassificationResult.setAcmgClassification(AcmgClassification.UNCERTAIN_SIGNIFICANCE);
         }
 
         return acmgClassificationResult;
