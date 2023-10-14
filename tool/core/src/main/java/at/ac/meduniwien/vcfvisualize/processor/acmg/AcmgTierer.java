@@ -199,8 +199,8 @@ public class AcmgTierer {
         List<GenomicPosition> clinvarResult = clinvar.findPathogenics(variant.getChrom().replace("chr", ""), variant.getPos(), variant.getAlt());
         boolean inClinvarAsPathogenicOrLikelyPathogenic = clinvarResult != null && !clinvarResult.isEmpty();
 
-        //this covers null variant, checking for frameshift, missense, etc. is not necessary (https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html#consequences)
-        boolean impactful = variant.getInfo().containsKey("info_csq_impact") && Arrays.asList("high", "moderate").contains(variant.getInfo().get("info_csq_impact").toLowerCase());
+        //this covers null variant, checking for frameshift, stop_gained, etc. is not necessary (https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html#consequences)
+        boolean impactful = variant.getInfo().containsKey("info_csq_impact") && Arrays.asList("high").contains(variant.getInfo().get("info_csq_impact").toLowerCase());
         acmgTieringResult.addExplanation("Impact", variant.getInfo().get("info_csq_impact"));
 
         boolean lossOfFunctionIsKnownMechanism = false;

@@ -172,13 +172,13 @@
 }
 
 .resultName {
-    width: 50%;
+    width: 35%;
     display: inline-block;
     cursor: pointer;
 }
 
 .resultTiers {
-    width: 50%;
+    width: 65%;
     text-align: right;
     display: inline-block;
 }
