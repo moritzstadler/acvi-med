@@ -93,8 +93,8 @@ public class SecondaryFindingsLoader {
                 List<GenomicPosition> clinvarResult = clinvar.findPathogenics(variant.getChrom(), variant.getPos(), variant.getAlt());
                 boolean clinvarPathogenicFound = clinvarResult != null && clinvarResult.size() > 0;
                 boolean clinvarPathogenicAnnotated = false;
-                if (variant.getInfo() != null && variant.getInfo().containsKey("info_csq_clinvar_clnsig") && variant.getInfo().get("info_csq_clinvar_clnsig") != null) {
-                    clinvarPathogenicAnnotated = variant.getInfo().get("info_csq_clinvar_clnsig").toLowerCase().contains("pathogenic"); //targets both pathogenic and likely pathogenic
+                if (variant.getInfo() != null && variant.getInfo().containsKey("info_csq_clinvar_clnsigconf") && variant.getInfo().get("info_csq_clinvar_clnsigconf") != null) {
+                    clinvarPathogenicAnnotated = variant.getInfo().get("info_csq_clinvar_clnsigconf").toLowerCase().contains("pathogenic"); //targets both pathogenic and likely pathogenic
                 }
                 boolean clinvarPositive = clinvarPathogenicFound || clinvarPathogenicAnnotated;
 
