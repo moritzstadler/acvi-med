@@ -90,7 +90,6 @@ public class SecondaryFindingsLoader {
                 SecondaryFindingDefinition secondaryFindingDefinition = secondaryFindingDefinitionByGene.get(gene);
 
                 //check clinvar
-                System.out.println("Checking Clinvar");
                 List<GenomicPosition> clinvarResult = clinvar.findPathogenics(variant.getChrom(), variant.getPos(), variant.getAlt());
                 boolean clinvarPathogenicFound = clinvarResult != null && clinvarResult.size() > 0;
                 boolean clinvarPathogenicAnnotated = false;
