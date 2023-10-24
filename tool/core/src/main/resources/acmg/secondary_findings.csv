@@ -1,0 +1,74 @@
+Gene;Inheritance;Onset child;Onset adult;Report KP;Report EP;Domain;Phenotype;OMIM Id;ACMG SF list version
+APC;AD;1;1;1;1;Genes related to cancer phenotypes;Familial adenomatous polyposis;175100;1
+RET;AD;1;1;1;0;Genes related to cancer phenotypes;Familial medullary thyroid cancer;155240;1
+BRCA1;AD;0;1;1;1;Genes related to cancer phenotypes;Hereditary breast and/or ovarian cancer;604370;1
+BRCA2;AD;0;1;1;1;Genes related to cancer phenotypes;Hereditary breast and/or ovarian cancer;612555;1
+PALB2;AD;1;1;1;1;Genes related to cancer phenotypes;Hereditary breast and/or ovarian cancer;114480;3
+SDHD;AD;1;1;1;1;Genes related to cancer phenotypes;Hereditary paraganglioma–pheochromocytoma syndrome;168000;1
+SDHAF2;AD;1;1;1;1;Genes related to cancer phenotypes;Hereditary paraganglioma–pheochromocytoma syndrome;601650;1
+SDHC;AD;1;1;1;1;Genes related to cancer phenotypes;Hereditary paraganglioma–pheochromocytoma syndrome;605373;1
+SDHB;AD;1;1;1;1;Genes related to cancer phenotypes;Hereditary paraganglioma–pheochromocytoma syndrome;115310;1
+MAX;AD;1;1;1;1;Genes related to cancer phenotypes;Hereditary paraganglioma–pheochromocytoma syndrome;171300;3
+TMEM127;AD;1;1;1;1;Genes related to cancer phenotypes;Hereditary paraganglioma–pheochromocytoma syndrome;171300;3
+BMPR1A;AD;1;1;1;1;Genes related to cancer phenotypes;Juvenile polyposis syndrome;174900;2
+SMAD4;AD;1;1;1;1;Genes related to cancer phenotypes;Juvenile polyposis syndrome;175050;2
+TP53;AD;1;1;1;1;Genes related to cancer phenotypes;Li–Fraumeni syndrome;151623;1
+MLH1;AD;0;1;1;1;Genes related to cancer phenotypes;Lynch syndrome;609310;1
+MSH2;AD;0;1;1;1;Genes related to cancer phenotypes;Lynch syndrome;120435;1
+MSH6;AD;0;1;1;1;Genes related to cancer phenotypes;Lynch syndrome;614350;1
+PMS2;AD;0;1;1;1;Genes related to cancer phenotypes;Lynch syndrome;614337;1
+MEN1;AD;1;1;1;1;Genes related to cancer phenotypes;Multiple endocrine neoplasia type 1;131100;1
+MUTYH;AR;0;1;1;1;Genes related to cancer phenotypes;MUTYH-associated  polyposis;608456;1
+NF2;AD;1;1;1;1;Genes related to cancer phenotypes;Neuro bromatosis type 2;101000;1
+STK11;AD;1;1;1;1;Genes related to cancer phenotypes;Peutz–Jeghers syndrome;175200;1
+PTEN;AD;1;1;1;1;Genes related to cancer phenotypes;PTEN hamartoma tumor syndrome;158350;1
+RB1;AD;1;0;1;1;Genes related to cancer phenotypes;Retinoblastoma;180200;1
+TSC1;AD;1;0;1;1;Genes related to cancer phenotypes;Tuberous sclerosis complex;191100;1
+TSC2;AD;1;0;1;1;Genes related to cancer phenotypes;Tuberous sclerosis complex;613254;1
+VHL;AD;1;1;1;1;Genes related to cancer phenotypes;von Hippel–Lindau syndrome;193300;1
+WT1;AD;1;0;1;1;Genes related to cancer phenotypes;WT1-related Wilms tumor;194070;1
+FBN1;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Aortopathies;154700;1
+TGFBR1;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Aortopathies;609192;1
+TGFBR2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Aortopathies;610168;1
+SMAD3;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Aortopathies;613795;1
+ACTA2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Aortopathies;611788;1
+MYH11;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Aortopathies;132900;1
+PKP2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Arrhythmogenic right ventricular cardiomyopathy;609040;1
+DSP;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Arrhythmogenic right ventricular cardiomyopathy;607450;1
+DSC2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Arrhythmogenic right ventricular cardiomyopathy;610476;1
+TMEM43;AD;1;1;1;0;Genes related to cardiovascular phenotypes;Arrhythmogenic right ventricular cardiomyopathy;604400;1
+DSG2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Arrhythmogenic right ventricular cardiomyopathy;610193;1
+RYR2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Catecholaminergic polymorphic ventricular tachycardia;604772;1
+CASQ2;AR;1;1;1;1;Genes related to cardiovascular phenotypes;Catecholaminergic polymorphic ventricular tachycardia;611938;3
+TRDN;AR;1;1;1;1;Genes related to cardiovascular phenotypes;Catecholaminergic polymorphic ventricular tachycardia;615441;3
+TNNT2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Dilated cardiomyopathy;601494;1
+LMNA;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Dilated cardiomyopathy;115200;1
+FLNC;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Dilated cardiomyopathy;617047;3
+TTN;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Dilated cardiomyopathy;604145;3
+COL3A1;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Ehlers–Danlos syndrome, vascular type;130050;1
+LDLR;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Familial hypercholesterolemia;143890;1
+APOB;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Familial hypercholesterolemia;144010;1
+PCSK9;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Familial hypercholesterolemia;603776;1
+MYH7;AD;1;1;1;0;Genes related to cardiovascular phenotypes;Hypertrophic cardiomyopathyh;192600;1
+MYBPC3;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Hypertrophic cardiomyopathyh;115197;1
+TNNI3;AD;1;1;1;0;Genes related to cardiovascular phenotypes;Hypertrophic cardiomyopathyh;613690;1
+TPM1;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Hypertrophic cardiomyopathyh;115196;1
+MYL3;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Hypertrophic cardiomyopathyh;608751;1
+ACTC1;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Hypertrophic cardiomyopathyh;612098;1
+PRKAG2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Hypertrophic cardiomyopathyh;600858;1
+MYL2;AD;1;1;1;0;Genes related to cardiovascular phenotypes;Hypertrophic cardiomyopathyh;608758;1
+KCNQ1;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Long QT syndrome types 1 and 2;192500;1
+KCNH2;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Long QT syndrome types 1 and 2;613688;1
+SCN5A;AD;1;1;1;1;Genes related to cardiovascular phenotypes;Long QT syndrome 3, Brugada syndrome;603830,601144;1
+BTD;AR;1;1;1;1;Genes related to inborn errors of metabolism phenotypes;Biotinidase de  ciency;253260;3
+GLA;XL;1;1;1;1;Genes related to inborn errors of metabolism phenotypes;Fabry disease;301500;1
+OTC;XL;1;1;1;1;Genes related to inborn errors of metabolism phenotypes;Ornithine transcarbamylase de  ciency;311250;2
+GAA;AR;1;1;1;1;Genes related to inborn errors of metabolism phenotypes;Pompe disease;232300;3
+HFE;AR;1;1;1;1;Genes related to miscellaneous phenotypes;Hereditary hemochromatosis;235200;3
+ACVRL1;AD;1;1;1;1;Genes related to miscellaneous phenotypes;Hereditary hemorrhagic telangiectasia;600376;3
+ENG;AD;1;1;1;1;Genes related to miscellaneous phenotypes;Hereditary hemorrhagic telangiectasia;187300;3
+RYR1;AD;1;1;1;0;Genes related to miscellaneous phenotypes;Malignant hyperthermia;145600;1
+CACNA1S;AD;1;1;1;0;Genes related to miscellaneous phenotypes;Malignant hyperthermia;601887;1
+HNF1A;AD;1;1;1;1;Genes related to miscellaneous phenotypes;Maturity-onset diabetes of the young;600496;3
+RPE65;AR;1;1;1;1;Genes related to miscellaneous phenotypes;RPE65-related  retinopathy;204100,613794;3
+ATP7B;AR;1;1;1;1;Genes related to miscellaneous phenotypes;Wilson disease;277900;2
