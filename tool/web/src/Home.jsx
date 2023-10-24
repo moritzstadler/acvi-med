@@ -64,7 +64,7 @@ class Home extends React.Component {
                   <div className={"studies " + (this.state.visible[i] ? "" : "hidden")} >
                     {
                       item.samples.map((sample, j) => {
-                        return <div className="sampleHomeBox"><div style={{display: "inline-block", width: "35%"}}><b>{sample.name}</b></div><div style={{display: "inline-block", width: "65%", "text-align": "right"}}><a className="buttonLink" href={"/sample/" + sample.name}>Open Variant-Explorer</a> <a className="buttonLink" href={"/tiering/" + sample.name}>Open Quick-Tiering</a></div></div>
+                        return <div className="sampleHomeBox"><div style={{display: "inline-block", width: "35%"}}><b>{sample.name}</b></div><div style={{display: "inline-block", width: "65%", "text-align": "right"}}><a className="buttonLink" href={"/sample/" + sample.name}>Open Variant-Explorer</a> <a className="buttonLink" href={"/tiering/" + sample.name}>Open Quick-Tiering</a> <a className="buttonLink" href={"/secondaryfindings/" + sample.name}>Open Secondary Findings</a></div></div>
                       })
                     }
                   </div>
