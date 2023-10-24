@@ -94,6 +94,7 @@ public class SecondaryFindingsLoader {
                 boolean clinvarPathogenicFound = clinvarResult != null && clinvarResult.size() > 0;
                 boolean clinvarPathogenicAnnotated = false;
                 if (variant.getInfo().containsKey("info_csq_clinvar_clnsig") && variant.getInfo().get("info_csq_clinvar_clnsig") != null) {
+                    System.out.println(variant.getInfo().get("info_csq_clinvar_clnsig"));
                     clinvarPathogenicAnnotated = variant.getInfo().get("info_csq_clinvar_clnsig").toLowerCase().contains("pathogenic"); //targets both pathogenic and likely pathogenic
                 }
                 boolean clinvarPositive = clinvarPathogenicFound || clinvarPathogenicAnnotated;
