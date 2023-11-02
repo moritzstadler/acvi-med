@@ -11,14 +11,7 @@ gzip -d clinvar.vcf.gz
 ```  
   
 ```
-sudo docker run --rm -it -v /data/vep:/opt/vep/.vep ensemblorg/ensembl-vep ./vep -i /opt/vep/.vep/clinvar.vcf --dir_cache /opt/vep/.vep --cache --offline --format vcf --warning_file /opt/vep/.vep/warnings \  
---o /opt/vep/.vep/cv_full.vcf \  
---force_overwrite \  
---vcf \  
--hgvsg --shift_hgvs 1 \  
---hgvs \  
---symbol \  
---fork 4
+sudo docker run --rm -it -v /data/vep:/opt/vep/.vep ensemblorg/ensembl-vep vep -i /opt/vep/.vep/clinvar.vcf --dir_cache /opt/vep/.vep --cache --offline --format vcf --warning_file /opt/vep/.vep/warnings --o /opt/vep/.vep/cv_full.vcf --force_overwrite --vcf -hgvsg --shift_hgvs 1 --hgvs --symbol --fork 4
 ```  
   
 ```
