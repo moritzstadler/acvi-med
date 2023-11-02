@@ -504,7 +504,7 @@ function groupVariantsByVid(result) {
   var variants = result.variants;
   var groupedVariants = {};
 
-  for (var i = 0; i < variants.length; i++) {
+  for (var i = 0; i < variants?.length; i++) {
     var variant = variants[i].variant;
     if (!(variant.vid in groupedVariants)) {
       groupedVariants[variant.vid] = [];

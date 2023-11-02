@@ -120,11 +120,11 @@ public class Clinvar {
                 long pos = Long.parseLong(tabSeperated[1]);
                 String ref = tabSeperated[2];
                 String alt = tabSeperated[3];
-                String clnsigLowerCase = tabSeperated[4].toLowerCase();
+                String clnsig = tabSeperated[4];
 
                 GenomicPosition genomicPosition = new GenomicPosition(chrom, pos, ref, alt);
 
-                if (clnsigLowerCase.contains("pathogenic") || clnsigLowerCase.contains("likely_pathogenic")) {
+                if (clnsig.contains("Pathogenic") || clnsig.contains("Likely_pathogenic")) {
                     //map chrom:pos to this
                     String chromPosKey = genomicPosition.getChrom() + ":" + genomicPosition.getPos();
                     if (!pathogenicOrLikelyPathogenicGenomicPositionsByChromAndPos.containsKey(chromPosKey)) {
