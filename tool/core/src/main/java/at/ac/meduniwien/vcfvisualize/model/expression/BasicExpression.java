@@ -26,7 +26,8 @@ public class BasicExpression<T> implements Expression {
                 "info_af_eas",
                 "info_af_nfe",
                 "info_af_oth",
-                "info_af_raw");
+                "info_af_raw",
+                "info_csq_gnomadg_af");
         if (comparator.equals("<") && treatNullAsZeroFields.contains(name)) {
             return "(" + name + " " + comparator + " " + value + " OR " + name + " IS NULL)";
         }

@@ -132,7 +132,7 @@ public class PhenotypeAwareLoader {
         /*Expression clinvarEnum = new EnumExpression("info_csq_clinvar_clnsig", new LinkedList<>(clinvar.getLikelyPathogenicAndPathogenicTerms()));
         Expression clinEnum = new EnumExpression("info_csq_clin_sig", new LinkedList<>(clinvar.getLikelyPathogenicAndPathogenicTerms()));
         Expression pathogenicityExpression = new IntermediateExpression(new ArrayList<>(Collections.singletonList("OR")), new ArrayList<>(Arrays.asList(clinEnum, clinvarEnum)));*/
-        Expression afExpression = new BasicExpression<Double>("info_af_raw", "<", 0.05);
+        Expression afExpression = new BasicExpression<Double>("info_csq_gnomadg_af", "<", 0.05);
         Expression impactExpression = new EnumExpression("info_csq_impact", Arrays.asList("HIGH", "LOW", "MODERATE", "null"));
         return new IntermediateExpression(new ArrayList<>(Arrays.asList("AND", "AND")), new ArrayList<>(Arrays.asList(geneExpression, afExpression, impactExpression)));
     }
