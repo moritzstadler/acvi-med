@@ -74,7 +74,7 @@ export default function Tiering(props) {
                     <button className="tert" onClick={(e) => setOnResultPage(false)}><i className="bi bi-arrow-left"> Back</i></button><br/><br/>
                         <h1>{props.matchProps.name}</h1>
                         <b>{groupedFindings.length}</b> secondary {groupedFindings.length == 1 ? "finding" : "findings"} for {props.matchProps.name} in <b>{Number(results.elapsedMilliseconds / 1000).toFixed(2)} seconds</b><br/><br/>
-                        {groupedFindings.length == 0 ? "No variants found. This does not mean that the patient is not affected by genetic disorders nor does it provide any information on the carrier status." : ""}
+                        {groupedFindings.length == 0 ? "No variants found in ACMG secondary findings set! Note: This does not mean that the patient is not affected by genetic disorders nor does it provide any information on the carrier status." : ""}
                         {groupedFindings.map(item => {
                           return (
                              <div className="finding">
@@ -160,6 +160,11 @@ function fetchVariants(token, sample, patientIsChild, patientHasSingleXChromosom
 
 function groupVariantsByVid(result) {
   var variants = result.variants;
+
+  if (variants.length == 0) {
+    return [];
+  }
+
   var groupedVariants = {};
 
   for (var i = 0; i < variants.length; i++) {
@@ -186,7 +191,7 @@ function groupVariantsByVid(result) {
     }
   }
 
-  console.log(canonicalList[0].secondaryFindingDefinition.gene);
+  //console.log(canonicalList[0].secondaryFindingDefinition.gene);
 
   var sortedVariants = canonicalList.sort((v1, v2) => {return v1?.secondaryFindingDefinition.gene.localeCompare(v2?.secondaryFindingDefinition.gene)});
   return sortedVariants;
