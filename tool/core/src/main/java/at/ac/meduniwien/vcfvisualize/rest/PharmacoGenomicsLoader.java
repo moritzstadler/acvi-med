@@ -143,7 +143,7 @@ public class PharmacoGenomicsLoader {
             //find variant which is canonical (or any if none is)
             Variant primeVariant = rsIdToVariant.get(rsId).get(0);
             for (Variant variant : rsIdToVariant.get(rsId)) {
-                if (variant.getInfo().containsKey("info_csq_canonical") && variant.getInfo().get("info_csq_canonical").toUpperCase().equals("YES")) {
+                if (variant.getInfo().containsKey("info_csq_canonical") && variant.getInfo().get("info_csq_canonical") != null && variant.getInfo().get("info_csq_canonical").toUpperCase().equals("YES")) {
                     primeVariant = variant;
                 }
             }
