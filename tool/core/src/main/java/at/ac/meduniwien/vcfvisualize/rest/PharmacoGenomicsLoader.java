@@ -111,6 +111,7 @@ public class PharmacoGenomicsLoader {
 
         String sample = pharmacoGenomicsLoadRequestDTO.sample;
         if (!variantProvider.isValidSampleId(sample) || !processIdToSample.get(processId).equals(sample)) {
+            System.out.println("process id does not match sample");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "user not authorized");
         }
 
@@ -119,6 +120,7 @@ public class PharmacoGenomicsLoader {
         }
 
         if (!processIdToCompleted.get(processId)) {
+            System.out.println("process not completed");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "process not completed yet");
         }
 
