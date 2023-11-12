@@ -49,7 +49,6 @@ public class Cron {
     public void init() {
         pharmGKB.initiate();
 
-        /*
         new Thread(() -> pharmGKB.initiate()).start();
 
         new Thread(() -> studyService.synchronizeSamples()).start();
@@ -59,7 +58,7 @@ public class Cron {
             hpo.loadDataFromAPI();
         }).start();
 
-        new Thread(() -> clinvar.initiate()).start();*/
+        new Thread(() -> clinvar.initiate()).start();
     }
 
 }
