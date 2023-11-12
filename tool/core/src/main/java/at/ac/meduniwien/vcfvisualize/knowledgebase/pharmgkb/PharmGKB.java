@@ -154,8 +154,6 @@ public class PharmGKB {
                 }
 
                 String rsId = variantOrHaplotypes;
-                System.out.println(rsId);
-
                 if (!rsIdToAnnotations.containsKey(rsId)) {
                     rsIdToAnnotations.put(rsId, new LinkedList<>());
                 }
