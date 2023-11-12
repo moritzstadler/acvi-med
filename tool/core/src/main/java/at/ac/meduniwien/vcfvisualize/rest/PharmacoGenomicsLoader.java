@@ -158,7 +158,15 @@ public class PharmacoGenomicsLoader {
                 pharmGKBAnnotationDTOs.add(pharmGKBAnnotationDTO);
             }
 
-            PharmacoGenomicsVariantDTO pharmacoGenomicsVariantDTO = new PharmacoGenomicsVariantDTO(primeVariant, pharmGKBAnnotationDTOs);
+            Set<String> infoFieldsToKeep = new HashSet<>(Arrays.asList("info_csq_symbol", "info_csq_hgvsc"));
+            //add genotype
+            for (String key : primeVariant.getInfo().keySet()) {
+                if (key.endsWith("_get")) {
+                    infoFieldsToKeep.add(key);
+                }
+            }
+            VariantDTO primeVariantDTO = primeVariant.convertToReducedDTO(infoFieldsToKeep);
+            PharmacoGenomicsVariantDTO pharmacoGenomicsVariantDTO = new PharmacoGenomicsVariantDTO(primeVariantDTO, pharmGKBAnnotationDTOs);
             pharmacoGenomicsVariantDTOs.add(pharmacoGenomicsVariantDTO);
         }
 
@@ -226,7 +234,7 @@ public class PharmacoGenomicsLoader {
                 pharmGKBAnnotationDTOs.add(pharmGKBAnnotationDTO);
             }
 
-            PharmacoGenomicsVariantDTO pharmacoGenomicsVariantDTO = new PharmacoGenomicsVariantDTO(primeVariant, pharmGKBAnnotationDTOs);
+            PharmacoGenomicsVariantDTO pharmacoGenomicsVariantDTO = new PharmacoGenomicsVariantDTO(primeVariant.convertToDTO(), pharmGKBAnnotationDTOs);
             pharmacoGenomicsVariantDTOs.add(pharmacoGenomicsVariantDTO);
         }
 

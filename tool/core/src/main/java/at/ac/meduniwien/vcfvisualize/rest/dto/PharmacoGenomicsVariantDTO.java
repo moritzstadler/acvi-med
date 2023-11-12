@@ -4,6 +4,7 @@ import at.ac.meduniwien.vcfvisualize.model.Variant;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class PharmacoGenomicsVariantDTO {
@@ -15,8 +16,8 @@ public class PharmacoGenomicsVariantDTO {
     @Setter
     public List<PharmGKBAnnotationDTO> pharmGKBAnnotations;
 
-    public PharmacoGenomicsVariantDTO(Variant variant, List<PharmGKBAnnotationDTO> pharmGKBAnnotations) {
-        this.variant = variant.convertToDTO();
+    public PharmacoGenomicsVariantDTO(VariantDTO variantDTO, List<PharmGKBAnnotationDTO> pharmGKBAnnotations) {
+        this.variant = variantDTO;
         this.pharmGKBAnnotations = pharmGKBAnnotations;
     }
 }
