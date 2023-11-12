@@ -3,6 +3,7 @@ package at.ac.meduniwien.vcfvisualize.cron;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.Clinvar;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.Hpo;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.PanelApp;
+import at.ac.meduniwien.vcfvisualize.knowledgebase.pharmgkb.PharmGKB;
 import at.ac.meduniwien.vcfvisualize.study.StudyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +26,15 @@ public class Cron {
     Clinvar clinvar;
 
     @Autowired
+    PharmGKB pharmGKB;
+
+    @Autowired
     StudyService studyService;
 
     @Scheduled(cron = "0 0 2 * * ?")
     public void performCronJobs() {
+        new Thread(() -> pharmGKB.initiate()).start();
+
         new Thread(() -> studyService.synchronizeSamples()).start();
 
         new Thread(() -> {
@@ -41,6 +47,11 @@ public class Cron {
 
     @PostConstruct
     public void init() {
+        pharmGKB.initiate();
+
+        /*
+        new Thread(() -> pharmGKB.initiate()).start();
+
         new Thread(() -> studyService.synchronizeSamples()).start();
 
         new Thread(() -> {
@@ -48,7 +59,7 @@ public class Cron {
             hpo.loadDataFromAPI();
         }).start();
 
-        new Thread(() -> clinvar.initiate()).start();
+        new Thread(() -> clinvar.initiate()).start();*/
     }
 
 }
