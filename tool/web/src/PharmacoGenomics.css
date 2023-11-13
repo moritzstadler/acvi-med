@@ -1,0 +1,220 @@
+.Tiering {
+}
+
+div.progressBarBackground {
+  width: 100%;
+  background: #eee;
+  border-radius: 3px;
+  height: 7px;
+}
+
+div.progressBar {
+  background: linear-gradient(90deg, #e44e35, #00a087);
+  height: 7px;
+  border-radius: 3px;
+  transition: width 1000ms;
+}
+
+.largeText {
+  font-size: 22px;
+}
+
+.pharmVariant {
+  background: #f5f5f5;
+  padding: 20px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.variantTitle {
+  font-size: 20px;
+}
+
+.annotation {
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+
+.annotationTitle {
+}
+
+.annotationThumb {
+  cursor: pointer;
+}
+
+.annotationThumb:hover {
+  opacity: 0.7;
+}
+
+.annotationOpen {
+}
+
+.alleles {
+  background: #fff;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.allele {
+  margin-bottom: 10px;
+  border-left: 3px solid #ccc;
+  padding-left: 5px;
+  color: #999;
+  font-size: 15px;
+}
+
+.alleleSelected {
+  border-left: 3px solid orange;
+  color: #000;
+}
+
+.alleleAmbiguous {
+  color: #000;
+}
+
+.evidences {
+  background: #fff;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding-top: 20px;
+}
+
+.evidence {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.levelOfEvidence {
+  font-size: 12px;
+  min-width: 25px;
+  text-align: center;
+  padding: 5px;
+  display: inline-block;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 5px;
+  margin-bottom: 2px;
+}
+
+.levelOfEvidence1A {
+  background: blue;
+}
+
+.levelOfEvidence1B {
+  background: blue;
+}
+
+.levelOfEvidence2A {
+  background: green;
+}
+
+.levelOfEvidence2B {
+  background: green;
+}
+
+.levelOfEvidence3 {
+  background: orange;
+}
+
+.levelOfEvidence4 {
+  background: red;
+}
+
+.drug {
+  display: inline-block;
+  font-weight: bold;
+  margin-left: 5px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.phenotypeCategory {
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 5px;
+  font-size: 15px;
+  margin-top: 5px;
+}
+
+.phenotypes {
+  display: inline-block;
+  color: #555;
+  font-weight: bold;
+}
+
+.pharmPhenotype {
+  display: inline-block;
+  padding: 5px;
+  background: #eee;
+  margin-right: 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.pharmPhenotypePlain {
+  font-weight: normal;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.windowBackground {
+  position: fixed;
+  top: 0px;
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  overflow: scroll;
+}
+
+.window {
+  position: absolute;
+  width: 1000px;
+  background: #fff;
+  margin: auto;
+  top: 50px;
+  margin-left: calc(50% - 500px);
+  border-radius: 5px;
+  padding: 50px;
+  cursor: auto;
+}
+
+.windowTitle {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.windowMainTitle {
+  font-size: 25px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.evidenceScore {
+  font-size: 15px;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding-top: 12px;
+  text-align: center;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.evidenceData {
+  display: inline-block;
+  margin-left: 10px;
+  width: calc(100% - 70px);
+}
+
+.evidenceSummary {
+  font-size: 16px;
+}
