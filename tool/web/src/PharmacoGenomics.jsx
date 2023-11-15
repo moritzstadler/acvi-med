@@ -124,7 +124,9 @@ export default function PharmacoGenomics(props) {
                     <div className="tieringBox">
                         <h1>{props.matchProps.name}</h1>
                         <div className="info">
-                            <i className="bi bi-info-circle-fill"></i> The following variants of the patient {props.matchProps.name} are associated with entries in <a href="https://www.pharmgkb.org/" target="_blank">PharmGKB</a>
+                            <i className="bi bi-info-circle-fill"></i> The following variants of the patient {props.matchProps.name} are associated with entries in <a href="https://www.pharmgkb.org/" target="_blank">PharmGKB</a><br/>
+                            <i className="bi bi-info-circle-fill"></i> Level of evidence 1A is highest (most supported by research) and 4 is lowest. <a href="https://www.pharmgkb.org/page/clinAnnLevels" target="_blank">Clinical Annotation Levels of Evidence</a><br/>
+                            <i className="bi bi-info-circle-fill"></i> Important variants have a black badge attached to them. Check out <a href="https://www.pharmgkb.org/vips" target="_blank">PharmGKB VIPs: Very Important Pharmacogenes</a> for more.
                         </div>
                         {results
                           .sort((a, b) => {console.log(a.pharmGKBAnnotations.map(p => p.pharmGKBAnnotation.levelOfEvidence)); if (a.pharmGKBAnnotations.map(p => p.pharmGKBAnnotation.levelOfEvidence).sort((a, b) => a.localeCompare(b)) > b.pharmGKBAnnotations.map(p => p.pharmGKBAnnotation.levelOfEvidence).sort((a, b) => a.localeCompare(b)) ) return 1; else return -1})
@@ -138,6 +140,7 @@ export default function PharmacoGenomics(props) {
                                 .map((annotation, index) => (
                                 <div onClick={(e) => setWindowData({variant: item.variant, annotation: annotation})}>
                                   <div className="annotationThumb">
+                                    {annotation.pharmGKBAnnotation.levelModifierss != "" ? <div className="levelModifier">{annotation.pharmGKBAnnotation.levelModifierss}</div> : ""}
                                     <div title="level of evidence (1A best, 4 worst) https://www.pharmgkb.org/page/clinAnnLevels" className={"levelOfEvidence levelOfEvidence" + annotation.pharmGKBAnnotation.levelOfEvidence} >{annotation.pharmGKBAnnotation.levelOfEvidence}</div>
                                     {annotation.pharmGKBAnnotation.drugs.split(";").map(drug => (
                                       <div className="drug">{drug.toUpperCase()}</div>
@@ -200,6 +203,7 @@ function Annotation(props) {
     return (
       <div className={"annotation annotationOpen"}>
         <div className="annotationTitle">
+          {annotation.pharmGKBAnnotation.levelModifierss != "" ? <div className="levelModifier" style={{fontSize: "15px"}}>{annotation.pharmGKBAnnotation.levelModifierss}</div> : ""}
           <div title="level of evidence (1A best, 4 worst) https://www.pharmgkb.org/page/clinAnnLevels" className={"levelOfEvidence levelOfEvidence" + annotation.pharmGKBAnnotation.levelOfEvidence} style={{fontSize: "15px"}}>{annotation.pharmGKBAnnotation.levelOfEvidence} Level of evidence</div>
           {annotation.pharmGKBAnnotation.drugs.split(";").map(drug => (
             <div className="drug" style={{fontSize: "16px"}}>{drug.toUpperCase()}</div>
