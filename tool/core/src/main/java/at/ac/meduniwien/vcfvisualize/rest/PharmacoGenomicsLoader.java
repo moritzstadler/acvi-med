@@ -198,7 +198,10 @@ public class PharmacoGenomicsLoader {
             }
 
             Set<String> infoFieldsToKeep = new HashSet<>(Arrays.asList("info_csq_symbol", "info_csq_hgvsc"));
+<<<<<<< HEAD
+=======
             //genotype is automatically kept
+>>>>>>> b0bf0b1070c61286fe0369a8d02750e533c0c25b
             VariantDTO primeVariantDTO = primeVariant.convertToReducedDTO(infoFieldsToKeep);
             PharmacoGenomicsVariantDTO pharmacoGenomicsVariantDTO = new PharmacoGenomicsVariantDTO(primeVariantDTO, pharmGKBAnnotationDTOs);
             pharmacoGenomicsVariantDTOs.add(pharmacoGenomicsVariantDTO);
