@@ -93,7 +93,7 @@ public class PharmacoGenomicsLoader {
                 List<List<String>> rsIdsBatches = new LinkedList<>();
 
                 while (batchStart + batchSize < rsIds.size()) {
-                    rsIdsBatches.add(rsIds.subList(batchStart, batchSize));
+                    rsIdsBatches.add(rsIds.subList(batchStart, batchStart + batchSize));
                     batchStart += batchSize;
                 }
                 rsIdsBatches.add(rsIds.subList(batchStart, rsIds.size()));
