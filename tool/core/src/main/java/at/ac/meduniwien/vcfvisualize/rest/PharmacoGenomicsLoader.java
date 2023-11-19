@@ -74,24 +74,63 @@ public class PharmacoGenomicsLoader {
         }
 
         String processId = UUID.randomUUID().toString();
+        prepareClearCache(processId, sample);
 
+        new Thread(() -> {
+            try {
+                //version for single size batches
+                /*for (String rsId : pharmGKB.getKnownRsIds()) {
+                    List<Variant> partialResult = variantProvider.getVariants(user, sample, new Filter(buildExpressionByRsId(Collections.singletonList(rsId)), new LinkedList<>(), 0), false);
+                    processIdToVariants.get(processId).addAll(partialResult);
+                    processIdToProcessedCount.put(processId, processIdToProcessedCount.get(processId) + 1);
+                }*/
+
+                List<String> rsIds = new LinkedList<>();
+                rsIds.addAll(pharmGKB.getKnownRsIds());
+
+                int batchStart = 0;
+                int batchSize = 5;
+                List<List<String>> rsIdsBatches = new LinkedList<>();
+
+                while (batchStart + batchSize < rsIds.size()) {
+                    rsIdsBatches.add(rsIds.subList(batchStart, batchSize));
+                    batchStart += batchSize;
+                }
+                rsIdsBatches.add(rsIds.subList(batchStart, rsIds.size()));
+
+                for (List<String> rsIdsBatch : rsIdsBatches) {
+                    List<Variant> partialResult = variantProvider.getVariants(user, sample, new Filter(buildExpressionByRsId(rsIdsBatch), new LinkedList<>(), 0), false);
+                    processIdToVariants.get(processId).addAll(partialResult);
+                    processIdToProcessedCount.put(processId, processIdToProcessedCount.get(processId) + rsIdsBatch.size());
+                }
+
+                processIdToCompleted.put(processId, true);
+            } catch (Exception ex) {
+                System.out.println("Error performing PGx: " + ex.getMessage());
+                //delete cached data
+                emptyCache(processId, sample);
+            }
+        }).start();
+
+        return processId;
+    }
+
+    private void prepareClearCache(String processId, String sample) {
         processIdToVariants.put(processId, new LinkedList<>());
         processIdToProcessingStart.put(processId, System.currentTimeMillis());
         processIdToProcessedCount.put(processId, 0);
         processIdToCompleted.put(processId, false);
-        processIdToSample.put(processId, pharmacoGenomicsLoadRequestDTO.sample);
+        processIdToSample.put(processId, sample);
         sampleToProcessId.put(sample, processId);
+    }
 
-        new Thread(() -> {
-            for (String rsId : pharmGKB.getKnownRsIds()) {
-                List<Variant> partialResult = variantProvider.getVariants(user, sample, new Filter(buildExpressionByRsId(Collections.singletonList(rsId)), new LinkedList<>(), 0), false);
-                processIdToVariants.get(processId).addAll(partialResult);
-                processIdToProcessedCount.put(processId, processIdToProcessedCount.get(processId) + 1);
-            }
-            processIdToCompleted.put(processId, true);
-        }).start();
-
-        return processId;
+    private void emptyCache(String processId, String sample) {
+        processIdToVariants.remove(processId);
+        processIdToProcessingStart.remove(processId);
+        processIdToProcessedCount.remove(processId);
+        processIdToCompleted.remove(processId);
+        processIdToSample.remove(processId);
+        sampleToProcessId.remove(sample);
     }
 
     @CrossOrigin
@@ -159,13 +198,7 @@ public class PharmacoGenomicsLoader {
             }
 
             Set<String> infoFieldsToKeep = new HashSet<>(Arrays.asList("info_csq_symbol", "info_csq_hgvsc"));
-            //add genotype
-            /*String genotypeKey = null;
-            for (String key : primeVariant.getInfo().keySet()) {
-                if (key.endsWith("_gt")) {
-                    genotypeKey = key;
-                }
-            }*/
+            //genotype is automatically kept
             VariantDTO primeVariantDTO = primeVariant.convertToReducedDTO(infoFieldsToKeep);
             PharmacoGenomicsVariantDTO pharmacoGenomicsVariantDTO = new PharmacoGenomicsVariantDTO(primeVariantDTO, pharmGKBAnnotationDTOs);
             pharmacoGenomicsVariantDTOs.add(pharmacoGenomicsVariantDTO);
@@ -175,12 +208,8 @@ public class PharmacoGenomicsLoader {
         queryResultDTO.elapsedMilliseconds = System.currentTimeMillis() - processIdToProcessingStart.get(processId);
 
         //clear cache
-        processIdToVariants.remove(processId);
-        processIdToProcessingStart.remove(processId);
-        processIdToProcessedCount.remove(processId);
-        processIdToCompleted.remove(processId);
-        processIdToSample.remove(processId);
-        sampleToProcessId.remove(sample);
+        //TODO add back if re-analysis is important
+        //emptyCache(processId, sample);
 
         return queryResultDTO;
     }
