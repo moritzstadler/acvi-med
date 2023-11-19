@@ -79,13 +79,13 @@ public class PharmacoGenomicsLoader {
         new Thread(() -> {
             try {
                 //version for single size batches
-                /*for (String rsId : pharmGKB.getKnownRsIds()) {
+                for (String rsId : pharmGKB.getKnownRsIds()) {
                     List<Variant> partialResult = variantProvider.getVariants(user, sample, new Filter(buildExpressionByRsId(Collections.singletonList(rsId)), new LinkedList<>(), 0), false);
                     processIdToVariants.get(processId).addAll(partialResult);
                     processIdToProcessedCount.put(processId, processIdToProcessedCount.get(processId) + 1);
-                }*/
+                }
 
-                List<String> rsIds = new LinkedList<>();
+                /*List<String> rsIds = new LinkedList<>();
                 rsIds.addAll(pharmGKB.getKnownRsIds());
 
                 int batchStart = 0;
@@ -102,7 +102,7 @@ public class PharmacoGenomicsLoader {
                     List<Variant> partialResult = variantProvider.getVariants(user, sample, new Filter(buildExpressionByRsId(rsIdsBatch), new LinkedList<>(), 0), false);
                     processIdToVariants.get(processId).addAll(partialResult);
                     processIdToProcessedCount.put(processId, processIdToProcessedCount.get(processId) + rsIdsBatch.size());
-                }
+                }*/
 
                 processIdToCompleted.put(processId, true);
             } catch (Exception ex) {
