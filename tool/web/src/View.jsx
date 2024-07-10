@@ -4,8 +4,14 @@ import React from 'react';
 import ViewField from './ViewField.jsx';
 
 import Chart from "react-apexcharts";
-import igv from 'igv'
-//import igv from '../igv/igv.js'
+//import igv from 'igv'
+import igv from '../node_modules/igv/dist/igv.esm.js';
+//import * as igv from 'igv';
+
+
+//import igv from "https://cdn.jsdelivr.net/npm/igv@2.15.13/dist/igv.esm.min.js";
+//import igv from './igv.esm.min.js';
+//import igv from '../node_modules/igv/dist/igv.esm.js';
 //import igv from "https://cdn.jsdelivr.net/npm/igv@2.10.5/dist/igv.esm.min.js"
 
 import Config from './config.js';

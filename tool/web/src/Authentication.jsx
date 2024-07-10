@@ -27,6 +27,11 @@ class Authentication extends React.Component {
           <button className="large" onClick={(e) => this.props.login(this.emailRef.current.value, this.passwordRef.current.value)}><i className="glyphicon bi bi-lock-fill"></i> Login</button><br/>
           {message}
         </div>
+        <div className="authenticationBox">
+          <b>No access?</b> You can try ACVI-Med with the "Genome in a Bottle" sample data by clicking the button below.
+          <br/>
+          <button className="large tert" onClick={(e) => this.props.login("test", "test")}><i className="glyphicon bi bi-lock-fill"></i> Access the demo version</button><br/>
+        </div>
       </div>;
   } 
 
