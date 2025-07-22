@@ -16,7 +16,7 @@ After cloning the repository and navigating to the importer folder containing th
 Depending on your local setup you might need to prepend the ``sudo`` command to following actions.
 
 Start by creating a directory for the data needed to annotate VCF files. You can create the new folder in your home directory or anywhere else.
-It is important that enough disc spaces is available for these operations.
+It is important that enough disc space is available for these operations.
 <pre><code>mkdir $HOME/vep_data</code></pre>
 
 Depending on your local setup you might need to change the access rights to the directory you created.
@@ -31,7 +31,7 @@ Then install all vep plugins in your container by running the following command.
 
 ## Adding libraries
 
-Some plugins need additional data to run. You need to perform all steps presented below or otherwise the annotion of your VCF file cannot be completed.
+Some plugins need additional data to run. You need to perform all steps presented below or otherwise the annotation of your VCF file cannot be completed.
 
 Start by creating a directory for the data needed by the plugins in your ``vep_data`` directory.
 <pre><code>mkdir $HOME/vep_data/libs/</code></pre>
@@ -43,7 +43,7 @@ Create a directory for CADD
 cd $HOME/vep_data/libs/cadd
 </code></pre>
 
-Copy the files vida wget from https://cadd.gs.washington.edu/download
+Copy the files via wget from https://cadd.gs.washington.edu/download
 <pre><code>wget https://krishna.gs.washington.edu/download/CADD/v1.6/GRCh38/whole_genome_SNVs.tsv.gz.tbi
 wget https://krishna.gs.washington.edu/download/CADD/v1.6/GRCh38/whole_genome_SNVs.tsv.gz
 wget https://krishna.gs.washington.edu/download/CADD/v1.6/GRCh38/gnomad.genomes.r3.0.indel.tsv.gz.tbi
