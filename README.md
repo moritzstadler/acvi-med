@@ -1,15 +1,31 @@
 <p align="center">
-<img width="300px" src="/tool/web/src/logo.png"/
+<img width="300px" src="/tool/web/src/logo.png"/>
 </p>
 <p align="center">
 <b>ACVI-MED: Accelerated Clinical Variant Interpretation</b>
 </p>
 <hr/>
 
+**Abstract**
+
+The clinical adoption of whole genome and exome sequencing (WGS/WES) is expanding
+rapidly, yet variant interpretation remains a critical bottleneck, limiting diagnostic yield and
+delaying precision care. We present ACVI-Med, an open-source, on-premise platform for
+comprehensive, clinically oriented analysis of genomic data. ACVI-Med integrates
+phenotype-aware filtering, ACMG-guided variant classification, and secondary findings
+detection into a unified, containerized system built for reproducibility and deployment across
+diverse institutional environments. Designed for accessibility, ACVI-Med enables users
+without extensive bioinformatics expertise to interpret variants from VCF files through a
+flexible interface supporting phenotype-driven filtering, ACMG-guided variant classification,
+and integration of population, clinical, and predictive annotations. The software incorporates
+modules for secondary findings detection, aligned with ACMG Secondary Findings v3.2
+recommendations, extending its utility beyond primary variant analysis. ACVI-Med&#39;s
+customizable filtering logic, real-time access to curated knowledge bases, and interactive
+visualization tools support transparent and reproducible genomic interpretation. Unlike
+commercial solutions, ACVI-Med is cost-effective, containerized, and can be institutionally
+self-hosted, reducing barriers to adoption in research and clinical settings.
 
 **TODO: Add DOI, citation info and paper**
-
-**TODO: add commits explaining installation of docker**
 
 # Introduction
 
