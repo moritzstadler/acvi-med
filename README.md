@@ -2,8 +2,12 @@
 <img width="300px" src="/tool/web/src/logo.png"/>
 </p>
 <p align="center">
-<b>ACVI-MED: Accelerated Clinical Variant Interpretation</b>
+<i>ACVI-MED: Accelerated Clinical Variant Interpretation</i>
 </p>
+<hr/>
+
+<center><h3><i>Access the demo version at <a target="_blank" href="https://derma-genomics.meduniwien.ac.at/">derma-genomics.meduniwien.ac.at</a></i></h3></center>
+
 <hr/>
 
 **Abstract**
