@@ -111,7 +111,7 @@ Download both phenotype files from https://doi.org/10.6084/m9.figshare.22494535.
 ## Annotate your file
 
 Finally everything is set up to start annotating your VCF file.
-Move the file you want to annotate to your ``$HOME/vep_data`` folder and run the following command. Replace ``yourvcffile.vcf`` with the actual name your the VCF file you want to annotate,
+Move the file you want to annotate to your ``$HOME/vep_data`` folder and run the following command. Replace ``yourvcffile.vcf`` with the actual name of the VCF file you want to annotate,
 
 <pre><code>sudo docker run --rm -it -v $HOME/vep_data:/data ensemblorg/ensembl-vep ./vep -i /data/yourvcffile.vcf --dir_cache /data --everything --cache --offline --format vcf --warning_file /data/warnings --verbose \
 --plugin CADD,"/data/libs/cadd/whole_genome_SNVs.tsv.gz","/data/libs/cadd/gnomad.genomes.r3.0.indel.tsv.gz" \
