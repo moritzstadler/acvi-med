@@ -9,8 +9,6 @@
 <center><h3><i>Access the demo version at <a target="_blank" href="https://derma-genomics.meduniwien.ac.at/">derma-genomics.meduniwien.ac.at</a></i></h3></center>
 
 
-[acvi-med-quick-tiering.webm](https://github.com/user-attachments/assets/102e21c8-cc95-4086-ab45-5d7485f9fe90)
-
 
 <hr/>
 
@@ -33,14 +31,28 @@ visualization tools support transparent and reproducible genomic interpretation.
 commercial solutions, ACVI-Med is cost-effective, containerized, and can be institutionally
 self-hosted, reducing barriers to adoption in research and clinical settings.
 
-**TODO: Add DOI, citation info and paper**
+<table>
+  <th>
+    <tr>
+      <td>Variant explorer</td>
+      <td>ACMG based tiering</td>
+    </tr>
+  </th>
+  <tr>
+<td>
+
+https://github.com/user-attachments/assets/7b37735b-07bc-46bd-8a6b-99d577ea1fa6</td>
+<td>
+
+https://github.com/user-attachments/assets/f7fbbeae-ecd6-408f-9475-6dc24fe57eb6</td>
+  </tr>
+</table>
+
+<i>Access the demo version at <a target="_blank" href="https://derma-genomics.meduniwien.ac.at/">derma-genomics.meduniwien.ac.at</a></i>
 
 # Introduction
 
 This tool is designed to allow clinicians and researchers to annotate and analyze VCF files.
-**TODO add video here once everything is finished**
-
-**TODO add installation video**
 
 ## Architecture
 
