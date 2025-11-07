@@ -229,7 +229,6 @@ class View extends React.Component {
   isActiveHashLink(hash) {
     if(window.location.hash) {
       var currentHash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
-      alert(currentHash);
       return hash == currentHash;      
     }
     return false;
