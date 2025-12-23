@@ -1,6 +1,7 @@
 package at.ac.meduniwien.vcfvisualize.cron;
 
 import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.Clinvar;
+import at.ac.meduniwien.vcfvisualize.knowledgebase.cspec.VcepCspecService;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.Hpo;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.PanelApp;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.pharmgkb.PharmGKB;
@@ -31,6 +32,9 @@ public class Cron {
     @Autowired
     StudyService studyService;
 
+    @Autowired
+    VcepCspecService vcepCspecService;
+
     @Scheduled(cron = "0 0 2 * * ?")
     public void performCronJobs() {
         new Thread(() -> pharmGKB.initiate()).start();
@@ -43,6 +47,8 @@ public class Cron {
         }).start();
 
         new Thread(() -> clinvar.initiate()).start();
+
+        new Thread(() -> vcepCspecService.loadDataFromAPI()).start();
     }
 
     @PostConstruct
@@ -59,6 +65,8 @@ public class Cron {
         }).start();
 
         new Thread(() -> clinvar.initiate()).start();
+
+        new Thread(() -> vcepCspecService.loadDataFromAPI()).start();
     }
 
 }

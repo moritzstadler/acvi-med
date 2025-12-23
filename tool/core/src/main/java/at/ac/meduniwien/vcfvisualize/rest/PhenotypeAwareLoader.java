@@ -3,6 +3,8 @@ package at.ac.meduniwien.vcfvisualize.rest;
 import at.ac.meduniwien.vcfvisualize.data.VariantProvider;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.Clinvar;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.clinvar.GenomicPosition;
+import at.ac.meduniwien.vcfvisualize.knowledgebase.cspec.VcepCspecService;
+import at.ac.meduniwien.vcfvisualize.knowledgebase.cspec.VcepRuleSet;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.hpo.Hpo;
 import at.ac.meduniwien.vcfvisualize.knowledgebase.panelapp.PanelApp;
 import at.ac.meduniwien.vcfvisualize.mocking.MockVariantProvider;
@@ -19,6 +21,7 @@ import at.ac.meduniwien.vcfvisualize.processor.acmg.AcmgTieringResult;
 import at.ac.meduniwien.vcfvisualize.rest.dto.PhenotypeAwareLoadRequestDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.PhenotypeAwareQueryResultDTO;
 import at.ac.meduniwien.vcfvisualize.rest.dto.PhenotypeAwareVariantDTO;
+import at.ac.meduniwien.vcfvisualize.rest.dto.VcepRuleSetDTO;
 import at.ac.meduniwien.vcfvisualize.security.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +38,7 @@ import java.util.stream.Collectors;
 public class PhenotypeAwareLoader {
 
     String symbolKey = "info_csq_symbol";
-    static final List<String> DEFAULT_INFO_FIELDS = Arrays.asList("info_csq_canonical", "info_csq_hgvsc", "info_csq_hgvsg");
+    static final List<String> DEFAULT_INFO_FIELDS = Arrays.asList("info_csq_canonical", "info_csq_hgvsc", "info_csq_hgvsg", "info_csq_symbol");
 
     @Autowired
     VariantProvider variantProvider; //TODO replace with VariantProvider
@@ -54,6 +57,9 @@ public class PhenotypeAwareLoader {
 
     @Autowired
     AcmgTierer acmgTierer;
+
+    @Autowired
+    VcepCspecService vcepCspecService;
 
     @CrossOrigin
     @PostMapping("/phenotypeaware/load")
@@ -99,6 +105,7 @@ public class PhenotypeAwareLoader {
             phenotypeAwareVariantDTO.setVariant(variant.convertToReducedDTO(infoFieldsToKeep));
             phenotypeAwareVariantDTO.setAcmgTieringResults(acmgTierer.performAcmgTiering(variant, true, false, phenotypeAwareLoadRequestDTO.humansDTO));
             phenotypeAwareVariantDTO.setHpoTermsLeadToDiscovery(List.of());
+            addVcepRuleSetsToVariant(variant, phenotypeAwareVariantDTO);
             queryResultDTO.getVariants().add(phenotypeAwareVariantDTO);
         }
 
@@ -106,6 +113,7 @@ public class PhenotypeAwareLoader {
             PhenotypeAwareVariantDTO phenotypeAwareVariantDTO = new PhenotypeAwareVariantDTO();
             phenotypeAwareVariantDTO.setVariant(variant.convertToReducedDTO(infoFieldsToKeep));
             phenotypeAwareVariantDTO.setAcmgTieringResults(acmgTierer.performAcmgTiering(variant, false, true, phenotypeAwareLoadRequestDTO.humansDTO));
+            addVcepRuleSetsToVariant(variant, phenotypeAwareVariantDTO);
             queryResultDTO.getVariants().add(phenotypeAwareVariantDTO);
         }
 
@@ -173,6 +181,28 @@ public class PhenotypeAwareLoader {
         }
 
         return new IntermediateExpression(operators, children);
+    }
+
+    /**
+     * Adds VCEP RuleSet information to a variant DTO if the variant has an associated gene
+     * with available VCEP classification criteria.
+     *
+     * @param variant the source variant containing gene information
+     * @param phenotypeAwareVariantDTO the DTO to populate with VCEP data
+     */
+    private void addVcepRuleSetsToVariant(Variant variant, PhenotypeAwareVariantDTO phenotypeAwareVariantDTO) {
+        if (variant.getInfo().containsKey(symbolKey)) {
+            String geneSymbol = variant.getInfo().get(symbolKey);
+            if (geneSymbol != null && !geneSymbol.isEmpty()) {
+                List<VcepRuleSet> ruleSets = vcepCspecService.getRuleSetsForGene(geneSymbol);
+                if (!ruleSets.isEmpty()) {
+                    List<VcepRuleSetDTO> vcepRuleSetDTOs = ruleSets.stream()
+                            .map(VcepRuleSetDTO::fromVcepRuleSet)
+                            .collect(Collectors.toList());
+                    phenotypeAwareVariantDTO.setVcepRuleSets(vcepRuleSetDTOs);
+                }
+            }
+        }
     }
 
 }

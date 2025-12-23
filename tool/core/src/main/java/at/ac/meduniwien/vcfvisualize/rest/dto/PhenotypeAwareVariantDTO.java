@@ -36,6 +36,10 @@ public class PhenotypeAwareVariantDTO {
     @Setter
     AcmgClassificationResult acmgClassificationResult;
 
+    @Getter
+    @Setter
+    List<VcepRuleSetDTO> vcepRuleSets;
+
     public PhenotypeAwareVariantDTO(Variant variant) {
         this.variant = variant.convertToDTO();
     }
