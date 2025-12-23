@@ -24,6 +24,7 @@ export default function Tiering(props) {
     const [loading, setLoading] = useState(false);
 
     const [openExplanations, setOpenExplanations] = useState([]);
+    const [vcepModalData, setVcepModalData] = useState(null);
 
     const handleQueryChange = event => {
         setQuery(event.target.value);
@@ -237,6 +238,7 @@ export default function Tiering(props) {
                         <h1>{props.matchProps.name}</h1>
                         <div className="info">
                             Perform an <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544753/" target="_blank">ACMG-Tiering</a> for the sample {props.matchProps.name}. Enter the observed phenotypes below to start!
+                            <br/><b>If you are testing the software start by typing <i>'Adult onset leukodystrophy'</i> below and select the according panel. Then click on <i>Perform Tiering</i> to explore ACVI-Med's full capabilites!</b>
                         </div>
                         {searchDataLoaded && getFormats(searchData.meta).length > 1 ?
                           <div className="trioBox">
@@ -295,9 +297,10 @@ export default function Tiering(props) {
                                 </div>
                                 <div className={"resultTiers " + (resultVisibility[i] === true ? "hidden" : "")}>
                                     {item.acmgTiers.map(tier => (
-                                        <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox"><div className={"tier " + tier.replace(/[0-9]/g, "")}>{tier}</div></div>
+                                        <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tier}</div></div>
                                     ))}
-                                    <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox"><div className={"classification " + item.acmgClassification?.toLowerCase()}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                    <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox" title="Calculated based on ACMG v3 (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + item.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                    {item.hasVcepRuleSets && <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: item.vcepRuleSets, acmgTiers: item.acmgTiers }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>}
                                 </div>
                                 <div  className={"isoforms"}>
                                   {resultVisibility[i] ?
@@ -313,13 +316,15 @@ export default function Tiering(props) {
                                           </div>
                                           <div className="resultTiers">
                                             {isoform.acmgTieringResults.map(tr => (
-                                                <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox"><div className={"tier " + tr.tier.replace(/[0-9]/g, "")}>{tr.tier}</div></div>
+                                                <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tr.tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tr.tier}</div></div>
                                             ))}
-                                            <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox"><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                            <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox" title="Calculated based on ACMG v3 (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                            {isoform.vcepRuleSets != null && isoform.vcepRuleSets.length > 0 && <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: isoform.vcepRuleSets, acmgTiers: isoform.acmgTieringResults.map(tr => tr.tier) }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>}
                                           </div>
                                           {openExplanations.includes(i + "." + index + ".classification") ?
                                             <div className={"tierExplanation"}>
                                               <div className="tierTitle">ACMG classification: {isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div>
+                                              <div className="info" style={{fontStyle: 'italic'}}>Calculated based on ACMG v3 (Richards et al., 2015)</div>
                                               <hr/>
                                               <div className="info">Causes why this variant was classified as {isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}:</div>
                                               {Object.keys(isoform.acmgClassificationResult.explanation).sort((a, b) => {return a.localeCompare(b)}).map(k => (
@@ -358,9 +363,264 @@ export default function Tiering(props) {
                         ))}
                     </div>
                 </div>
+                {vcepModalData && <VcepModal vcepRuleSets={vcepModalData.vcepRuleSets} acmgTiers={vcepModalData.acmgTiers} onClose={() => setVcepModalData(null)} />}
             </div>
         )
     }
+}
+
+function VcepModal({ vcepRuleSets, acmgTiers, onClose }) {
+    const [selectedVcepIndex, setSelectedVcepIndex] = useState(0);
+    const [selectedStrengths, setSelectedStrengths] = useState({});
+    const [finalCall, setFinalCall] = useState(null);
+    const [assertionLoading, setAssertionLoading] = useState(false);
+    
+    // Initialize checkedTiers based on the variant's existing ACMG tiers
+    const getInitialCheckedTiers = () => {
+        const initial = {};
+        if (acmgTiers) {
+            acmgTiers.forEach(tier => {
+                initial[tier] = true;
+            });
+        }
+        return initial;
+    };
+    const [checkedTiers, setCheckedTiers] = useState(getInitialCheckedTiers);
+
+    const selectedVcep = vcepRuleSets[selectedVcepIndex];
+    const criteriaCodes = selectedVcep?.ruleSetDetails?.criteriaCodes || [];
+    // Construct the correct URL format (without /api/)
+    const ruleSetUrl = selectedVcep?.ruleSetId 
+        ? `https://cspec.genome.network/cspec/RuleSet/id/${selectedVcep.ruleSetId}`
+        : null;
+
+    // Tier sort order: PVS, PS, PM, PP, BA, BS, BP
+    const tierOrder = ["PVS", "PS", "PM", "PP", "BA", "BS", "BP"];
+    
+    const getTierSortKey = (label) => {
+        for (let i = 0; i < tierOrder.length; i++) {
+            if (label.startsWith(tierOrder[i])) {
+                // Return order index * 100 + numeric suffix for proper ordering (e.g., PS1, PS2, PS3)
+                const numMatch = label.match(/\d+$/);
+                const num = numMatch ? parseInt(numMatch[0]) : 0;
+                return i * 100 + num;
+            }
+        }
+        return 999; // Unknown tiers go last
+    };
+
+    // Filter tiers that have at least one applicable strength and sort them
+    const applicableTiers = criteriaCodes
+        .filter(tier => {
+            const applicableStrengths = tier.evidenceStrengths?.filter(
+                strength => !strength.applicability?.toLowerCase().includes("not")
+            );
+            return applicableStrengths && applicableStrengths.length > 0;
+        })
+        .sort((a, b) => getTierSortKey(a.label) - getTierSortKey(b.label));
+
+    // Get applicable strengths for a tier
+    const getApplicableStrengths = (tier) => {
+        return tier.evidenceStrengths?.filter(
+            strength => !strength.applicability?.toLowerCase().includes("not")
+        ) || [];
+    };
+
+    // Get selected strength for a tier (default to first applicable)
+    const getSelectedStrength = (tierLabel) => {
+        if (selectedStrengths[tierLabel] !== undefined) {
+            return selectedStrengths[tierLabel];
+        }
+        return 0; // Default to first
+    };
+
+    // Determine if a tier is pathogenic or benign based on its label
+    const getTierCategory = (tierLabel) => {
+        if (tierLabel.startsWith("PVS") || tierLabel.startsWith("PS") || 
+            tierLabel.startsWith("PM") || tierLabel.startsWith("PP")) {
+            return "Pathogenic";
+        }
+        return "Benign";
+    };
+
+    // Build evidence object and call API
+    const callAssertionApi = async () => {
+        if (!ruleSetUrl) return;
+
+        // Build evidence object from checked tiers
+        const evidence = {};
+        
+        for (const tier of applicableTiers) {
+            if (checkedTiers[tier.label]) {
+                const applicableStrengths = getApplicableStrengths(tier);
+                const selectedStrengthIndex = getSelectedStrength(tier.label);
+                const selectedStrength = applicableStrengths[selectedStrengthIndex];
+                
+                if (selectedStrength) {
+                    const category = getTierCategory(tier.label);
+                    const strengthLabel = selectedStrength.label;
+                    const evidenceKey = `${category}.${strengthLabel}`;
+                    
+                    evidence[evidenceKey] = (evidence[evidenceKey] || 0) + 1;
+                }
+            }
+        }
+
+        // Only call API if there's evidence
+        if (Object.keys(evidence).length === 0) {
+            setFinalCall(null);
+            return;
+        }
+
+        setAssertionLoading(true);
+        
+        try {
+            const payload = {
+                cspecRuleSetUrl: ruleSetUrl,
+                evidence: evidence
+            };
+
+            const response = await fetch('/cspec/cspec/eng/svi/assertion', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            console.log('Assertion API response:', data);
+            setFinalCall(data.data?.finalCall || data.finalCall || null);
+        } catch (error) {
+            console.error('Error calling assertion API:', error);
+            setFinalCall(null);
+        } finally {
+            setAssertionLoading(false);
+        }
+    };
+
+    // Call API when checkboxes or strengths change
+    useEffect(() => {
+        callAssertionApi();
+    }, [checkedTiers, selectedStrengths, selectedVcepIndex]);
+
+    const handleStrengthChange = (tierLabel, index) => {
+        setSelectedStrengths({ ...selectedStrengths, [tierLabel]: index });
+    };
+
+    const handleCheckboxChange = (tierLabel) => {
+        setCheckedTiers({ ...checkedTiers, [tierLabel]: !checkedTiers[tierLabel] });
+    };
+
+    const handleOverlayClick = (e) => {
+        if (e.target.className === "vcepModalOverlay") {
+            onClose();
+        }
+    };
+
+    // Get tier color class based on label
+    const getTierColorClass = (label) => {
+        if (label.startsWith("PVS")) return "PVS";
+        if (label.startsWith("PS")) return "PS";
+        if (label.startsWith("PM")) return "PM";
+        if (label.startsWith("PP")) return "PP";
+        if (label.startsWith("BA")) return "BA";
+        if (label.startsWith("BS")) return "BS";
+        if (label.startsWith("BP")) return "BP";
+        return "";
+    };
+
+    // Get classification color class for final call
+    const getFinalCallClass = (call) => {
+        if (!call) return "";
+        const normalized = call.toLowerCase().replace(/\s+/g, "_");
+        return normalized;
+    };
+
+    return (
+        <div className="vcepModalOverlay" onClick={handleOverlayClick}>
+            <div className="vcepModalContent">
+                <div className="vcepModalHeader">
+                    <h2>ClinGen VCEP Rule Set</h2>
+                    <button className="vcepModalClose" onClick={onClose}><i className="bi bi-x-lg"></i></button>
+                </div>
+                <div className="vcepModalBody">
+                    <div className="vcepModalBodyFixed">
+                        {vcepRuleSets.length > 1 ? (
+                            <div className="vcepSelector">
+                                <label>Select VCEP:</label>
+                                <select value={selectedVcepIndex} onChange={(e) => setSelectedVcepIndex(parseInt(e.target.value))}>
+                                    {vcepRuleSets.map((vcep, index) => (
+                                        <option key={index} value={index}>{vcep.vcepName}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        ) : (
+                            <div className="vcepSelected">
+                                <b>{selectedVcep?.vcepName}</b>
+                            </div>
+                        )}
+
+                        <div className="vcepFinalCallBox">
+                            <label>Final Call:</label>
+                            {assertionLoading ? (
+                                <span className="vcepFinalCallLoading"><div className="spinner-border spinner-border-sm" role="status"></div> Computing...</span>
+                            ) : finalCall ? (
+                                <div className={"classification " + getFinalCallClass(finalCall)}>{finalCall}</div>
+                            ) : (
+                                <span className="vcepFinalCallEmpty">Select tiers to compute</span>
+                            )}
+                            <span className="vcepFinalCallInfo"><i className="bi bi-info-circle"></i> based on CSpec Reasoner SVI</span>
+                        </div>
+                    </div>
+                    
+                    <div className="vcepTiersList">
+                        <div className="vcepDisclaimer">
+                            <i className="bi bi-info-circle-fill"></i> The tiers were preselected based on the ACMG v3 (Richards et al., 2015) rules. You can change the applicable tiers and their modified strength based on the description provided by the specific ClinGen VCEP provided for this gene.
+                        </div>
+                        <label>Tiers</label>
+                        {applicableTiers.map((tier, tierIndex) => {
+                            const applicableStrengths = getApplicableStrengths(tier);
+                            const selectedStrengthIndex = getSelectedStrength(tier.label);
+                            const selectedStrength = applicableStrengths[selectedStrengthIndex];
+                            
+                            return (
+                                <div key={tierIndex} className="vcepTierRow">
+                                    <div className="vcepTierLeft">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={checkedTiers[tier.label] || false}
+                                            onChange={() => handleCheckboxChange(tier.label)}
+                                        />
+                                        <div className={"tier " + getTierColorClass(tier.label)}>{tier.label}</div>
+                                        {applicableStrengths.length > 1 ? (
+                                            <select 
+                                                className="vcepStrengthSelect"
+                                                value={selectedStrengthIndex}
+                                                onChange={(e) => handleStrengthChange(tier.label, parseInt(e.target.value))}
+                                            >
+                                                {applicableStrengths.map((strength, sIndex) => (
+                                                    <option key={sIndex} value={sIndex}>{strength.label}</option>
+                                                ))}
+                                            </select>
+                                        ) : (
+                                            <span className="vcepStrengthLabel">{applicableStrengths[0]?.label}</span>
+                                        )}
+                                    </div>
+                                    <div className="vcepTierDescription">
+                                        {selectedStrength?.description || tier.description || "No description available"}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {applicableTiers.length === 0 && (
+                            <div className="info">No applicable tiers found.</div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 function Loader() {
@@ -548,12 +808,25 @@ function groupVariantsByVid(result) {
       }
     }
 
+    // Check if any isoform has vcepRuleSets
+    var hasVcepRuleSets = false;
+    var vcepRuleSets = [];
+    for (var j = 0; j < groupedVariants[keys[i]].length; j++) {
+      if (groupedVariants[keys[i]][j].vcepRuleSets != null && groupedVariants[keys[i]][j].vcepRuleSets.length > 0) {
+        hasVcepRuleSets = true;
+        vcepRuleSets = groupedVariants[keys[i]][j].vcepRuleSets;
+        break;
+      }
+    }
+
     var group = {
       chrom: groupedVariants[keys[i]][0].variant.chrom,
       pos: groupedVariants[keys[i]][0].variant.pos,
       isoforms: groupedVariants[keys[i]],
       acmgTiers: acmgTiersSorted,
-      acmgClassification: orderClassification[acmgClassificationIndex]
+      acmgClassification: orderClassification[acmgClassificationIndex],
+      hasVcepRuleSets: hasVcepRuleSets,
+      vcepRuleSets: vcepRuleSets
     };
     resultingVariants.push(group);
   }

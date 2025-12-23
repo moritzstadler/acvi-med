@@ -22,7 +22,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 class App extends React.Component {
 
   componentDidMount() {
-    document.title = "Derma Genomics"
+    document.title = "ACVI-Med"
     document.description = "ACVI-Med is a tool for analyzing WES and WGS data."
   }
 

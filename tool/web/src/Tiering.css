@@ -112,6 +112,7 @@
 
 .tierBox {
     display: inline;
+    cursor: pointer;
 }
 
 .tier {
@@ -123,7 +124,7 @@
     font-size: 9pt;
     display: inline;
     margin: 2px;
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 .tier:hover {
@@ -181,6 +182,13 @@
     width: 65%;
     text-align: right;
     display: inline-block;
+}
+
+.resultTiers .tierBox,
+.resultTiers .tier,
+.resultTiers .classification,
+.resultTiers .classificationBox {
+    cursor: pointer !important;
 }
 
 .smallInlineBox {
@@ -257,7 +265,7 @@
     font-size: 9pt;
     display: inline;
     margin: 2px;
-    cursor: pointer;
+    cursor: pointer !important;
     margin-left: 10px;
 }
 
@@ -283,4 +291,252 @@
 
 .uncertain_significance {
   background: #999;
+}
+
+.vcepBadge {
+  background: #0d6efd;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 15px;
+  padding: 2px 10px;
+  font-size: 9pt;
+  display: inline-block;
+  margin-left: 10px;
+  text-transform: uppercase;
+}
+
+.vcepBadge i {
+  margin-right: 4px;
+}
+
+.vcepBadge:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+/* VCEP Modal Styles */
+.vcepModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.vcepModalContent {
+  background: #fff;
+  width: 1000px;
+  max-width: 95%;
+  max-height: 90vh;
+  border-radius: 5px;
+  box-shadow: 0px 0px 50px #333;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.vcepModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #ddd;
+}
+
+.vcepModalHeader h2 {
+  margin: 0;
+  font-size: 16pt;
+}
+
+.vcepModalClose {
+  background: none;
+  border: none;
+  font-size: 16pt;
+  cursor: pointer;
+  color: #555;
+  padding: 5px;
+}
+
+.vcepModalClose:hover {
+  color: #000;
+}
+
+.vcepModalBody {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.vcepModalBodyFixed {
+  padding: 20px 30px 0 30px;
+  flex-shrink: 0;
+}
+
+.vcepSelector {
+  margin-bottom: 20px;
+}
+
+.vcepSelector label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.vcepSelector select {
+  width: 100%;
+  padding: 8px;
+  font-size: 11pt;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.vcepSelected {
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+.vcepTiersList {
+  padding: 10px 30px 20px 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.vcepDisclaimer {
+  background: #e7f3ff;
+  border: 1px solid #b6d4fe;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  font-size: 9pt;
+  color: #0a58ca;
+  line-height: 1.4;
+}
+
+.vcepDisclaimer i {
+  margin-right: 6px;
+}
+
+.vcepTiersList > label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 11pt;
+}
+
+.vcepTierRow {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.vcepTierLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.vcepTierLeft input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.vcepTierLeft .tier {
+  cursor: pointer;
+}
+
+.vcepStrengthSelect {
+  padding: 4px 8px;
+  font-size: 10pt;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.vcepStrengthLabel {
+  font-size: 10pt;
+  color: #555;
+  font-style: italic;
+}
+
+.vcepTierDescription {
+  font-size: 10pt;
+  color: #555;
+  margin-left: 28px;
+  line-height: 1.4;
+}
+
+.vcepFinalCallBox {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-height: 56px;
+}
+
+.vcepFinalCallBox > label {
+  font-weight: bold;
+  font-size: 11pt;
+  margin: 0;
+}
+
+.vcepFinalCallLoading {
+  background: #999;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 15px;
+  padding: 5px 10px;
+  font-size: 9pt;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  height: 27px;
+  box-sizing: border-box;
+  gap: 6px;
+}
+
+.vcepFinalCallBox .classification {
+  display: inline-flex;
+  align-items: center;
+  height: 27px;
+  box-sizing: border-box;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.vcepFinalCallLoading .spinner-border-sm {
+  width: 12px;
+  height: 12px;
+  border-width: 2px;
+  flex-shrink: 0;
+}
+
+.vcepFinalCallEmpty {
+  color: #999;
+  font-style: italic;
+  font-size: 10pt;
+}
+
+.vcepFinalCallInfo {
+  color: #444;
+  font-size: 9pt;
+  margin-left: auto;
+}
+
+.vcepFinalCallInfo i {
+  margin-right: 4px;
 }

@@ -43,6 +43,7 @@
     ]
   },
   "devDependencies": {
-    "apexcharts": "^3.32.0"
+    "apexcharts": "^3.32.0",
+    "http-proxy-middleware": "^3.0.5"
   }
 }
