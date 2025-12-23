@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class PanelApp {
 
-    private static final long REQUEST_DELAY_MS = 500;
+    private static final long REQUEST_DELAY_MS = 1000;
 
     @Autowired
     RestClient restClient;
