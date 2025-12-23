@@ -17,6 +17,8 @@ import java.util.List;
 @Service
 public class PanelApp {
 
+    private static final long REQUEST_DELAY_MS = 500;
+
     @Autowired
     RestClient restClient;
 
@@ -75,9 +77,10 @@ public class PanelApp {
         geneByName = new HashMap<>();
 
         int dbgCnt = 0;
+        int total = panelDTOs.size();
         for (PanelDTO panelDTO : panelDTOs) {
             dbgCnt++;
-            System.out.println("loading panel (" + dbgCnt + "/" + panelDTOs.size() + ") " + panelDTO.id + " " + panelDTO.name);
+            System.out.println("loading panel (" + dbgCnt + "/" + total + ") " + panelDTO.id + " " + panelDTO.name);
             try {
                 PanelResponseDTO panelResponseDTO = getPanelByIdFromAPISkippingCache(panelDTO.id);
                 Panel panel = new Panel(panelResponseDTO);
@@ -105,6 +108,17 @@ public class PanelApp {
             } catch (Exception e) {
                 System.out.println("error in panel '" + panelDTO.name + "' id: " + panelDTO.id);
                 System.out.println(e.getMessage());
+            }
+
+            // Delay between requests to avoid rate limiting (429 Too Many Requests)
+            if (dbgCnt < total) {
+                try {
+                    Thread.sleep(REQUEST_DELAY_MS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    System.out.println("PanelApp: Loading interrupted");
+                    break;
+                }
             }
         }
 

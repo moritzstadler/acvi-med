@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM eclipse-temurin:11-jdk
 COPY application.properties /target/resources
 COPY src/main/resources /src/main/resources
 ARG JAR_FILE=target/*.jar
