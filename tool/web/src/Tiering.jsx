@@ -289,6 +289,10 @@ export default function Tiering(props) {
                         <button className="tert" onClick={(e) => setOnResultPage(false)}><i className="bi bi-arrow-left"> Back to search</i></button><br/><br/>
                         <h1>Possible causative variants</h1>
                         <b>{results.variants.length}</b> variants found in <b>{Number(results.elapsedMilliseconds / 1000).toFixed(2)} seconds</b><br/><br/>
+                        <div className="info" style={{background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', padding: '10px 14px', marginBottom: '12px', color: '#664d03'}}>
+                            <i className="bi bi-exclamation-triangle-fill" style={{marginRight: '6px'}}></i>
+                            <b>Variant selection and classification were performed using standard <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544753/" target="_blank" style={{color: '#664d03'}}>ACMG v3 rules (Richards et al., 2015)</a>.</b> For genes under the purview of a ClinGen Variant Curation Expert Panel (VCEP), gene-specific rules may yield a different classification. Look for the <span style={{background: '#e0cffc', padding: '2px 6px', borderRadius: '4px', fontSize: '0.85em'}}><i className="bi bi-exclamation-triangle-fill"></i> vcep rules available</span> badge on individual variants to review and apply VCEP-specific rules. VCEP rule sets can also be viewed directly in the <a href="https://cspec.genome.network/cspec/ui/svi/" target="_blank" rel="noopener noreferrer" style={{color: '#664d03'}}>ClinGen CSpec Registry</a>.
+                        </div>
                         <div className="info"><i class="bi bi-info-circle-fill"></i> Click on the name of a tier in order to view its definition.</div>
                         {results.variants.map((item, i) => (
                             <div className="tieringResult">
@@ -299,8 +303,8 @@ export default function Tiering(props) {
                                     {item.acmgTiers.map(tier => (
                                         <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tier}</div></div>
                                     ))}
-                                    <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox" title="Calculated based on ACMG v3 (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + item.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
-                                    {item.hasVcepRuleSets && <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: item.vcepRuleSets, acmgTiers: item.acmgTiers }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>}
+                                    <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + item.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                    {item.hasVcepRuleSets && <div className="vcepBadge" title="Gene-specific VCEP rules may yield a different classification than standard ACMG" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: item.vcepRuleSets, acmgTiers: item.acmgTiers }); }}><i className="bi bi-exclamation-triangle-fill"></i> vcep rules available — classification may differ</div>}
                                 </div>
                                 <div  className={"isoforms"}>
                                   {resultVisibility[i] ?
@@ -318,13 +322,13 @@ export default function Tiering(props) {
                                             {isoform.acmgTieringResults.map(tr => (
                                                 <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tr.tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tr.tier}</div></div>
                                             ))}
-                                            <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox" title="Calculated based on ACMG v3 (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
-                                            {isoform.vcepRuleSets != null && isoform.vcepRuleSets.length > 0 && <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: isoform.vcepRuleSets, acmgTiers: isoform.acmgTieringResults.map(tr => tr.tier) }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>}
+                                            <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                            {isoform.vcepRuleSets != null && isoform.vcepRuleSets.length > 0 && <div className="vcepBadge" title="Gene-specific VCEP rules may yield a different classification than standard ACMG" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: isoform.vcepRuleSets, acmgTiers: isoform.acmgTieringResults.map(tr => tr.tier) }); }}><i className="bi bi-exclamation-triangle-fill"></i> vcep rules available — classification may differ</div>}
                                           </div>
                                           {openExplanations.includes(i + "." + index + ".classification") ?
                                             <div className={"tierExplanation"}>
-                                              <div className="tierTitle">ACMG classification: {isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div>
-                                              <div className="info" style={{fontStyle: 'italic'}}>Calculated based on ACMG v3 (Richards et al., 2015)</div>
+                                              <div className="tierTitle">Standard ACMG classification: {isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div>
+                                              <div className="info" style={{fontStyle: 'italic'}}>Calculated based on standard ACMG v3 rules (Richards et al., 2015). {isoform.vcepRuleSets != null && isoform.vcepRuleSets.length > 0 ? "Gene-specific VCEP rules exist for this gene and may yield a different classification." : ""}</div>
                                               <hr/>
                                               <div className="info">Causes why this variant was classified as {isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}:</div>
                                               {Object.keys(isoform.acmgClassificationResult.explanation).sort((a, b) => {return a.localeCompare(b)}).map(k => (
@@ -560,6 +564,11 @@ function VcepModal({ vcepRuleSets, acmgTiers, onClose }) {
                                 <b>{selectedVcep?.vcepName}</b>
                             </div>
                         )}
+                        {ruleSetUrl && (
+                            <div className="vcepRuleSetLink">
+                                <a href={ruleSetUrl} target="_blank" rel="noopener noreferrer"><i className="bi bi-box-arrow-up-right"></i> View full rule set in ClinGen CSpec Registry</a>
+                            </div>
+                        )}
 
                         <div className="vcepFinalCallBox">
                             <label>Final Call:</label>
@@ -576,7 +585,7 @@ function VcepModal({ vcepRuleSets, acmgTiers, onClose }) {
                     
                     <div className="vcepTiersList">
                         <div className="vcepDisclaimer">
-                            <i className="bi bi-info-circle-fill"></i> The tiers were preselected based on the ACMG v3 (Richards et al., 2015) rules. You can change the applicable tiers and their modified strength based on the description provided by the specific ClinGen VCEP provided for this gene.
+                            <i className="bi bi-info-circle-fill"></i> The tiers below were preselected based on <b>standard ACMG v3 rules (Richards et al., 2015)</b>. Since this gene has a ClinGen VCEP rule set, the applicable tiers and their strengths may differ. Review the VCEP-specific descriptions below and adjust the selections accordingly.
                         </div>
                         <label>Tiers</label>
                         {applicableTiers.map((tier, tierIndex) => {
