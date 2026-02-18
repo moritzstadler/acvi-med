@@ -299,20 +299,29 @@ export default function Tiering(props) {
                                 <div onClick={(e) => toggleResultVisibility(i)} className="resultName">
                                   <i className={"glyphicon bi bi-caret-" + (resultVisibility[i] === true ? "down" : "right") + "-fill"} ></i> <b>{item.chrom}:{item.pos}</b> <span className="note">click to view isoforms and details</span>
                                 </div>
-                                <div className={"resultTiers " + (resultVisibility[i] === true ? "hidden" : "")} style={{display: resultVisibility[i] === true ? 'none' : 'flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap'}}>
-                                    <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap'}}>
-                                        <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>based on ACMG v3</span>
-                                        {item.acmgTiers.map(tier => (
-                                            <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tier}</div></div>
-                                        ))}
-                                        <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + item.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
-                                    </div>
-                                    {item.hasVcepRuleSets &&
-                                        <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'flex', alignItems: 'center'}}>
-                                            <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>manually evaluate based on VCEP</span>
-                                            <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: item.vcepRuleSets, acmgTiers: item.acmgTiers }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>
+                                <div className={"resultTiers " + (resultVisibility[i] === true ? "hidden" : "")}>
+                                    {item.hasVcepRuleSets ? (
+                                        <div style={{display: 'inline-flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap'}}>
+                                            <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', marginTop: '4px'}}>
+                                                <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>based on ACMG v3</span>
+                                                {item.acmgTiers.map(tier => (
+                                                    <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tier}</div></div>
+                                                ))}
+                                                <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + item.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                            </div>
+                                            <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'inline-flex', alignItems: 'center', marginTop: '4px'}}>
+                                                <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>manually evaluate based on VCEP</span>
+                                                <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: item.vcepRuleSets, acmgTiers: item.acmgTiers }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>
+                                            </div>
                                         </div>
-                                    }
+                                    ) : (
+                                        <>
+                                            {item.acmgTiers.map(tier => (
+                                                <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tier}</div></div>
+                                            ))}
+                                            <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + item.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                        </>
+                                    )}
                                 </div>
                                 <div  className={"isoforms"}>
                                   {resultVisibility[i] ?
@@ -326,20 +335,29 @@ export default function Tiering(props) {
                                                 {isoform.variant.info["info_csq_canonical"] && <span className="smallInlineBox" style={{background: "#00a087"}}>Canonical</span>}
                                               </a>
                                           </div>
-                                          <div className="resultTiers" style={{display: 'flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap'}}>
-                                            <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap'}}>
-                                                <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>based on ACMG v3</span>
-                                                {isoform.acmgTieringResults.map(tr => (
-                                                    <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tr.tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tr.tier}</div></div>
-                                                ))}
-                                                <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
-                                            </div>
-                                            {isoform.vcepRuleSets != null && isoform.vcepRuleSets.length > 0 &&
-                                                <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'flex', alignItems: 'center'}}>
-                                                    <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>manually evaluate based on VCEP</span>
-                                                    <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: isoform.vcepRuleSets, acmgTiers: isoform.acmgTieringResults.map(tr => tr.tier) }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>
+                                          <div className="resultTiers">
+                                            {isoform.vcepRuleSets != null && isoform.vcepRuleSets.length > 0 ? (
+                                                <div style={{display: 'inline-flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap'}}>
+                                                    <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', marginTop: '4px'}}>
+                                                        <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>based on ACMG v3</span>
+                                                        {isoform.acmgTieringResults.map(tr => (
+                                                            <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tr.tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tr.tier}</div></div>
+                                                        ))}
+                                                        <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                                    </div>
+                                                    <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'inline-flex', alignItems: 'center', marginTop: '4px'}}>
+                                                        <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>manually evaluate based on VCEP</span>
+                                                        <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: isoform.vcepRuleSets, acmgTiers: isoform.acmgTieringResults.map(tr => tr.tier) }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>
+                                                    </div>
                                                 </div>
-                                            }
+                                            ) : (
+                                                <>
+                                                    {isoform.acmgTieringResults.map(tr => (
+                                                        <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tr.tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tr.tier}</div></div>
+                                                    ))}
+                                                    <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
+                                                </>
+                                            )}
                                           </div>
                                           {openExplanations.includes(i + "." + index + ".classification") ?
                                             <div className={"tierExplanation"}>
@@ -561,7 +579,7 @@ function VcepModal({ vcepRuleSets, acmgTiers, onClose }) {
         <div className="vcepModalOverlay" onClick={handleOverlayClick}>
             <div className="vcepModalContent">
                 <div className="vcepModalHeader">
-                    <h2>ClinGen VCEP Rule Set {selectedVcep?.sviUrl && <a href={selectedVcep.sviUrl} target="_blank" rel="noopener noreferrer" style={{fontSize: '0.55em', fontWeight: 'normal', verticalAlign: 'middle', marginLeft: '8px'}}><i className="bi bi-box-arrow-up-right"></i> View in CSpec Registry</a>}</h2>
+                    <h2>ClinGen VCEP Rule Set</h2>
                     <button className="vcepModalClose" onClick={onClose}><i className="bi bi-x-lg"></i></button>
                 </div>
                 <div className="vcepModalBody">
@@ -574,10 +592,11 @@ function VcepModal({ vcepRuleSets, acmgTiers, onClose }) {
                                         <option key={index} value={index}>{vcep.vcepName}</option>
                                     ))}
                                 </select>
+                                {selectedVcep?.sviUrl && <a href={selectedVcep.sviUrl} target="_blank" rel="noopener noreferrer" style={{marginLeft: '8px', fontSize: '0.9em'}}><i className="bi bi-box-arrow-up-right"></i> View in CSpec Registry</a>}
                             </div>
                         ) : (
                             <div className="vcepSelected">
-                                <b>{selectedVcep?.vcepName}</b>
+                                <b>{selectedVcep?.vcepName}</b> {selectedVcep?.sviUrl && <a href={selectedVcep.sviUrl} target="_blank" rel="noopener noreferrer" style={{fontSize: '0.9em'}}><i className="bi bi-box-arrow-up-right"></i> View in CSpec Registry</a>}
                             </div>
                         )}
                         <div className="vcepFinalCallBox">
