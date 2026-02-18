@@ -291,7 +291,7 @@ export default function Tiering(props) {
                         <b>{results.variants.length}</b> variants found in <b>{Number(results.elapsedMilliseconds / 1000).toFixed(2)} seconds</b><br/><br/>
                         <div className="info" style={{background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', padding: '10px 14px', marginBottom: '12px', color: '#664d03'}}>
                             <i className="bi bi-exclamation-triangle-fill" style={{marginRight: '6px'}}></i>
-                            <b>Variant selection and classification were performed using standard <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544753/" target="_blank" style={{color: '#664d03'}}>ACMG v3 rules (Richards et al., 2015)</a>.</b> For genes under the purview of a ClinGen Variant Curation Expert Panel (VCEP), gene-specific rules may yield a different classification. Look for the "clingen vcep available" badge on individual variants to review and apply VCEP-specific rules. VCEP rule sets can also be viewed directly in the <a href="https://cspec.genome.network/cspec/ui/svi/" target="_blank" rel="noopener noreferrer" style={{color: '#664d03'}}>ClinGen CSpec Registry</a>.
+                            <b>Variant selection and classification were performed using standard <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4544753/" target="_blank" style={{color: '#664d03'}}>ACMG v3 rules (Richards et al., 2015)</a>.</b> For genes under the purview of a ClinGen Variant Curation Expert Panel (VCEP), gene-specific rules may yield a different classification. Look for the "CLINGEN VCEP AVAILABLE" badge on individual variants to review and apply VCEP-specific rules. VCEP rule sets can also be viewed directly in the <a href="https://cspec.genome.network/cspec/ui/svi/" target="_blank" rel="noopener noreferrer" style={{color: '#664d03'}}>ClinGen CSpec Registry</a>.
                         </div>
                         <div className="info"><i class="bi bi-info-circle-fill"></i> Click on the name of a tier in order to view its definition.</div>
                         {results.variants.map((item, i) => (
@@ -301,17 +301,17 @@ export default function Tiering(props) {
                                 </div>
                                 <div className={"resultTiers " + (resultVisibility[i] === true ? "hidden" : "")}>
                                     {item.hasVcepRuleSets ? (
-                                        <div style={{display: 'inline-flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap'}}>
-                                            <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', marginTop: '4px'}}>
-                                                <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>based on ACMG v3</span>
+                                        <div style={{display: 'inline-flex', gap: '8px', alignItems: 'stretch', marginTop: '6px'}}>
+                                            <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '8px', paddingTop: '12px', position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap'}}>
+                                                <span style={{position: 'absolute', top: '-8px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888', lineHeight: 1}}>based on ACMG v3</span>
                                                 {item.acmgTiers.map(tier => (
                                                     <div onClick={(e) => {toggleTierView(i + ".0." + tier); toggleResultVisibility(i)}} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tier}</div></div>
                                                 ))}
                                                 <div onClick={(e) => {toggleTierView(i + ".0.classification"); toggleResultVisibility(i)}} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + item.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{item.acmgClassification?.replaceAll("_", " ")}</div></div>
                                             </div>
-                                            <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'inline-flex', alignItems: 'center', marginTop: '4px'}}>
-                                                <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>manually evaluate based on VCEP</span>
-                                                <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: item.vcepRuleSets, acmgTiers: item.acmgTiers }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>
+                                            <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '8px', paddingTop: '12px', position: 'relative', display: 'inline-flex', alignItems: 'center'}}>
+                                                <span style={{position: 'absolute', top: '-8px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888', lineHeight: 1}}>manually evaluate based on VCEP</span>
+                                                <div className="vcepBadge" style={{marginLeft: 0}} onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: item.vcepRuleSets, acmgTiers: item.acmgTiers }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>
                                             </div>
                                         </div>
                                     ) : (
@@ -337,17 +337,17 @@ export default function Tiering(props) {
                                           </div>
                                           <div className="resultTiers">
                                             {isoform.vcepRuleSets != null && isoform.vcepRuleSets.length > 0 ? (
-                                                <div style={{display: 'inline-flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap'}}>
-                                                    <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', marginTop: '4px'}}>
-                                                        <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>based on ACMG v3</span>
+                                                <div style={{display: 'inline-flex', gap: '8px', alignItems: 'stretch', marginTop: '6px'}}>
+                                                    <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '8px', paddingTop: '12px', position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap'}}>
+                                                        <span style={{position: 'absolute', top: '-8px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888', lineHeight: 1}}>based on ACMG v3</span>
                                                         {isoform.acmgTieringResults.map(tr => (
                                                             <div onClick={(e) => toggleTierView(i + "." + index + "." + tr.tier)} className="tierBox" style={{cursor: 'pointer'}}><div className={"tier " + tr.tier.replace(/[0-9]/g, "")} style={{cursor: 'pointer'}}>{tr.tier}</div></div>
                                                         ))}
                                                         <div onClick={(e) => toggleTierView(i + "." + index + ".classification")} className="classificationBox" title="Calculated based on standard ACMG v3 rules (Richards et al., 2015)" style={{cursor: 'pointer'}}><div className={"classification " + isoform.acmgClassificationResult.acmgClassification?.toLowerCase()} style={{cursor: 'pointer'}}>{isoform.acmgClassificationResult.acmgClassification?.replaceAll("_", " ")}</div></div>
                                                     </div>
-                                                    <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '6px 10px', position: 'relative', display: 'inline-flex', alignItems: 'center', marginTop: '4px'}}>
-                                                        <span style={{position: 'absolute', top: '-9px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888'}}>manually evaluate based on VCEP</span>
-                                                        <div className="vcepBadge" onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: isoform.vcepRuleSets, acmgTiers: isoform.acmgTieringResults.map(tr => tr.tier) }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>
+                                                    <div style={{border: '1px solid #ccc', borderRadius: '6px', padding: '8px', paddingTop: '12px', position: 'relative', display: 'inline-flex', alignItems: 'center'}}>
+                                                        <span style={{position: 'absolute', top: '-8px', left: '8px', background: '#fff', padding: '0 4px', fontSize: '0.7em', color: '#888', lineHeight: 1}}>manually evaluate based on VCEP</span>
+                                                        <div className="vcepBadge" style={{marginLeft: 0}} onClick={(e) => { e.stopPropagation(); setVcepModalData({ vcepRuleSets: isoform.vcepRuleSets, acmgTiers: isoform.acmgTieringResults.map(tr => tr.tier) }); }}><i className="bi bi-exclamation-triangle-fill"></i> clingen vcep available</div>
                                                     </div>
                                                 </div>
                                             ) : (
