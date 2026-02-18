@@ -2,7 +2,7 @@
 <img width="300px" src="/tool/web/src/logo.png"/>
 </p>
 <p align="center">
-<i>ACVI-MED: Accelerated Clinical Variant Interpretation</i>
+<i>ACVI-MED: Accelerated Candidate Variant Interpretation</i>
 </p>
 <hr/>
 
