@@ -9,9 +9,34 @@ https://doi.org/10.1186/s12859-026-06414-2
 
 <center><h3><i>Access the demo version at <a target="_blank" href="https://derma-genomics.meduniwien.ac.at/">derma-genomics.meduniwien.ac.at</a></i></h3></center>
 
-
-
 <hr/>
+
+If you use ACVI-Med in your research, please cite our paper:
+
+[![DOI:10.1186/s12859-026-06414-2](https://img.shields.io/badge/DOI-10.1186%2Fs12859--026--06414--2-blue.svg)](https://doi.org/10.1186/s12859-026-06414-2)
+[![Paper Status](https://img.shields.io/badge/Journal-BMC%20Bioinformatics-brightgreen.svg)](https://doi.org/10.1186/s12859-026-06414-2)
+
+> **ACVI-Med, an open source variant interpretation tool for medical genomics** > Stadler, M., Gansberger, S., Borik-Heil, L., Griss, J., Okamoto, I., Weninger, W. P., & Wielscher, M.  
+> *BMC Bioinformatics* **27**, 1 (2026). [https://doi.org/10.1186/s12859-026-06414-2](https://doi.org/10.1186/s12859-026-06414-2)
+
+<details>
+<summary>Click to expand BibTeX</summary>
+
+```bibtex
+@article{Stadler2026,
+  title={ACVI-Med, an open source variant interpretation tool for medical genomics},
+  author={Stadler, Moritz and Gansberger, Sabina and Borik-Heil, Liliane and Griss, Johannes and Okamoto, Ichiro and Weninger, Wolfgang P. and Wielscher, Matthias},
+  journal={BMC Bioinformatics},
+  volume={27},
+  number={1},
+  year={2026},
+  publisher={BioMed Central},
+  doi={10.1186/s12859-026-06414-2},
+  url={https://doi.org/10.1186/s12859-026-06414-2}
+}
+```
+
+</details>
 
 **Abstract**
 
