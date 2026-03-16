@@ -2,7 +2,7 @@
 <img width="300px" src="/tool/web/src/logo.png"/>
 </p>
 <p align="center">
-<i>ACVI-MED: Accelerated Candidate Variant Interpretation</i>
+<i>ACVI-MED: Accelerated Candidate Variant Interpretation</i><br/>
 https://doi.org/10.1186/s12859-026-06414-2
 </p>
 <hr/>
