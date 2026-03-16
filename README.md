@@ -3,6 +3,7 @@
 </p>
 <p align="center">
 <i>ACVI-MED: Accelerated Candidate Variant Interpretation</i>
+https://doi.org/10.1186/s12859-026-06414-2
 </p>
 <hr/>
 
