@@ -31,7 +31,7 @@ public class MySqlLoader {
         dataSource.setPassword(password);
         dataSource.setServerName(host);
 
-        String databaseName = "vcfvisualizetest"; //TODO rename
+        String databaseName = "acvimed";
         boolean datbaseExists = databaseExists(databaseName);
         if (datbaseExists) {
             System.out.println("MySql database found");
