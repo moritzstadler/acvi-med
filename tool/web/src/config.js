@@ -1,6 +1,6 @@
 export const Config = { 
-	apiBaseUrl: "https://derma-genomics.meduniwien.ac.at" + "/api",
-	appBaseUrl: window.location.protocol + "//" + window.location.hostname
+	apiBaseUrl: window.location.protocol + "//" + window.location.host + "/api",
+	appBaseUrl: window.location.protocol + "//" + window.location.host
 };
 
 export default Config;
